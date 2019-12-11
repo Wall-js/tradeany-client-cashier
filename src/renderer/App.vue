@@ -6,9 +6,10 @@
               :itemList="itemList"
               :bgColor = "bgColor"
               router
+              v-show="isShow"
       ></SideMenu>
       <el-container id="header-main" direction="vertical">
-        <Header :userName="userName" />
+        <Header :userName="userName"   v-show="isShow"/>
         <el-main>
           <router-view></router-view>
         </el-main>
@@ -78,6 +79,17 @@
           },
         ],
         userName:'admin',
+        isShow:false
+      }
+    },
+    methods:{
+
+    },
+    watch:{
+      $route(to,from){
+        if(this.$route.path !== '/'){
+          this.isShow = true
+        }
       }
     },
   }
