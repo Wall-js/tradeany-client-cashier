@@ -1,0 +1,97 @@
+.m-t-sm{
+    margin-top: 10px;
+}
+.m-t-md{
+    margin-top: 15px;
+}
+.m-t-lg{
+    margin-top: 20px;
+}
+.m-b-sm{
+    margin-bottom: 10px;
+}
+.m-b-md{
+    margin-bottom: 15px;
+}
+
+.m-r-sm{
+    margin-right: 10px;
+}
+.m-r-md{
+    margin-right: 15px;
+}
+.m-r-lg{
+    margin-right: 20px;
+}
+.m-l-sm{
+    margin-left: 10px;
+}
+.m-l-md{
+    margin-left: 15px;
+}
+.m-l-lg{
+    margin-left: 20px;
+}
+.p-t-lg{
+    padding-top: 20px;
+}
+.p-r-lg{
+    padding-right: 20px;
+}
+.p-b-lg{
+    padding-bottom: 20px;
+}
+.p-l-lg{
+    padding-left: 20px;
+}
+.p-all-lg{
+    padding: 20px;
+}
+.text-primary{
+    color: #ef5b6d;
+}
+.bg-primary{
+    background: #ef5b6d;
+    color: #fff;
+}
+.min-height-lg{
+    min-height: 100Vh;
+}
+.message{
+    color:#999;
+    font-size: 12px
+}
+.div-inline{
+    display: inline;
+}
+.flex-row{
+    display: flex;
+
+}
+.flex-column{
+    display: flex;
+    flex-direction:column;
+}
+.flex-row-reverse{
+    display: flex;
+    flex-direction:row-reverse;
+}
+.just-center{
+    justify-content: center;
+}
+.just-around{
+    justify-content: space-around;
+}
+.just-between{
+    justify-content: space-between;
+}
+.just-end{
+    justify-content: flex-end;
+}
+.flex-align{
+    align-items: center;
+}
+.formHint{
+    font-size: 12px;
+    color: #999999;
+}
