@@ -1,15 +1,89 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+    <el-container id="el-container">
+      <SideMenu
+              :title="title"
+              :itemList="itemList"
+              :bgColor = "bgColor"
+              router
+      ></SideMenu>
+      <el-container id="header-main" direction="vertical">
+        <Header :userName="userName" />
+        <el-main>
+          <router-view></router-view>
+        </el-main>
+      </el-container>
+    </el-container>
   </div>
 </template>
 
 <script>
+  import Header from './components/Header/Header'
+  import SideMenu from './components/SideMenu/SideMenu'
   export default {
-    name: 'tradeany-client-cashier'
+    components: { Header,SideMenu},
+    name: 'tradeany-client-cashier',
+    data () {
+      return {
+        name:'tianshan',
+        bgColor:'#1564AF',
+        title: 'TRADEANY',
+        itemList: [
+          {
+            type: 'menuItem',
+            title: '收 银 台',
+            icon:'el-icon-full-screen',
+            // index: "/"
+          },
+          {
+            type: 'submenu',
+            title: '商品管理',
+            index: "1",
+            icon:"el-icon-s-goods",
+            routers: [
+              {
+                type: 'itemGroup',
+                title: '商品管理',
+                index: "/",
+                routers: [
+                  {
+                    labelName: '在售产品',
+                    index: "/"
+                  },
+                  {
+                    labelName: '云仓产品',
+                    index: "/"
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            type: 'menuItem',
+            title: '库存管理',
+            icon:"el-icon-s-shop",
+            // index: "/"
+          },
+          {
+            type: 'menuItem',
+            title: '销售统计',
+            icon:'el-icon-s-data',
+            // index: "/"
+          },
+          {
+            type: 'menuItem',
+            title: '类目管理',
+            icon:'el-icon-notebook-2',
+            // index: "/"
+          },
+        ],
+        userName:'admin',
+      }
+    },
   }
 </script>
 
 <style>
+  @import url('./main.css');
   /* CSS */
 </style>
