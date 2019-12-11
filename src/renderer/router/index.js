@@ -5,15 +5,20 @@ Vue.use(Router)
 
 export default new Router({
   routes: [
-    // {
-    //   path: '/',
-    //   name: 'landing-page',
-    //   component: require('@/Pages/CashRegister').default
-    // },
     {
       path: '/',
       name: 'landing-page',
-      component: require('@/Pages/ProductManagement/SellingGoods').default
+      component: require('@/pages/Login').default
+    },
+    {
+      path: '/home',
+      name: 'landing-page',
+      component: require('@/pages/CashRegister').default
+    },
+    {
+      path: '/SellingGoods',
+      name: 'landing-page',
+      component: require('@/pages/ProductManagement/SellingGoods').default
     },
     {
       path: '*',

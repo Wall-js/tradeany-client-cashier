@@ -5,7 +5,7 @@
                 <h1>收银台系统</h1>
                 <h3>欢迎来到【收银台】</h3>
             </div>
-            <img class="logimg pageLeftCon" src="~@/assets/images/sellerBg.jpg" alt="electron-vue">
+            <img class="logimg pageLeftCon" src="~@/assets/images/cashier.jpg" alt="electron-vue">
         </div>
         <div class="pageRight pageHeight">
             <el-form ref="loginForm" :model="loginForm" :rules="rules" class="loginForm">
