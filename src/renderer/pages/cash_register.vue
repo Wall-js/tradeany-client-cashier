@@ -3,28 +3,28 @@
     <el-row :gutter="20">
       <el-col :span="12">
         <el-card class="min-height-lg">
-          <el-row>
-            <el-col class="flex-row">
-              <el-input placeholder="请输入会员编号" v-model="membershipCode">
-                <template slot="prepend"><el-button  icon="el-icon-full-screen" size="small"></el-button></template>
-                <template slot="append"><el-button  type="primary" icon="el-icon-search" size="small"></el-button></template>
-              </el-input>
-            </el-col>
-          </el-row>
+          <!--<el-row>-->
+            <!--&lt;!&ndash;<el-col class="flex-row">&ndash;&gt;-->
+              <!--&lt;!&ndash;<el-input placeholder="请输入会员编号" v-model="membershipCode">&ndash;&gt;-->
+                <!--&lt;!&ndash;<template slot="prepend"><el-button  icon="el-icon-full-screen" size="small"></el-button></template>&ndash;&gt;-->
+                <!--&lt;!&ndash;<template slot="append"><el-button  type="primary" icon="el-icon-search" size="small"></el-button></template>&ndash;&gt;-->
+              <!--&lt;!&ndash;</el-input>&ndash;&gt;-->
+            <!--&lt;!&ndash;</el-col>&ndash;&gt;-->
+          <!--</el-row>-->
           <el-row class="m-t-lg">
             <el-col class="flex-row just-between">
-              <span>会员登陆</span>
-              <div>
-                <el-button type="primary" size="small">二维码</el-button>
-                <el-button type="primary" size="small" @click="clearOrder">清除</el-button>
-              </div>
+              <!--<span>会员登陆</span>-->
+              <!--<div>-->
+                <!--<el-button type="primary" size="small">二维码</el-button>-->
+                <!--<el-button type="primary" size="small" @click="clearOrder">清除</el-button>-->
+              <!--</div>-->
             </el-col>
           </el-row>
-          <el-divider></el-divider>
-          <Panel
-                  :array="membershipArray"
-          ></Panel>
-          <el-divider></el-divider>
+          <!--<el-divider></el-divider>-->
+          <!--<Panel-->
+                  <!--:array="membershipArray"-->
+          <!--&gt;</Panel>-->
+          <!--<el-divider></el-divider>-->
           <el-row>
             <el-col class="flex-row just-around">
               <el-button type="primary" size="small">会员</el-button>
@@ -323,16 +323,12 @@
         // 商品删除
       changeOpera(item,action,type){
         if(action==='删除'){
-            let payload={
-                "_id":item.No
-            };
-          this.$store.dispatch("Cashier/deleteSubOrder",payload);
+          this.$store.dispatch("Cashier/deleteSubOrder",{index:item.No});
         }
       },
         // 编辑商品数量
       handleChange(scope){
-        console.log(scope)
-        // this.$store.dispatch("Cashier/updateSubOrder",payload);
+        this.$store.dispatch("Cashier/updateSubOrder", {index: scope.$index, quantity: scope.row.quantity});
       },
         // 挂单
       setCacheOrder(){
@@ -342,11 +338,11 @@
       },
         // 挂单操作
       changeCacheOrder(item,action,type){
-        console.log(item.No)
+        console.log(item.No);
           if(action==='提单'){
-              this.$store.dispatch("Cashier/getCacheOrder",{index:item.No-1});
+              this.$store.dispatch("Cashier/getCacheOrder",{index:item.No});
           }else if(action==='删除'){
-              this.$store.dispatch("Cashier/deleteCacheOrder",{index:item.No-1});
+              this.$store.dispatch("Cashier/deleteCacheOrder",{index:item.No});
           }
         },
       // 计算提交
@@ -378,8 +374,8 @@
       // 获取商品
       getGoods(){
         this.$store.state.Cashier.order.subOrder.forEach((item,index)=>{
-          item['No'] = index+1;
-          item['isOperaText'] = [`修改`,`删除`]
+          item['No'] = index;
+          item['isOperaText'] = [`删除`]
         });
         return this.$store.state.Cashier.subOrder
       },
@@ -387,7 +383,7 @@
       getCacheOrder(){
         // let list = this.$store.state.Cashier.cacheOrder
         return this.$store.state.Cashier.cacheOrder.forEach((item,index)=>{
-          item['No'] = index+1;
+          item['No'] = index;
           item['name'] = item.consumer.name;
           item['subOrderQty'] = item.subOrder.length;
           item['isOperaText'] = [`提单`,`删除`]
