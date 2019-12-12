@@ -5,11 +5,12 @@
               :title="title"
               :itemList="itemList"
               :bgColor = "bgColor"
+              :isCollapsed="isCollapsed"
               router
               v-show="isShow"
       ></SideMenu>
       <el-container id="header-main" direction="vertical">
-        <Header :userName="userName"   v-show="isShow"/>
+        <Header :userName="userName"  v-show="isShow" @handleShow="handleShow" />
         <el-main>
           <router-view></router-view>
         </el-main>
@@ -26,7 +27,7 @@
     name: 'tradeany-client-cashier',
     data () {
       return {
-        // isCollapsed:false,
+        isCollapsed:false,
         bgColor:'#1564AF',
         title: 'TRADEANY',
         itemList: [
@@ -83,11 +84,15 @@
       }
     },
     methods:{
-
+      handleShow(){
+        this.isCollapsed=!this.isCollapsed;
+      },
     },
     created(){
       if(this.$route.path !== '/'){
         this.isShow = true
+      }else {
+        this.isShow = false
       }
     },
     watch:{
@@ -95,6 +100,8 @@
         console.log("当前路由",this.$route.path);
         if(this.$route.path !== '/'){
           this.isShow = true
+        }else {
+          this.isShow = false
         }
       }
     },
