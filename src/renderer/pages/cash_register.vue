@@ -16,7 +16,7 @@
               <span>会员登陆</span>
               <div>
                 <el-button type="primary" size="small">二维码</el-button>
-                <el-button type="primary" size="small">清除</el-button>
+                <el-button type="primary" size="small" @click="clearOrder">清除</el-button>
               </div>
             </el-col>
           </el-row>
@@ -29,7 +29,7 @@
             <el-col class="flex-row just-around">
               <el-button type="primary" size="small">会员</el-button>
               <el-button type="primary" size="small" @click="setCacheOrder">挂单</el-button>
-              <el-button type="primary" size="small">清空</el-button>
+              <el-button type="primary" size="small" @click="cleanSubOrder">清空</el-button>
             </el-col>
           </el-row>
           <el-divider></el-divider>
@@ -44,7 +44,7 @@
                   >
                     <el-table-column slot="stock" label="数量">
                         <template slot-scope="scope">
-                          <el-input-number v-model="scope.row.stock" :min="0" :max="10000"  size="mini" @change="handleChange"></el-input-number>
+                          <el-input-number v-model="scope.row.quantity" :min="0" :max="10000"  size="mini" @change="handleChange"></el-input-number>
                         </template>
                     </el-table-column>
                   </Table>
@@ -53,7 +53,7 @@
                     <el-col  class="flex-row just-between flex-align" :span="18" >
                       <div>
                         <span>总价</span>
-                        <h4>￥0</h4>
+                        <h4>￥{{$store.state.Cashier.total}}</h4>
                       </div>
                       <div>
                         <el-button type="primary" size="small">
@@ -66,7 +66,7 @@
                 <el-tab-pane label="挂单区" name="second">
                   <Table
                           :tableList="ordersTableList"
-                          :tableData="ordersTableData"
+                          :tableData="$store.state.Cashier.cacheOrder"
                           @changeOpera="changeCacheOrder"
                   >
                   </Table>
@@ -141,15 +141,15 @@
                 label:'序号'
             },
           {
-            prop:'name',
+            prop:'productName',
             label:'名称'
           }, {
-            prop:'goods_price',
+            prop:'productPrice',
             label:'单价'
           }, {
             slot:'stock',
             type:'slot',
-            prop: 'stock',
+            prop: 'quantity',
             label: '库存数量',
           }, {
             prop: 'operation',
@@ -158,15 +158,7 @@
             isOperaText: 'isOperaText'
           }
         ],
-        shopTableData:[
-          {
-            No:'1',
-            name:'22',
-            goods_price:'33',
-            stock:'1',
-            isOperaText:['删除']
-          }
-        ],
+        shopTableData:[],
         ordersTableList:[
            {
             prop:'No',
@@ -199,15 +191,16 @@
       }
     },
     methods: {
-      // 查询
-      testGet() {
-        let result;
-        this.$db.user.find({}, (err, newDocs) => {
-          console.log(22,newDocs);
-        });
-      },
       handleClick(){},
       rightHandleClick(){
+      },
+      // 清空order
+      clearOrder() {
+        this.$store.dispatch("Cashier/clearOrder",);
+      },
+      // 清空商品
+      cleanSubOrder(){
+        this.$store.dispatch("Cashier/cleanSubOrder",);
       },
         // 添加商品
        createSubOrder() {
@@ -215,10 +208,10 @@
          // let subOrder=this.$store.state.Cashier.order.subOrder;
          // console.log(11,subOrder)
          // this.shopTableData=subOrder;
-         subOrder.forEach((item,index)=>{
-           item['No'] = index+1;
-          item['isOperaText']=['删除'];
-        });
+        //  subOrder.forEach((item,index)=>{
+        //    item['No'] = index+1;
+        //   item['isOperaText']=['删除'];
+        // });
       },
         // 商品删除
       changeOpera(item,action,type){
@@ -232,10 +225,13 @@
         // 编辑商品数量
       handleChange(value){
         console.log(value)
+        this.$store.dispatch("Cashier/updateSubOrder",payload);
       },
         // 挂单
       setCacheOrder(){
-          this.$store.dispatch("setCacheOrder");
+          this.$store.dispatch("Cashier/setCacheOrder");
+          console.log(this.$store.getters.total)
+        console.log(this.$store.state.Cashier.cacheOrder)
       },
         // 挂单操作
       changeCacheOrder(item,action,type){
