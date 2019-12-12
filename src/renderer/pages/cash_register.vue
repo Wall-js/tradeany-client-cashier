@@ -414,7 +414,7 @@
         }
       },
       //确认结算
-      settlementForm(){
+      settlementForm(){}
 
     },
     components: {
