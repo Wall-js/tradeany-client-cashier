@@ -1,3 +1,5 @@
+import db from "../../datastore";
+
 const defaultState = {
     order: {
         type: undefined,
@@ -8,7 +10,7 @@ const defaultState = {
             level: undefined,
         },
         subOrder: [],
-        total: 0,
+        // total: 0,
         activeKey: 'total'
     },
     cacheOrder: [],
@@ -16,6 +18,21 @@ const defaultState = {
 
 
 const state = Object.assign({}, defaultState);
+
+const getters = {
+    total: state => {
+        state.order.subOrder.length > 0 ? state.order.subOrder.reduce((total, item, index) => {
+            const a = numeral(item.goods_price);
+            const b = a.multiply(item.quantity);
+            const c = b.add(total);
+            if (index === state.order.subOrder.length - 1) {
+                return c.format('0.00');
+            } else {
+                return c.value();
+            }
+        }, 0) : 0;
+    },
+};
 
 const mutations = {
     // 清空收银台
@@ -41,12 +58,12 @@ const mutations = {
         } else {
             state.order.subOrder.push(payload);
         }
-        state.cacheOrder.push(state.order);
     },
 
     // 删除商品
     DELETE_SUBORDER(state, payload) {
-        const index = state.order.subOrder.findIndex((v) => (v._id === payload._id));
+        const subOrder = state.order.subOrder.filter(v => v._id !== payload._id);
+
         if (index !== -1) {
             state.order.subOrder[index].quantity += 1;
         } else {
@@ -92,13 +109,21 @@ const actions = {
         ctx.commit("ClEAR_ORDER")
     },
     // 清空商品
-    cleanSubOrder(ctx, payload) {
+    cleanSubOrder(ctx) {
         ctx.commit("CLEAN_SUBORDER")
     },
 
     // 添加商品
     createSubOrder(ctx, payload) {
-        ctx.commit("CREATE_SUBORDER", payload)
+        db.goods.findOne({barCode: payload.barCode}, (err, doc) => {
+            doc.quantity = payload.quantity ? payload.quantity : 1;
+            ctx.commit("CREATE_SUBORDER", doc);
+            if (payload) {
+                if (payload.callback) {
+                    payload.callback(err)
+                }
+            }
+        });
     },
     // 删除商品
     deleteSubOrder(ctx, payload) {
@@ -111,20 +136,21 @@ const actions = {
 
     // 挂单
     setCacheOrder(ctx) {
-        ctx.commit("SET_CACHE_ORDER")
+        ctx.commit("SET_CACHE_ORDER", payload)
     },
     // 提单
     getCacheOrder(ctx, payload) {
-        ctx.commit("GET_CACHE_ORDER")
+        ctx.commit("GET_CACHE_ORDER", payload)
     },
     // 挂单删除
     deleteCacheOrder(ctx, payload) {
-        ctx.commit("DELETE_CACHE_ORDER")
+        ctx.commit("DELETE_CACHE_ORDER", payload)
     },
 };
 
 export default {
     namespaced: true,
+    getters,
     state,
     mutations,
     actions
