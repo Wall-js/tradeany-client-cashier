@@ -8,7 +8,8 @@
         <!--<button @click="dec">-</button>-->
         <!--</div>-->
         <div>
-            <p>{{$store.state.Cashier.order.total}}</p>
+            <!--<p>{{$store.state.Cashier.order.total}}</p>-->
+            <!--<p>{{$store.state.Item.getters.total}}</p>-->
         </div>
 
         <div>
@@ -45,7 +46,7 @@
             //
             // },
             getItem() {
-                // console.log(this.$store);
+                console.log(this.$store.state.Item.list);
                 let payload = {
                     pagination: {
                         current: 2,
