@@ -10,7 +10,7 @@
       ></SideMenu>
       <el-container id="header-main" direction="vertical">
         <Header :userName="userName" @handleShow="handleShow" />
-        <el-main>
+        <el-main class="elMain">
           <router-view></router-view>
         </el-main>
       </el-container>
@@ -102,4 +102,7 @@
 <style>
   @import url('./main.css');
   /* CSS */
+  .elMain{
+    background: #f6f6f6;
+  }
 </style>
