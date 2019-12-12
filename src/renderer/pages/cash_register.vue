@@ -132,6 +132,7 @@
                 <!--<el-tab-pane label="家居生活" name="fourth">未定样式</el-tab-pane>-->
                 <!--<el-tab-pane label="零食/饮品" name="fifth">未定样式</el-tab-pane>-->
                 <!--<el-tab-pane label="美容美妆" name="sixth">未定样式</el-tab-pane>-->
+
                 <!--<el-tab-pane label="保健养生" name="seventh">未定样式</el-tab-pane>-->
               </el-tabs>
             </el-col>
