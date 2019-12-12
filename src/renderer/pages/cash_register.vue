@@ -7,7 +7,7 @@
             <el-col class="flex-row">
               <el-input placeholder="请输入会员编号" v-model="membershipCode">
                 <template slot="prepend"><el-button  icon="el-icon-full-screen" size="small"></el-button></template>
-                <template slot="append"><el-button  type="primary" icon="el-icon-search" size="small" @click="testSave"></el-button></template>
+                <template slot="append"><el-button  type="primary" icon="el-icon-search" size="small"></el-button></template>
               </el-input>
             </el-col>
           </el-row>
@@ -15,8 +15,8 @@
             <el-col class="flex-row just-between">
               <span>会员登陆</span>
               <div>
-                <el-button type="primary" size="small" @click="testGet">二维码</el-button>
-                <el-button type="primary" size="small" @click="_delete">清除</el-button>
+                <el-button type="primary" size="small">二维码</el-button>
+                <el-button type="primary" size="small">清除</el-button>
               </div>
             </el-col>
           </el-row>
@@ -27,7 +27,7 @@
           <el-divider></el-divider>
           <el-row>
             <el-col class="flex-row just-around">
-              <el-button type="primary" size="small" @click="search">会员</el-button>
+              <el-button type="primary" size="small">会员</el-button>
               <el-button type="primary" size="small">挂单</el-button>
               <el-button type="primary" size="small">清空</el-button>
             </el-col>
@@ -40,7 +40,14 @@
                   <Table
                           :tableList="shopTableList"
                           :tableData="shopTableData"
-                  ></Table>
+                          @changeOpera="changeOpera"
+                  >
+                    <el-table-column slot="stock" label="数量">
+                        <template slot-scope="scope">
+                          <el-input-number v-model="scope.row.stock" :min="0" :max="10000"  size="mini" @change="handleChange"></el-input-number>
+                        </template>
+                    </el-table-column>
+                  </Table>
                   <el-divider></el-divider>
                   <el-row type="flex" justify="center">
                     <el-col  class="flex-row just-between flex-align" :span="18" >
@@ -60,6 +67,7 @@
                   <Table
                           :tableList="ordersTableList"
                           :tableData="ordersTableData"
+                          @changeOpera="changeOpera"
                   ></Table>
                 </el-tab-pane>
               </el-tabs>
@@ -128,22 +136,31 @@
         activeName:'first',
         shopTableList:[
           {
-            prop:'time',
+            prop:'name',
             label:'名称'
           }, {
-            prop:'time',
+            prop:'goods_price',
             label:'单价'
           }, {
-            prop:'time',
-            label:'数量'
+            slot:'stock',
+            type:'slot',
+            prop: 'stock',
+            label: '库存数量',
           }, {
-            type:'operation',
-            prop:'time',
-            label:'操作',
+            prop: 'operation',
+            label: '操作',
+            type: 'operation',
             isOperaText: 'isOperaText'
           }
         ],
-        shopTableData:[],
+        shopTableData:[
+          {
+            name:'22',
+            goods_price:'33',
+            stock:'1',
+            isOperaText:['删除']
+          }
+        ],
         ordersTableList:[
           {
             prop:'time',
@@ -175,62 +192,51 @@
           console.log(22,newDocs);
         });
       },
-      // 插入
-      testSave() {
-        let doc = {
-          hello: '张器1'
-          , n: 5
-          , today: new Date()
-          , nedbIsAwesome: true
-          , notthere: null
-          // , notToBeSaved: undefined  // 该字段不会被保存
-          , fruits: ['apple', 'orange', 'pear']
-          , infos: {name: 'nedb'}
-        };
-        this.$db.user.insert(doc, (err, newDocs) => {
-            console.log(newDocs);
-        })
-
-      },
-      // 查询
-      search(){
-        this.$db.user.findOne({
-          membershipCode: this.membershipCode
-        }, (err, ret) => {
-          console.log("查询",ret);
-          this.membershipArray=[
-            {
-              label:'名称：',
-              value:'田珊珊',
-              span:12
-
-            },
-            {
-              label:'编号：',
-              value:'3454545',
-              span:12
-
-            }, {
-              label:'等级：',
-              value:'54545',
-              span:12
-            }, {
-              label:'积分：',
-              value:'55',
-              span:12
-            },
-          ];
-        });
-
-        },
-      // 删除
-      _delete(){
-        this.$db.user.remove({}, { multi: true }, function (err, numRemoved) {
-          console.log("删除",numRemoved)
-        });
-      },
       handleClick(){},
       rightHandleClick(){
+      },
+      // 加入购物车
+      createItem() {
+        let barCode={"barCode":this.barCode};
+        this.$store.dispatch("getCatItem",barCode);
+         let subOrder=this.$store.state.Cashier.order.subOrder;
+         console.log(subOrder)
+         this.shopTableData=subOrder;
+         this.membershipArray=[
+          {
+            label:'名称：',
+            value:consumer.name,
+            span:12
+
+          },
+          {
+            label:'编号：',
+            value:'2222',
+            span:12
+
+          }, {
+            label:'等级：',
+            value:'444',
+            span:12
+          }, {
+            label:'积分：',
+            value:'444',
+            span:12
+          },
+        ];
+         subOrder.forEach(item =>{
+          item['isOperaText']=['删除'];
+        });
+      },
+      changeOpera(tem,action,type){
+        if(action==='删除'){
+          console.log("删除")
+          let id={"id":tem.id}
+          this.$store.dispatch("delCatItem",id);
+        }
+      },
+      handleChange(value){
+        console.log(value)
       }
     },
     components: {
@@ -238,10 +244,7 @@
       Table
     },
     computed: {
-      doneTodosCount () {
-        console.log(999999,this.$store.getters.doneTodosCount)
-        return this.$store.getters.doneTodosCount
-      }
+
     }
   }
 </script>
