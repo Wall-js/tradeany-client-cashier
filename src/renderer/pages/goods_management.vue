@@ -215,7 +215,13 @@
              */
             //查询
             search() {
-                console.log('搜索数据', this.searchForm)
+                this.$store.dispatch("Goods/filterGoods",{
+                    pagination: {
+                        current: 1,
+                        pageSize: 10,
+                    },
+                    form:this.searchForm
+                })
             },
             //重置
             reset(refs) {
@@ -261,7 +267,7 @@
                     this.isEdit = true;
                     this.show = true;
                     let formItemList = this.addProductFormConfig['formItemList'];
-                    formItemList[0]['disabled'] = true;
+                    // formItemList[0]['disabled'] = true;
                     formItemList[formItemList.length-2]['disabled'] = true;
                     this.addProductForm = {...item}
                 }else if(action === '删除'){
@@ -300,6 +306,7 @@
                     current: 1,
                     pageSize: 10,
                 }});
+            console.log(this.$store.state.Goods.list)
         },
 
     }

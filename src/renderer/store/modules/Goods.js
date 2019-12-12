@@ -1,5 +1,11 @@
 import db from "../../datastore"
 
+const model = {
+    barCode:'',
+    name:'',
+    price:'',
+    stock:'',
+};
 const state = {
     list: [],
     pagination: {
@@ -66,6 +72,21 @@ const actions = {
             }
         });
     },
+    //商品过滤
+    filterGoods(ctx, payload){
+        ctx.commit('SET_GOODS_PAGINATION', payload);
+        let pageSize = ctx.state.pagination.pageSize;
+        let skip = (ctx.state.pagination.current - 1) * pageSize;
+        db.goods.find({ 'name': payload.form.name}).skip(skip).limit(pageSize).exec((err, docs) => {
+            ctx.dispatch('getGoodsTotal');
+            ctx.commit('SET_GOODS', docs);
+            if (payload) {
+                if (payload.callback) {
+                    payload.callback(err)
+                }
+            }
+        });
+    },
     getGoodsTotal(ctx, payload) {
         db.goods.count({}, function (err, count) {
             ctx.commit("SET_GOODS_TOTAL", count);
@@ -119,7 +140,7 @@ const actions = {
     },
     getCurrentRouter(ctx, payload){
         ctx.commit('SET_CURRENT_ROUTER', payload);
-    }
+    },
 };
 
 
