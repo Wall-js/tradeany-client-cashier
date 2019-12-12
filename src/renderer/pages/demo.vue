@@ -27,7 +27,8 @@
 
             },
             createItem() {
-                this.$store.dispatch("createItem");
+                let doc = {name:"111",quantity:10};
+                this.$store.dispatch("createItem",doc);
             },
             inc() {
                 this.$store.dispatch("incCounter");
