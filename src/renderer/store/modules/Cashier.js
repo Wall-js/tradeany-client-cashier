@@ -34,7 +34,7 @@ const mutations = {
     },
 
     // 添加商品
-    CREATE_CASHIER_GOODS(state, payload) {
+    CREATE_SUBORDER(state, payload) {
         const index = state.order.subOrder.findIndex((v) => (v._id === payload._id));
         if (index !== -1) {
             state.order.subOrder[index].quantity += 1;
@@ -45,7 +45,18 @@ const mutations = {
     },
 
     // 删除商品
-    DELETE_CASHIER_GOODS(state, payload) {
+    DELETE_SUBORDER(state, payload) {
+        const index = state.order.subOrder.findIndex((v) => (v._id === payload._id));
+        if (index !== -1) {
+            state.order.subOrder[index].quantity += 1;
+        } else {
+            state.order.subOrder.push(payload);
+        }
+        state.cacheOrder.push(state.order);
+    },
+
+    // 编辑商品数量
+    UPDATE_SUBORDER(state, payload) {
         const index = state.order.subOrder.findIndex((v) => (v._id === payload._id));
         if (index !== -1) {
             state.order.subOrder[index].quantity += 1;
@@ -76,41 +87,36 @@ const actions = {
     clearAll(ctx) {
         ctx.commit("ClEAR_ALL")
     },
-
     // 清空order
     clearOrder(ctx) {
         ctx.commit("ClEAR_ORDER")
     },
-
     // 清空商品
     cleanSubOrder(ctx, payload) {
         ctx.commit("CLEAN_SUBORDER")
     },
 
-    // 修改商品数量
-    UpdateGoodsQuantity(ctx, payload) {
-        ctx.commit("UPDATE_GOODS_QUANTITY")
-    },
-
     // 添加商品
-    createCashierGoods(ctx, payload) {
-        ctx.commit("CREATE_CASHIER_GOODS")
+    createSubOrder(ctx, payload) {
+        ctx.commit("CREATE_SUBORDER", payload)
     },
     // 删除商品
     deleteSubOrder(ctx, payload) {
-        ctx.commit("DELETE_CASHIER_GOODS")
+        ctx.commit("DELETE_SUBORDER", payload)
+    },
+    // 编辑商品数量
+    updateSubOrder(ctx, payload) {
+        ctx.commit("UPDATE_SUBORDER", payload)
     },
 
     // 挂单
     setCacheOrder(ctx) {
         ctx.commit("SET_CACHE_ORDER")
     },
-
     // 提单
     getCacheOrder(ctx, payload) {
         ctx.commit("GET_CACHE_ORDER")
     },
-
     // 挂单删除
     deleteCacheOrder(ctx, payload) {
         ctx.commit("DELETE_CACHE_ORDER")
