@@ -36,7 +36,7 @@
 </template>
 
 <script>
-    import SystemInformation from './SystemInformation'
+    import SystemInformation from './LandingPage/SystemInformation'
 
     export default {
         name: 'landing-page',
