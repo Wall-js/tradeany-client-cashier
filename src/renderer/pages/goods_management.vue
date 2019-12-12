@@ -3,15 +3,15 @@
     <div>
         <el-card>
             <Form :value="searchForm"
-                  :formConfig="searchFormConfig"
-                  refName="searchForm"
+                   :formConfig="searchFormConfig"
+                   refName="searchForm"
             >
                 <div slot="codeInput" class="float-right m-l-sm">
-                    <el-button icon="el-icon-full-screen" size="small"></el-button>
+                    <el-button  icon="el-icon-full-screen" size="small" ></el-button>
                 </div>
             </Form>
         </el-card>
-        <el-card class="m-t-sm">
+        <el-card class="m-t-sm min-height-lg">
             <el-row>
                 <el-col>
                     <el-button type="primary" size="small" @click="()=>{this.show=true}">商品录入</el-button>
@@ -28,17 +28,16 @@
             </el-row>
             <el-row>
                 <el-col>
-                    <page-break :pageTotal="$store.state.Goods.pagination.total"
-                                :pageSize="$store.state.Goods.pagination.pageSize"
+                    <page-break :pageTotal="$store.state.Goods.pagination.total" :pageSize="$store.state.Goods.pagination.pageSize"
                                 @pageChange="pageChange"></page-break>
                 </el-col>
             </el-row>
         </el-card>
         <!--商品录入弹窗-->
         <Dialog
-                :show.sync="show"
-                :dialogConfig="dialogConfig"
-                @handleClose="closeDialog"
+            :show.sync="show"
+            :dialogConfig="dialogConfig"
+            @handleClose="closeDialog"
         >
             <el-row slot="content">
                 <el-col>
@@ -49,7 +48,7 @@
                             ref="dialogForm"
                     >
                         <div slot="codeInput" class="float-right m-l-sm">
-                            <el-button icon="el-icon-full-screen" size="small"></el-button>
+                            <el-button  icon="el-icon-full-screen" size="small"></el-button>
                         </div>
                     </Form>
                 </el-col>
@@ -67,14 +66,14 @@
 
     export default {
         layout: 'home',
-        data() {
+        data () {
             return {
                 /**
                  *搜索
                  **/
                 searchForm: {
-                    barCode: '',
-                    productName: ''
+                    barCode:'',
+                    name:''
                 },
                 searchFormConfig: {
                     line_type: true,
@@ -83,14 +82,14 @@
                             type: 'input',
                             label: '条形码：',
                             prop: 'barCode',
-                            style: 'width:246px',
+                            style:'width:246px',
                             placeholder: '请输入或通过扫码枪获取条形码',
-                            slotBottom: 'codeInput',
-                        }, {
+                            slotBottom:'codeInput',
+                        },{
                             type: 'input',
                             label: '商品名称：',
-                            prop: 'productName',
-                            style: 'width:300px',
+                            prop: 'name',
+                            style:'width:300px',
                             placeholder: '请输入商品名称',
                         }, {
                             type: 'btnGroup',
@@ -118,71 +117,71 @@
                     {
                         label: '条形码',
                         prop: 'barCode',
-                    }, {
+                    },{
                         label: '商品名称',
-                        prop: 'productName',
-                    }, {
+                        prop: 'name',
+                    },{
                         label: '单价',
-                        prop: 'productPrice',
-                    }, {
+                        prop: 'price',
+                    },{
                         label: '库存数量',
                         prop: 'stock',
                     },
                     {
-                        type: 'operation',
+                        type:'operation',
                         prop: 'operation',
-                        label: '操作',
+                        label:'操作',
                         isOperaText: 'isOperaText'
                     }
                 ],
                 //商品录入
-                show: false,
-                dialogConfig: {
-                    title: '商品录入',
-                    width: '500px',
+                show:false,
+                dialogConfig:{
+                    title:'商品录入',
+                    width:'500px',
                 },
-                addProductForm: {
-                    barCode: '',
-                    productName: '',
-                    productPrice: '',
-                    productQty: ''
+                addProductForm:{
+                    barCode:'',
+                    name:'',
+                    price:'',
+                    stock:''
                 },
                 addProductFormConfig: {
-                    labelWidth: '120px',
+                    labelWidth:'120px',
                     formItemList: [
                         {
                             type: 'input',
                             label: '条形码',
                             prop: 'barCode',
-                            style: 'width:246px',
+                            style:'width:246px',
                             placeholder: '请输入或通过扫码枪获取条形码',
-                            slotBottom: 'codeInput',
-                            rules: [
+                            slotBottom:'codeInput',
+                            rules:[
                                 {required: true, message: '请输入或通过扫码枪获取条形码', trigger: 'blur'}
                             ],
-                        }, {
+                        },{
                             type: 'input',
                             label: '商品名称',
-                            prop: 'productName',
-                            style: 'width:300px',
+                            prop: 'name',
+                            style:'width:300px',
                             placeholder: '请输入商品名称',
-                            rules: [
+                            rules:[
                                 {required: true, message: '请输入商品名称', trigger: 'blur'}
                             ],
-                        }, {
+                        },{
                             type: 'input',
                             label: '单价',
-                            prop: 'productPrice',
-                            style: 'width:300px',
+                            prop: 'price',
+                            style:'width:300px',
                             placeholder: '请输入单价',
-                            rules: [
+                            rules:[
                                 {required: true, message: '请输入单价', trigger: 'blur'}
                             ],
-                        }, {
+                        },{
                             type: 'input',
                             label: '库存数量',
                             prop: 'stock',
-                            style: 'width:300px',
+                            style:'width:300px',
                             placeholder: '请输入数量',
                         }, {
                             type: 'btnGroup',
@@ -201,7 +200,7 @@
                         }
                     ],
                 },
-                isEdit: false
+                isEdit:false
             }
         },
         components: {
@@ -223,23 +222,23 @@
                 refs['searchForm'].resetFields();
             },
             //商品录入
-            addProductSubmit(refs) {
+            addProductSubmit(refs){
                 refs['addProductForm'].validate((valid) => {
                     if (valid) {
-                        if (this.isEdit) {
+                        if(this.isEdit){
                             let addProductForm = this.addProductForm
                             let payload = {
-                                _id: addProductForm['_id'],
-                                data: {...addProductForm}
+                                _id:addProductForm['_id'],
+                                data:{...addProductForm}
                             }
-                            this.$store.dispatch("Goods/updateGoods", payload)
+                            this.$store.dispatch("Goods/updateGoods",payload)
                             this.$message.success('修改成功')
-                        } else {
-                            this.$store.dispatch("Goods/createGoods", this.addProductForm)
+                        }else {
+                            this.$store.dispatch("Goods/createGoods",this.addProductForm)
                             this.$message.success('录入成功')
                         }
 
-                        this.show = false;
+                        this.show=false;
                         refs['addProductForm'].resetFields();
                     } else {
                         console.log('error submit!!');
@@ -248,75 +247,59 @@
                 });
             },
             //关闭弹窗
-            closeDialog(refs) {
-                if (refs) {
-                    this.show = false;
+            closeDialog(refs){
+                if(refs){
+                    this.show=false;
                     refs['addProductForm'].resetFields();
-                } else {
+                }else {
                     this.$refs['dialogForm']['$refs']['addProductForm'].resetFields();
                 }
             },
             //商品操作
-            changeOpera(item, action, type) {
+            changeOpera (item, action, type) {
                 if (action === '修改') {
                     this.isEdit = true;
                     this.show = true;
                     let formItemList = this.addProductFormConfig['formItemList'];
                     formItemList[0]['disabled'] = true;
-                    formItemList[formItemList.length - 2]['disabled'] = true;
+                    formItemList[formItemList.length-2]['disabled'] = true;
                     this.addProductForm = {...item}
-                } else if (action === '删除') {
+                }else if(action === '删除'){
                     this.$confirm('此操作将删除该商品, 是否继续?', '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
                         type: 'warning'
                     }).then(() => {
-                        this.$store.dispatch("Goods/deleteGoods", {_id: item._id})
+                        this.$store.dispatch("Goods/deleteGoods",{_id:item._id})
                     })
 
                 }
-            },
-            changeEdit() {
-
             },
             /**
              * 分页数据
              * @param item
              */
-            pageChange(item) {
-                this.$store.dispatch("Goods/getGoods", {
+            pageChange (item) {
+                this.$store.dispatch("Goods/getGoods",{
                     pagination: {
                         current: item,
                         pageSize: 10,
                     },
                 });
             },
-            /**
-             * 下架按钮
-             * */
-            submitRechargeForm() {
-                this.show = false
-            },
         },
-        beforeCreate() {
+        beforeCreate(){
             //获取当前路由
-            console.log(this.$route);
-            this.$store.dispatch("Goods/getCurrentRouter", {
-                pagination: {
-                    current: 1,
-                    pageSize: 10,
-                }
-            });
-
+            console.log(this.$route.path);
+            this.$store.dispatch("Goods/getCurrentRouter",this.$route.path);
         },
         created() {
             //获取数据
-            this.$store.dispatch("Goods/getGoods", {
+            this.$store.dispatch("Goods/getGoods",{
                 pagination: {
                     current: 1,
                     pageSize: 10,
-                }
-            });
+                }});
         },
 
     }
