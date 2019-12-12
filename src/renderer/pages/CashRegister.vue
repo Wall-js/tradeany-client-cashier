@@ -137,7 +137,7 @@
           }, {
             type:'operation',
             prop:'time',
-            label:'删除',
+            label:'操作',
             isOperaText: 'isOperaText'
           }
         ],
