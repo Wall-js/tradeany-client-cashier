@@ -1,25 +1,48 @@
 <template>
     <div id="wrapper">
-        <div>{{ count }}</div>
-        <button @click="add">+</button>
-        <button @click="sub">-</button>
+        <div>
+            <div>计数器</div>
+            <div>{{ count }}</div>
+            <div>{{ $store.state.Counter.main }}</div>
+            <button @click="inc">+</button>
+            <button @click="dec">-</button>
+        </div>
+        <div>
+            {{ $store.state.Item }}
+        </div>
+        <button @click="getItem">getItem</button>
+        <button @click="createItem">createItem</button>
+        <button @click="$store.dispatch('deleteAllItem')">deleteAllItem</button>
+
     </div>
 </template>
 
 <script>
     export default {
-        name: 'Demo',
+        name: 'demo',
         methods: {
-            add() {
+            getItem() {
+                this.$store.dispatch("getItem");
+                // console.log(this.$store.state.Counter.main)
 
             },
-            sub() {
+            createItem() {
+                this.$store.dispatch("createItem");
+            },
+            inc() {
+                this.$store.dispatch("incCounter");
+                // console.log(this.$store.state.Counter.main)
+            },
+            dec() {
+                this.$store.dispatch("decCounter");
+                // console.log(this.$store.state.Counter.main)
 
             },
+
         },
         computed: {
             count() {
-                return this.store.state.count
+                return this.$store.state.Counter.main
             }
         }
     }
