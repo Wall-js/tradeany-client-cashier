@@ -5,7 +5,11 @@
             <Form :value="searchForm"
                     :formConfig="searchFormConfig"
                     refName="searchForm"
-            ></Form>
+            >
+                <div slot="codeInput" class="float-right m-l-sm">
+                    <el-button  icon="el-icon-full-screen" size="small" ></el-button>
+                </div>
+            </Form>
         </el-card>
         <el-card class="mainBox">
             <el-row>
@@ -64,58 +68,29 @@
         layout: 'home',
         data () {
             return {
-                // loading:'false',
                 /**
-                 *form表单
+                 *搜索
                  **/
                 searchForm: {
-                    min:0,
-                    max:0,
+                    barCode:'',
+                    productName:''
                 },
                 searchFormConfig: {
                     line_type: true,
                     formItemList: [
                         {
                             type: 'input',
+                            label: '条形码：',
+                            prop: 'barCode',
+                            style:'width:246px',
+                            placeholder: '请输入或通过扫码枪获取条形码',
+                            slotBottom:'codeInput',
+                        },{
+                            type: 'input',
                             label: '商品名称：',
-                            prop: 'line_name',
-                            placeholder: '请输入',
-                            labelWidth:'120px',
-                        },{
-                            type: 'select',
-                            label: '商品分类：',
-                            prop: 'line_name',
-                            labelWidth:'120px',
-                            optList: [
-                                {
-                                    value: '选项1',
-                                    label: '全部'
-                                }, {
-                                    value: '选项2',
-                                    label: '已成托'
-                                }]
-                        },{
-                            type: 'input',
-                            label: '品牌：',
-                            prop: 'line_name',
-                            placeholder: '请输入',
-                            labelWidth:'120px',
-                        },{
-                            type: 'rangeInput',
-                            prop: 'price',
-                            label: '商品价格：',
-                            propList:['min','max'],
-                            unit:'元',
-                            numConfig:{
-                                precision:2,
-                                step:0.1,
-                                min:0,
-                            }},{
-                            type: 'input',
-                            label: '物理仓：',
-                            prop: 'line_name',
-                            placeholder: '请输入',
-                            labelWidth:'120px',
+                            prop: 'productName',
+                            style:'width:300px',
+                            placeholder: '请输入商品名称',
                         }, {
                             type: 'btnGroup',
                             operate: [
@@ -133,69 +108,32 @@
                         }
                     ],
                 },
-
-                //所有记录
+                //商品列表
                 TableList: [
                     {
-                      type: 'selection',
-                      width: '55',
-                    },
-                    {
-                        prop: 'name',
-                        label: '产品名',
-                        // width: '180'
-                    },
-                    {
-                        prop: 'image',
-                        type: 'image',
-                        label: '产品图',
-                        width: '180'
-                    },
-                    {
-                        prop: 'brandName',
-                        label: '品牌',
-                        // width: '180'
-                    },
-                    {
-                        prop: 'sizeName1',
-                        label: '规格名',
-                        // width: '180'
-                    },
-                    {
-                        prop: 'name1',
-                        label: '规格值',
-                        // width: '180'
-                    },
-                    {
-                        prop: 'name2',
-                        label: '规格值',
-                        // width: '180'
-                    },
-                    {
-                        prop: 'cloudPrice',
-                        label: '运营价格',
-                        // width: '180'
-                    },
-                    {
-                        prop: 'price',
-                        label: '售价',
-                        // width: '180'
-                    },
-                    {
-                        prop: 'storage',
-                        label: '物理仓',
-                        // width: '180'
+                        label: '条形码',
+                        prop: 'barCode',
+                    },{
+                        label: '商品名称',
+                        prop: 'productName',
+                    },{
+                        label: '单价',
+                        prop: 'productPrice',
+                    },{
+                        label: '库存数量',
+                        prop: 'productQty',
                     },
                     {
                         prop: 'operation',
-                        label: '操作',
-                        type: 'operation',
+                        label:'操作',
                         isOperaText: 'isOperaText'
-                        // width: '150',
                     }
-                    ],
+                ],
                 TableData: [
-
+                    {
+                        productQty:12121212,
+                        isOperaText:['修改']
+                    }
                 ],
                 pageTotal: 1,
                 PageSize: 10,
@@ -206,13 +144,18 @@
                     title:'商品录入',
                     width:'500px',
                 },
-                addProductForm:{},
+                addProductForm:{
+                    barCode:'',
+                    productName:'',
+                    productPrice:'',
+                    productQty:''
+                },
                 addProductFormConfig: {
                     labelWidth:'120px',
                     formItemList: [
                         {
                             type: 'input',
-                            label: '条形码：',
+                            label: '条形码',
                             prop: 'barCode',
                             style:'width:246px',
                             placeholder: '请输入或通过扫码枪获取条形码',
@@ -222,7 +165,7 @@
                             ],
                         },{
                             type: 'input',
-                            label: '商品名称：',
+                            label: '商品名称',
                             prop: 'productName',
                             style:'width:300px',
                             placeholder: '请输入商品名称',
@@ -231,7 +174,7 @@
                             ],
                         },{
                             type: 'input',
-                            label: '单价：',
+                            label: '单价',
                             prop: 'productPrice',
                             style:'width:300px',
                             placeholder: '请输入单价',
@@ -240,7 +183,7 @@
                             ],
                         },{
                             type: 'input',
-                            label: '数量：',
+                            label: '库存数量',
                             prop: 'productQty',
                             style:'width:300px',
                             placeholder: '请输入数量',
@@ -270,6 +213,17 @@
             Dialog,
         },
         methods: {
+            /**
+             * 搜索
+             */
+            //查询
+            search() {
+                console.log('搜索数据', this.searchForm)
+            },
+            //重置
+            reset(refs) {
+                refs['searchForm'].resetFields();
+            },
             //商品录入
             addProductSubmit(refs){
                 refs['addProductForm'].validate((valid) => {
@@ -303,20 +257,6 @@
 
             },
 
-            /**
-             * 订单搜索
-             */
-            search(searchForm) {
-                console.log('搜索数据', this.searchForm)
-            },
-            /**
-             * 重置
-             */
-            reset () {
-                console.log('重置')
-                console.log(this.$refs)
-                this.$refs['search'].resetForm()
-            },
             /**
              * 分页数据
              * @param item
