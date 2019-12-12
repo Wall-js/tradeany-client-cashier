@@ -19,8 +19,8 @@
 </template>
 
 <script>
-  import Header from './components/Header/Header'
-  import SideMenu from './components/SideMenu/SideMenu'
+  import Header from './components/Header'
+  import SideMenu from './components/SideMenu'
   export default {
     components: { Header,SideMenu},
     name: 'tradeany-client-cashier',
@@ -49,7 +49,7 @@
                 routers: [
                   {
                     labelName: '在售产品',
-                    index: "/SellingGoods"
+                    index: "/selling-goods"
                   },
                   {
                     labelName: '云仓产品',
@@ -69,7 +69,7 @@
             type: 'menuItem',
             title: '销售统计',
             icon:'el-icon-s-data',
-            index: "/LandingPage"
+            index: "/sanding-page"
           },
           {
             type: 'menuItem',

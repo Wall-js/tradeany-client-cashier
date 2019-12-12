@@ -19,13 +19,13 @@ export default new Router({
     },
     //商品管理
     {
-      path: '/sellingGoods',
+      path: '/selling-goods',
       name: 'selling-goods',
       component: require('@/pages/product_management').default
     },
     //销售统计
     {
-      path: '/sandingPage',
+      path: '/sanding-page',
       name: 'landing-page',
       component: require('@/components/LandingPage').default
     },
@@ -41,3 +41,5 @@ export default new Router({
     }
   ]
 })
+
+
