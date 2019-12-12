@@ -26,9 +26,9 @@ export default new Router({
     },
     //销售统计
     {
-      path: '/sanding-page',
-      name: 'landing-page',
-      component: require('@/components/LandingPage').default
+      path: '/sales-statistics',
+      name: 'sales-statistics',
+      component: require('@/pages/sales_statistics').default
     },
     //库存管理
     {

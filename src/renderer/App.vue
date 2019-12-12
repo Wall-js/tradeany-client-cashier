@@ -53,7 +53,7 @@
             type: 'menuItem',
             title: '销售统计',
             icon:'el-icon-s-data',
-            index: "/sanding-page"
+            index: "/sales-statistics"
           },
           {
             type: 'menuItem',
