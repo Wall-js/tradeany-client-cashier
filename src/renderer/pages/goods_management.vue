@@ -1,23 +1,23 @@
 <!--page name:'商品管理'-->
 <template>
-    <div class="container">
-        <el-card class="searchForm">
+    <div>
+        <el-card>
             <Form :value="searchForm"
-                    :formConfig="searchFormConfig"
-                    refName="searchForm"
+                   :formConfig="searchFormConfig"
+                   refName="searchForm"
             >
                 <div slot="codeInput" class="float-right m-l-sm">
                     <el-button  icon="el-icon-full-screen" size="small" ></el-button>
                 </div>
             </Form>
         </el-card>
-        <el-card class="mainBox">
+        <el-card>
             <el-row>
                 <el-col>
                     <el-button type="primary" size="small" @click="()=>{this.show=true}">商品录入</el-button>
                 </el-col>
             </el-row>
-            <el-row style="padding-top: 14px">
+            <el-row>
                 <el-col>
                     <package-table
                             :tableList="tableList"
@@ -310,24 +310,5 @@
 </script>
 
 <style scoped>
-    .container {
-        margin: 0 auto;
-    }
-
-    .mainBox {
-        margin: 10px 0 30px !important;
-        min-height: 100vh;
-    }
-
-    .searchForm {
-        margin-top: 10px;
-    }
-
-    .mainBox-btn {
-        margin-bottom: 8px;
-        margin-top: 5px;
-        float: right;
-    }
-
 </style>
 

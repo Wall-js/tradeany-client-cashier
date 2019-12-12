@@ -82,16 +82,6 @@ const actions = {
             }
         })
     },
-    deleteAllGoods(ctx, payload) {
-        db.goods.remove({}, {multi: true}, (err, newDocs) => {
-            ctx.dispatch("getGoods");
-            if (payload) {
-                if (payload.callback) {
-                    payload.callback(err)
-                }
-            }
-        })
-    },
     updateGoods(ctx, payload) {
         db.goods.update({_id: payload._id}, payload.data, {}, (err, newDocs) => {
             ctx.dispatch("getGoods");
