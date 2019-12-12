@@ -39,7 +39,7 @@
                 <el-tab-pane label="购物区" name="first">
                   <Table
                           :tableList="shopTableList"
-                          :tableData="shopTableData"
+                          :tableData="$store.state.Cashier.order.subOrder"
                           @changeOpera="changeOpera"
                   >
                     <el-table-column slot="stock" label="数量">
@@ -215,8 +215,9 @@
             "barCode":this.barCode
         };
         this.$store.dispatch("Cashier/createSubOrder",payload);
-         let subOrder=this.$store.state.Cashier.order.subOrder;
-         this.shopTableData=subOrder;
+         // let subOrder=this.$store.state.Cashier.order.subOrder;
+         // console.log(11,subOrder)
+         // this.shopTableData=subOrder;
          subOrder.forEach((item,index)=>{
            item['No'] = index+1;
           item['isOperaText']=['删除'];
