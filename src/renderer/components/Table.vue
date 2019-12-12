@@ -51,6 +51,7 @@ isOperaText: 'isOperaText'
             :header-cell-style="{color:'#333333',fontWeight: 'normal',textAlign:'center',background: '#f3f3f3',borderColor:'#d7d7d6'}"
             :cell-style="cellStyle?cellStyle:{textAlign:'center'}"
             @selection-change="selectChange"
+            @current-change="handleCurrentChange"
             :show-header="showHeader"
             :border="border"
             :max-height="maxHeight"
@@ -175,6 +176,9 @@ isOperaText: 'isOperaText'
             },
             radioChange(index,row){
                 this.$emit('radioChange',index,row)
+            },
+            handleCurrentChange(){
+                this.$emit('handleCurrentChange',index,row)
             }
         },
         props: {
