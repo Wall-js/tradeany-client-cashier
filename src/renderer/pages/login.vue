@@ -65,12 +65,15 @@
 </script>
 
 <style scoped>
+    .el-main{
+        padding: 0 !important;
+    }
     .pageHeight{
-        /*height: 100%;*/
+        height: 100%;
     }
     .container{
         width: 100%;
-        height: 97vh;
+        height: 100vh;
     }
     .pageLeft{
         width:60%;

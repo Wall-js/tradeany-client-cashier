@@ -301,123 +301,126 @@ min:0,
                 v-if="item.type==='slot'"
                 :name="item.slotName"
         ></slot>
-        <span v-if="item.type==='text'">{{item.text}}</span>
-        <el-input
-                v-if="item.type==='input'"
-                v-model="value[item.prop]"
-                :disabled="item.disabled"
-                :type="item.inputType"
-                :rows="item.rows"
-                :clearable="true"
-                :placeholder="item.placeholder"
-                :style="item.style"
-        ></el-input>
-        <el-input-number
-          v-else-if="item.type === 'numberInput'"
-          size="mini"
-          v-model="value[item.prop]"
-          :precision="item.precision"
-          :step="item.step"
-          :min="item.min"
-          :max="item.max"
-          :style="item.style"
-        ></el-input-number>
-        <div v-else-if="item.type==='rangeInput'">
+        <div class="flex-row">
+          <span v-if="item.type==='text'">{{item.text}}</span>
+          <el-input
+                  v-if="item.type==='input'"
+                  v-model="value[item.prop]"
+                  :disabled="item.disabled"
+                  :type="item.inputType"
+                  :rows="item.rows"
+                  :clearable="true"
+                  :placeholder="item.placeholder"
+                  :style="item.style"
+          ></el-input>
           <el-input-number
-            size="mini"
-            v-model="value[item.propList[0]]"
-            :precision="item.numConfig.precision"
-            :step="item.numConfig.step"
-            :min="item.numConfig.min"
-            :max="item.numConfig.max"
-            :style="item.style"
+                  v-else-if="item.type === 'numberInput'"
+                  size="mini"
+                  v-model="value[item.prop]"
+                  :precision="item.precision"
+                  :step="item.step"
+                  :min="item.min"
+                  :max="item.max"
+                  :style="item.style"
           ></el-input-number>
-          -
-          <el-input-number
-            size="mini"
-            v-model="value[item.propList[1]]"
-            :precision="item.numConfig.precision"
-            :step="item.numConfig.step"
-            :min="item.numConfig.min"
-            :max="item.numConfig.max"
-            :style="item.style"
-          ></el-input-number>
-          {{item.unit}}
-        </div>
-        <el-select
-                :clearable="true"
-                v-else-if="item.type==='select'"
-                v-model="value[item.prop]"
-                :disabled="item.disabled"
-                :placeholder="item.placeholder"
-        >
-          <el-option
-                  v-for="(optItem,index) in item.optList"
-                  :key="index"
-                  :label="optItem.label"
-                  :value="optItem.value"
-          ></el-option>
-        </el-select>
-        <div  v-else-if="item.type==='checkbox'" :class="item.colStyle">
-          <el-checkbox
-                  v-for="(boxItem,index) in item.optList"
-                  v-model="value[boxItem.label]"
-                  :key="index"
-                  :disabled="boxItem.disabled"
+          <div v-else-if="item.type==='rangeInput'">
+            <el-input-number
+                    size="mini"
+                    v-model="value[item.propList[0]]"
+                    :precision="item.numConfig.precision"
+                    :step="item.numConfig.step"
+                    :min="item.numConfig.min"
+                    :max="item.numConfig.max"
+                    :style="item.style"
+            ></el-input-number>
+            -
+            <el-input-number
+                    size="mini"
+                    v-model="value[item.propList[1]]"
+                    :precision="item.numConfig.precision"
+                    :step="item.numConfig.step"
+                    :min="item.numConfig.min"
+                    :max="item.numConfig.max"
+                    :style="item.style"
+            ></el-input-number>
+            {{item.unit}}
+          </div>
+          <el-select
+                  :clearable="true"
+                  v-else-if="item.type==='select'"
+                  v-model="value[item.prop]"
+                  :disabled="item.disabled"
+                  :placeholder="item.placeholder"
           >
-            {{boxItem.name}}
-            <el-button :type="boxItem.type" @click="boxItem.checkBoxClick(index)" v-show="boxItem.checkBoxBtn" :style="boxItem.style">{{boxItem.btnName}}</el-button>
-          </el-checkbox>
-        </div>
-        <el-radio-group
-
-                v-model="value[item.prop]"
-                v-else-if="item.type==='radio'">
-          <div :class="item.colStyle?'radioStyle':''">
-            <el-radio
+            <el-option
                     v-for="(optItem,index) in item.optList"
                     :key="index"
                     :label="optItem.label"
-                   >
-              {{optItem.value}}
-            </el-radio>
+                    :value="optItem.value"
+            ></el-option>
+          </el-select>
+          <div  v-else-if="item.type==='checkbox'" :class="item.colStyle">
+            <el-checkbox
+                    v-for="(boxItem,index) in item.optList"
+                    v-model="value[boxItem.label]"
+                    :key="index"
+                    :disabled="boxItem.disabled"
+            >
+              {{boxItem.name}}
+              <el-button :type="boxItem.type" @click="boxItem.checkBoxClick(index)" v-show="boxItem.checkBoxBtn" :style="boxItem.style">{{boxItem.btnName}}</el-button>
+            </el-checkbox>
+          </div>
+          <el-radio-group
+
+                  v-model="value[item.prop]"
+                  v-else-if="item.type==='radio'">
+            <div :class="item.colStyle?'radioStyle':''">
+              <el-radio
+                      v-for="(optItem,index) in item.optList"
+                      :key="index"
+                      :label="optItem.label"
+              >
+                {{optItem.value}}
+              </el-radio>
+            </div>
+          </el-radio-group>
+          <el-cascader
+                  v-else-if="item.type==='cascader'"
+                  :placeholder="item.placeholder"
+                  :options="item.optList"
+                  :props="item.props"
+                  @change="cascaderChange"
+                  clearable
+                  filterable
+          ></el-cascader>
+          <div
+                  v-else-if="item.type==='btnGroup'"
+                  :style="item.model === 'right' ? 'text-align: right;padding-right:15px' : ''">
+            <el-button
+                    v-for="(operateItem, index) in item.operate"
+                    :key="index"
+                    size="mini"
+                    :style="operateItem.style"
+                    :type="operateItem.type"
+                    :icon="operateItem.icon"
+                    @click="operateItem.handleClick($refs)"
+            >{{operateItem.name}}
+            </el-button>
+          </div>
+          <el-date-picker
+                  v-else-if="item.type==='date'"
+                  v-model="value[item.prop]"
+                  :range-separator="item.middleWord"
+                  :start-placeholder="item.startPlaceholder"
+                  :end-placeholder="item.endPlaceholder"
+                  :type="item.dataType"
+                  :disabled="item.disabled"
+                  :clearable="true"
+                  :placeholder="item.placeholder"
+                  :style="item.style"
+          ></el-date-picker>
+          <slot :name="item.slotBottom"></slot>
         </div>
-      </el-radio-group>
-        <el-cascader
-                v-else-if="item.type==='cascader'"
-                :placeholder="item.placeholder"
-                :options="item.optList"
-                :props="item.props"
-                @change="cascaderChange"
-                clearable
-                filterable
-        ></el-cascader>
-      <div
-        v-else-if="item.type==='btnGroup'"
-        :style="item.model === 'right' ? 'text-align: right;padding-right:15px' : ''">
-        <el-button
-          v-for="(operateItem, index) in item.operate"
-          :key="index"
-          size="mini"
-          :style="operateItem.style"
-          :type="operateItem.type"
-          :icon="operateItem.icon"
-          @click="operateItem.handleClick($refs)"
-        >{{operateItem.name}}
-        </el-button>
-      </div>
-      <el-date-picker
-        v-else-if="item.type==='date'"
-        v-model="value[item.prop]"
-        :range-separator="item.middleWord"
-        :start-placeholder="item.startPlaceholder"
-        :end-placeholder="item.endPlaceholder"
-        :type="item.dataType"
-        :disabled="item.disabled"
-        :clearable="true"
-        :placeholder="item.placeholder"
-        :style="item.style"
-      ></el-date-picker>
       <div style="color:#999;font-size: 12px" :class="item.messageInline?'messageInline':''" v-html="item.message"></div>
     </el-form-item>
     </template>

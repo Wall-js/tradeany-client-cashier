@@ -1,12 +1,18 @@
+<!--page name:'商品管理'-->
 <template>
     <div class="container">
         <el-card class="searchForm">
-            <Search :value="searchForm"
+            <Form :value="searchForm"
                     :formConfig="searchFormConfig"
                     refName="searchForm"
-            ></Search>
+            ></Form>
         </el-card>
         <el-card class="mainBox">
+            <el-row>
+                <el-col>
+                    <el-button type="primary" size="small" @click="()=>{this.show=true}">商品录入</el-button>
+                </el-col>
+            </el-row>
             <el-row style="padding-top: 14px">
                 <el-col>
                     <package-table
@@ -23,13 +29,34 @@
                 </el-col>
             </el-row>
         </el-card>
+        <!--商品录入弹窗-->
+        <Dialog
+            :show.sync="show"
+            :dialogConfig="dialogConfig"
+            @handleClose="closeDialog"
+        >
+            <el-row slot="content">
+                <el-col>
+                    <Form
+                            :value="addProductForm"
+                            :formConfig="addProductFormConfig"
+                            refName="addProductForm"
+                            ref="dialogForm"
+                    >
+                        <div slot="codeInput" class="float-right m-l-sm">
+                            <el-button  icon="el-icon-full-screen" size="small"></el-button>
+                        </div>
+                    </Form>
+                </el-col>
+            </el-row>
+        </Dialog>
     </div>
 </template>
 
 <script>
 
     import PageBreak from '../components/Pagination'
-    import Search from '../components/Form'
+    import Form from '../components/Form'
     import PackageTable from '../components/Table'
     import Dialog from '../components/Dialog';
 
@@ -173,15 +200,98 @@
                 pageTotal: 1,
                 PageSize: 10,
                 currentPage:'1',
+                //商品录入
+                show:false,
+                dialogConfig:{
+                    title:'商品录入',
+                    width:'500px',
+                },
+                addProductForm:{},
+                addProductFormConfig: {
+                    labelWidth:'120px',
+                    formItemList: [
+                        {
+                            type: 'input',
+                            label: '条形码：',
+                            prop: 'barCode',
+                            style:'width:246px',
+                            placeholder: '请输入或通过扫码枪获取条形码',
+                            slotBottom:'codeInput',
+                            rules:[
+                                {required: true, message: '请输入或通过扫码枪获取条形码', trigger: 'blur'}
+                            ],
+                        },{
+                            type: 'input',
+                            label: '商品名称：',
+                            prop: 'productName',
+                            style:'width:300px',
+                            placeholder: '请输入商品名称',
+                            rules:[
+                                {required: true, message: '请输入商品名称', trigger: 'blur'}
+                            ],
+                        },{
+                            type: 'input',
+                            label: '单价：',
+                            prop: 'productPrice',
+                            style:'width:300px',
+                            placeholder: '请输入单价',
+                            rules:[
+                                {required: true, message: '请输入单价', trigger: 'blur'}
+                            ],
+                        },{
+                            type: 'input',
+                            label: '数量：',
+                            prop: 'productQty',
+                            style:'width:300px',
+                            placeholder: '请输入数量',
+                        }, {
+                            type: 'btnGroup',
+                            operate: [
+                                {
+                                    name: '确认',
+                                    type: 'primary',
+                                    handleClick: this.addProductSubmit
+                                },
+                                {
+                                    name: '取消',
+                                    handleClick: this.closeDialog,
+                                    style: 'margin-left:10px'
+                                }
+                            ]
+                        }
+                    ],
+                },
             }
         },
         components: {
             PageBreak,
-            Search,
+            Form,
             PackageTable,
             Dialog,
         },
         methods: {
+            //商品录入
+            addProductSubmit(refs){
+                refs['addProductForm'].validate((valid) => {
+                    if (valid) {
+                       console.log(this.addProductForm)
+                    } else {
+                        console.log('error submit!!');
+                        return false;
+                    }
+                });
+
+
+            },
+            //关闭弹窗
+            closeDialog(refs){
+                if(refs){
+                    this.show=false
+                    refs['addProductForm'].resetFields();
+                }else {
+                    this.$refs['dialogForm']['$refs']['addProductForm'].resetFields();
+                }
+            },
             changeOpera (item, action, type) {
                 if (action === '下架') {
                     this.show = true
@@ -196,7 +306,7 @@
             /**
              * 订单搜索
              */
-            search (searchForm) {
+            search(searchForm) {
                 console.log('搜索数据', this.searchForm)
             },
             /**

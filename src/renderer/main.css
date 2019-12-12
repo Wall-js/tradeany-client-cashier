@@ -99,3 +99,6 @@ body,html{
     font-size: 12px;
     color: #999999;
 }
+.float-right{
+    float: right;
+}

@@ -6,14 +6,15 @@ Vue.use(Router)
 export default new Router({
   routes: [
     //登陆
-    {
-      path: '/',
-      name: 'login',
-      component: require('@/pages/login').default
-    },
+    // {
+    //   path: '/',
+    //   name: 'login',
+    //   component: require('@/pages/login').default
+    // },
     //收银台
     {
-      path: '/home',
+      // path: '/home',
+      path: '/',
       name: 'cash-register',
       component: require('@/pages/cash_register').default
     },

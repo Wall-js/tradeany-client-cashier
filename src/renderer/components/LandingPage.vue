@@ -65,10 +65,10 @@
                     , fruits: ['apple', 'orange', 'pear']
                     , infos: {name: 'nedb'}
                 };
-                // this.$db.user.insert(doc, (err, newDocs) => {
-                //     console.log(newDocs);
-                // })
-                itemCat.save(doc)
+                this.$db.user.insert(doc, (err, newDocs) => {
+                    console.log(newDocs);
+                })
+                // itemCat.save(doc)
             },
             testDel() {
                 // this.$db.user.remove({}, {multi: true}, (err, newDocs) => {
