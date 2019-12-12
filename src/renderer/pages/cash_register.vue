@@ -28,7 +28,7 @@
           <el-row>
             <el-col class="flex-row just-around">
               <el-button type="primary" size="small">会员</el-button>
-              <el-button type="primary" size="small">挂单</el-button>
+              <el-button type="primary" size="small" @click="setCacheOrder">挂单</el-button>
               <el-button type="primary" size="small">清空</el-button>
             </el-col>
           </el-row>
@@ -67,8 +67,9 @@
                   <Table
                           :tableList="ordersTableList"
                           :tableData="ordersTableData"
-                          @changeOpera="changeOpera"
-                  ></Table>
+                          @changeOpera="changeCacheOrder"
+                  >
+                  </Table>
                 </el-tab-pane>
               </el-tabs>
             </el-col>
@@ -81,7 +82,7 @@
             <el-col class="flex-row">
               <el-input placeholder="请输入商品条码或用扫码枪扫码" v-model="barCode">
                 <template slot="prepend"><el-button  icon="el-icon-full-screen" size="small"></el-button></template>
-                <template slot="append"><el-button  type="primary" icon="el-icon-search" size="small"></el-button></template>
+                <template slot="append"><el-button  type="primary" icon="el-icon-search" size="small" @click="createSubOrder"></el-button></template>
               </el-input>
             </el-col>
           </el-row>
@@ -135,6 +136,10 @@
         ],
         activeName:'first',
         shopTableList:[
+            {
+                prop:'No',
+                label:'序号'
+            },
           {
             prop:'name',
             label:'名称'
@@ -155,6 +160,7 @@
         ],
         shopTableData:[
           {
+            No:'1',
             name:'22',
             goods_price:'33',
             stock:'1',
@@ -162,14 +168,14 @@
           }
         ],
         ordersTableList:[
-          {
-            prop:'time',
-            label:'类型'
-          }, {
-            prop:'time',
+           {
+            prop:'No',
+            label:'序号'
+            },{
+            prop:'name',
             label:'名称'
           }, {
-            prop:'time',
+            prop:'price',
             label:'总价'
           }, {
             type:'operation',
@@ -178,10 +184,18 @@
             isOperaText: 'isOperaText'
           }
         ],
-        ordersTableData:[],
+        ordersTableData:[
+            {
+                type:'22',
+                name:'33',
+                price:'1',
+                isOperaText:['提单','删除']
+            }
+        ],
         rightActiveName:'first',
         membershipCode:'',
-        barCode:''
+        barCode:'',
+
       }
     },
     methods: {
@@ -195,49 +209,45 @@
       handleClick(){},
       rightHandleClick(){
       },
-      // 加入购物车
-      createItem() {
-        let barCode={"barCode":this.barCode};
-        this.$store.dispatch("getCatItem",barCode);
+        // 添加商品
+       createSubOrder() {
+        let payload={
+            "barCode":this.barCode
+        };
+        this.$store.dispatch("Cashier/createSubOrder",payload);
          let subOrder=this.$store.state.Cashier.order.subOrder;
-         console.log(subOrder)
          this.shopTableData=subOrder;
-         this.membershipArray=[
-          {
-            label:'名称：',
-            value:consumer.name,
-            span:12
-
-          },
-          {
-            label:'编号：',
-            value:'2222',
-            span:12
-
-          }, {
-            label:'等级：',
-            value:'444',
-            span:12
-          }, {
-            label:'积分：',
-            value:'444',
-            span:12
-          },
-        ];
-         subOrder.forEach(item =>{
+         subOrder.forEach((item,index)=>{
+           item['No'] = index+1;
           item['isOperaText']=['删除'];
         });
       },
-      changeOpera(tem,action,type){
+        // 商品删除
+      changeOpera(item,action,type){
         if(action==='删除'){
-          console.log("删除")
-          let id={"id":tem.id}
-          this.$store.dispatch("delCatItem",id);
+            let payload={
+                "_id":item.No
+            };
+          this.$store.dispatch("Cashier/deleteSubOrder",payload);
         }
       },
+        // 编辑商品数量
       handleChange(value){
         console.log(value)
-      }
+      },
+        // 挂单
+      setCacheOrder(){
+          this.$store.dispatch("setCacheOrder");
+      },
+        // 挂单操作
+      changeCacheOrder(item,action,type){
+          if(action==='提单'){
+              this.$store.dispatch("Cashier/getCacheOrder",item.No);
+          }else if(action==='删除'){
+              this.$store.dispatch("Cashier/deleteCacheOrder",item.No);
+          }
+        }
+
     },
     components: {
       Panel,
