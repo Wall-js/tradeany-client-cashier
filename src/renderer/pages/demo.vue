@@ -10,6 +10,7 @@
         <div>
             {{ $store.state.Item }}
         </div>
+        <button @click="setItemPagination">setItemPagination</button>
         <button @click="getItem">getItem</button>
         <button @click="createItem">createItem</button>
         <button @click="deleteItem">deleteItem</button>
@@ -23,6 +24,15 @@
     export default {
         name: 'demo',
         methods: {
+            setItemPagination() {
+                let payload = {
+                    current: 2,
+                    pageSize: 5,
+                };
+                this.$store.dispatch("setItemPagination",payload);
+                // console.log(this.$store.state.Counter.main)
+
+            },
             getItem() {
                 this.$store.dispatch("getItem");
                 // console.log(this.$store.state.Counter.main)

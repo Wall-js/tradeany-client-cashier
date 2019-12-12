@@ -39,8 +39,8 @@ const actions = {
     },
     getGoods(ctx, payload) {
         // db.goods.find({}, (err, docs) => {
-        let pageSize = state.pagination.pageSize;
-        let skip = (state.pagination.current - 1) * pageSize;
+        let pageSize = ctx.state.pagination.pageSize;
+        let skip = (ctx.state.pagination.current - 1) * pageSize;
         db.goods.find({}).skip(skip).limit(pageSize).exec((err, docs) => {
             ctx.dispatch("getGoodsTotal");
             ctx.commit("GET_GOODS", docs);
