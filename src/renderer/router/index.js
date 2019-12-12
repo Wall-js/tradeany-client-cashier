@@ -36,6 +36,11 @@ export default new Router({
       component: require('@/pages/category').default
     },
     {
+      path: '/printer',
+      name: 'printer',
+      component: require('@/components/Printer').default
+    },
+    {
       path: '*',
       redirect: '/'
     }
