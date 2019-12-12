@@ -281,11 +281,15 @@
              * @param item
              */
             async pageChange (item) {
-                let params = {
-                    pageSize:10,
-                    current:item
-                }
-                this.$store.dispatch('setGoodsPagination',params);
+                console.log("执行分")
+                let payload = {
+                    pagination: {
+                        current: item,
+                        pageSize: 10,
+                    },
+                };
+                this.getGoods(payload)
+                this.$store.dispatch("getGoods",payload);
             },
             /**
              * 下架按钮
@@ -294,8 +298,8 @@
                 this.show = false
             },
             //获取数据
-            async getGoods(){
-                this.$store.dispatch("getGoods");
+            getGoods(payload){
+                this.$store.dispatch("getGoods",payload);
                 const list = this.$store.state.Goods.list;
                 console.log(this.$store.state.Goods.list)
                 console.log(this.$store.state.Goods.pagination)

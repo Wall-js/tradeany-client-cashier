@@ -33,6 +33,7 @@ const mutations = {
 
 const actions = {
     getGoods(ctx, payload) {
+        console.log("121212",payload);
         ctx.commit('SET_GOODS_PAGINATION', payload);
         let pageSize = ctx.state.pagination.pageSize;
         let skip = (ctx.state.pagination.current - 1) * pageSize;
