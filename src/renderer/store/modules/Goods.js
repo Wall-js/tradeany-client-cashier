@@ -16,20 +16,19 @@ const mutations = {
 };
 
 const actions = {
-    getAllGoods({commit}) {
+    getAllGoods(ctx) {
         db.goods.find({}, (err, docs) => {
-            commit('GET_GOODS', docs)
+            ctx.commit('GET_GOODS', docs)
         });
     },
-    deleteAllItem({dispatch}) {
-        db.item.remove({}, {multi: true}, (err, newDocs) => {
-            dispatch("getItem")
+    deleteAllGoods(ctx) {
+        db.goods.remove({}, {multi: true}, (err, newDocs) => {
+            ctx.dispatch("getItem")
         })
     },
-    createItem({dispatch}) {
-        let doc = {name: "123"};
-        db.item.insert(doc, (err, newDocs) => {
-            dispatch("getItem")
+    createGoods(ctx, payload) {
+        db.goods.insert(payload, (err, newDocs) => {
+            ctx.dispatch("getItem")
         })
     },
 
