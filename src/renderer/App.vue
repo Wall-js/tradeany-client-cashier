@@ -61,6 +61,12 @@
             icon:'el-icon-notebook-2',
             index: "/category"
           },
+          {
+            type: 'menuItem',
+            title: '打印',
+            icon:'el-icon-notebook-2',
+            index: "/printer"
+          },
         ],
         userName:'admin',
         isShow:false
