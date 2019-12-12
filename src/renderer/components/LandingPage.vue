@@ -37,7 +37,6 @@
 
 <script>
     import SystemInformation from './LandingPage/SystemInformation'
-    import itemCat from '../service/itemCat'
 
     export default {
         name: 'landing-page',
