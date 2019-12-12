@@ -27,6 +27,8 @@ const mutations = {
     ClEAR_ORDER(state) {
         state.order = defaultState.order
     },
+
+    // 清空商品
     CLEAN_SUBORDER(state) {
         state.order.subOrder = []
     },
@@ -41,6 +43,7 @@ const mutations = {
         }
         state.cacheOrder.push(state.order);
     },
+
     // 删除商品
     DELETE_CASHIER_GOODS(state, payload) {
         const index = state.order.subOrder.findIndex((v) => (v._id === payload._id));
@@ -51,14 +54,17 @@ const mutations = {
         }
         state.cacheOrder.push(state.order);
     },
+
     // 挂单
     SET_CACHE_ORDER(state) {
         state.cacheOrder.push(state.order);
     },
+
     // 提单
     GET_CACHE_ORDER(state, payload) {
         state.order = state.cacheOrder.find((value, index) => index === payload);
     },
+
     // 挂单删除
     DELETE_CACHE_ORDER(state, payload) {
         state.cacheOrder = state.cacheOrder.filter((value, index) => index !== payload)
@@ -75,10 +81,12 @@ const actions = {
     clearOrder(ctx) {
         ctx.commit("ClEAR_ORDER")
     },
+
     // 清空商品
     cleanSubOrder(ctx, payload) {
         ctx.commit("CLEAN_SUBORDER")
     },
+
     // 修改商品数量
     UpdateGoodsQuantity(ctx, payload) {
         ctx.commit("UPDATE_GOODS_QUANTITY")
@@ -97,10 +105,12 @@ const actions = {
     setCacheOrder(ctx) {
         ctx.commit("SET_CACHE_ORDER")
     },
+
     // 提单
     getCacheOrder(ctx, payload) {
         ctx.commit("GET_CACHE_ORDER")
     },
+
     // 挂单删除
     deleteCacheOrder(ctx, payload) {
         ctx.commit("DELETE_CACHE_ORDER")
@@ -108,6 +118,7 @@ const actions = {
 };
 
 export default {
+    namespaced: true,
     state,
     mutations,
     actions
