@@ -8,6 +8,10 @@
         <!--<button @click="dec">-</button>-->
         <!--</div>-->
         <div>
+            <p>{{$store.state.Cashier.order.total}}</p>
+        </div>
+
+        <div>
             <ol>
                 <li v-for="v in $store.state.Item.list">
                     {{ v }}
