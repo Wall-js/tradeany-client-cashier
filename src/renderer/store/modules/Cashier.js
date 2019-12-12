@@ -121,6 +121,17 @@ const actions = {
     cleanSubOrder(ctx) {
         ctx.commit("CLEAN_SUBORDER")
     },
+    //创建订单
+    createOrder(ctx, payload) {
+        payload.createTime =new Date();
+        db.order.insert(payload, (err, newDocs) => {
+            if (payload) {
+                if (payload.callback) {
+                    payload.callback(err)
+                }
+            }
+        })
+    },
 
     // 添加商品
     createSubOrder(ctx, payload) {

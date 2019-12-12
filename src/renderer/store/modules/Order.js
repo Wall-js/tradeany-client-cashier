@@ -1,7 +1,23 @@
 import db from "../../datastore"
 
+const model = {
+    // OrderNo: undefined,
+    // PayNo: undefined,
+    // OrderStatus: undefined,
+    // OriginFee: undefined,
+    // Discount: undefined,
+    // PayFee: undefined,
+    // PayTime: undefined,
+    // VerDept: undefined,
+    // UserUid: undefined,
+    // UserName: undefined,
+    // UserMobile: undefined,
+    // IdNumber: undefined,
+    // UserMem: undefined,
+};
 const state = {
     list: [],
+    totalprice:0,
     pagination: {
         current: 1,
         pageSize: 10,
@@ -24,6 +40,19 @@ const actions = {
         let skip = (state.pagination.current - 1) * pageSize;
         db.order.find({}).skip(skip).limit(pageSize).exec((err, docs) => {
             ctx.dispatch('getOrderTotal');
+            ctx.commit('GET_ORDER', docs);
+            if (payload) {
+                if (payload.callback) {
+                    payload.callback(err)
+                }
+            }
+        });
+    },
+    //商品过滤
+    filterOrder(ctx, payload){
+        let pageSize = ctx.state.pagination.pageSize;
+        let skip = (ctx.state.pagination.current - 1) * pageSize;
+        db.order.find({ 'createTime': payload.form.createTime}).skip(skip).limit(pageSize).exec((err, docs) => {
             ctx.commit('GET_ORDER', docs);
             if (payload) {
                 if (payload.callback) {
@@ -63,6 +92,7 @@ const actions = {
         })
     },
     createOrder(ctx, payload) {
+        payload.createTime =new Date();
         db.order.insert(payload, (err, newDocs) => {
             ctx.dispatch("getOrder");
             if (payload) {
@@ -70,7 +100,6 @@ const actions = {
                     payload.callback(err)
                 }
             }
-
         })
     },
     getOrderTotal(ctx, payload) {
@@ -83,7 +112,6 @@ const actions = {
             }
         });
     },
-
 };
 
 export default {
