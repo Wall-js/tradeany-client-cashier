@@ -5,23 +5,23 @@ Vue.use(Router)
 
 export default new Router({
   routes: [
-      //登陆
+    //登陆
     {
       path: '/',
       name: 'login',
-      component: require('@/pages/Login').default
+      component: require('@/pages/login').default
     },
     //收银台
     {
       path: '/home',
       name: 'cash-register',
-      component: require('@/pages/CashRegister').default
+      component: require('@/pages/cash_register').default
     },
     //商品管理
     {
       path: '/goods-management',
       name: 'goods-management',
-      component: require('@/pages/GoodsManagement').default
+      component: require('@/pages/goods_management').default
     },
     //销售统计
     {
@@ -33,19 +33,19 @@ export default new Router({
     {
       path: '/stock-management',
       name: '/stock-management',
-      component: require('@/pages/StockManagement').default
+      component: require('@/pages/stock_management').default
     },
-      //类目管理
+    //类目管理
     {
       path: '/category',
       name: 'category',
       component: require('@/pages/category').default
     },
-      {
-          path: '/demo',
-          name: 'demo',
-          component: require('@/pages/demo').default
-      },
+    {
+      path: '/demo',
+      name: 'demo',
+      component: require('@/pages/demo').default
+    },
     {
       path: '/printer',
       name: 'printer',
