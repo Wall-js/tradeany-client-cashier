@@ -211,10 +211,7 @@
       },
         // 添加商品
        createSubOrder() {
-        let payload={
-            "barCode":this.barCode
-        };
-        this.$store.dispatch("Cashier/createSubOrder",payload);
+        this.$store.dispatch("Cashier/createSubOrder",{"barCode":this.barCode});
          // let subOrder=this.$store.state.Cashier.order.subOrder;
          // console.log(11,subOrder)
          // this.shopTableData=subOrder;
