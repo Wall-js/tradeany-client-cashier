@@ -142,11 +142,6 @@
 <!--</template>-->
 
 <!--<script>-->
-    <!--import Dialogform from '~/components/Dialogform'-->
-    <!--import operat from "~/store/modules/operat";-->
-    <!--import utils from "~/utils/utils";-->
-    <!--import { corecloudItemCat } from '~/url_config'-->
-
     <!--export default {-->
         <!--layout: 'home',-->
         <!--name: "category",-->
@@ -330,7 +325,19 @@
             <!--},-->
 
             <!--submitRechargeForm(){},-->
-
+            <!--/**-->
+             <!--* 取消冒泡-->
+             <!--*/-->
+            <!--stopPro() {-->
+                <!--let e = window.event;-->
+                <!--if (e && e.stopPropagation) {-->
+                    <!--//W3C取消冒泡事件-->
+                    <!--e.stopPropagation();-->
+                <!--} else {-->
+                    <!--//IE取消冒泡事件-->
+                    <!--window.event.cancelBubble = true;-->
+                <!--}-->
+            <!--},-->
             <!--/**-->
              <!--* 新增一级类目-->
              <!--*/-->
@@ -342,7 +349,7 @@
              <!--* 编辑一级类目-->
              <!--* */-->
             <!--editStairCategory(){-->
-                <!--utils.stopPro();-->
+                <!--this.stopPro();-->
                 <!--this.show = true;-->
                 <!--this.dialogConfig['title'] =this.$t('editCategory')-->
             <!--},-->
@@ -360,18 +367,7 @@
                     <!--if (valid) {-->
                         <!--console.log(JSON.stringify(this.stairForm));-->
                         <!--if(title === '新增产品类目'||title === 'Add a category'){-->
-                            <!--this.$axios.post(corecloudItemCat,JSON.stringify(this.stairForm)).then((res)=>{-->
-                                <!--if(res.data.code === 200){-->
-                                    <!--this.$message({-->
-                                        <!--message: '新建成功',-->
-                                        <!--type: 'success'-->
-                                    <!--});-->
-                                    <!--this.show =false-->
-                                    <!--location.reload()-->
-                                <!--}else{-->
-                                    <!--this.$message.error('新建异常');-->
-                                <!--}-->
-                            <!--})-->
+
                         <!--}else if(title === '修改产品类目'){-->
 
                         <!--}-->
@@ -403,7 +399,7 @@
              <!--* 编辑二级类目-->
              <!--* */-->
             <!--editTwoCategory(){-->
-                <!--utils.stopPro();-->
+                <!--this.stopPro();-->
                 <!--this.showTwo = true;-->
                 <!--this.dialogConfig['title'] =this.$t('editCategory')-->
             <!--},-->
@@ -420,18 +416,7 @@
                     <!--if (valid) {-->
                         <!--console.log(JSON.stringify(this.twoForm));-->
                         <!--if(title === '新增产品类目'){-->
-                            <!--this.$axios.post(corecloudItemCat,JSON.stringify(this.twoForm)).then((res)=>{-->
-                                <!--if(res.data.code === 200){-->
-                                    <!--this.$message({-->
-                                        <!--message: '新建成功',-->
-                                        <!--type: 'success'-->
-                                    <!--});-->
-                                    <!--this.showTwo =false;-->
-                                    <!--this.GetItemCatList()-->
-                                <!--}else{-->
-                                    <!--this.$message.error('新建异常');-->
-                                <!--}-->
-                            <!--})-->
+
                         <!--}else if(title === '修改产品类目'){-->
 
                         <!--}-->
@@ -478,18 +463,7 @@
                     <!--if (valid) {-->
                         <!--console.log(JSON.stringify(this.threeForm));-->
                         <!--if(title === '新增产品类目'){-->
-                            <!--this.$axios.post(corecloudItemCat,JSON.stringify(this.threeForm)).then((res)=>{-->
-                                <!--if(res.data.code === 200){-->
-                                    <!--this.$message({-->
-                                        <!--message: '新建成功',-->
-                                        <!--type: 'success'-->
-                                    <!--});-->
-                                    <!--this.showThree =false-->
-                                    <!--this.GetItemCatList()-->
-                                <!--}else{-->
-                                    <!--this.$message.error('新建异常');-->
-                                <!--}-->
-                            <!--})-->
+
                         <!--}else if(title === '修改产品类目'){-->
 
                         <!--}-->
@@ -509,25 +483,13 @@
              <!--* 删除类目-->
              <!--* */-->
             <!--delCategory(id) {-->
-                <!--utils.stopPro();-->
+                <!--this.stopPro();-->
                 <!--this.$confirm('确定要删除该类目?', '提示', {-->
                     <!--confirmButtonText: '确定',-->
                     <!--cancelButtonText: '取消',-->
                     <!--type: 'warning'-->
                 <!--}).then(() => {-->
-                    <!--this.$axios.delete(`${corecloudItemCat}/${id}`).then((res)=>{-->
-                        <!--if(res.data.code === 200){-->
-                            <!--this.$message.success('删除成功')-->
-                            <!--location.reload()-->
-                        <!--}-->
-                    <!--}).catch((Error)=>{-->
-                        <!--console.log(Error.response)-->
-                        <!--if(Error.response.data.code === 40003){-->
-                            <!--this.$alert('该类目已被占用，不可删除', '提示', {-->
-                                <!--confirmButtonText: '确定',-->
-                            <!--});-->
-                        <!--}-->
-                    <!--})-->
+
                 <!--}).catch(() => {-->
                 <!--});-->
             <!--},-->
@@ -536,69 +498,16 @@
              <!--*/-->
             <!--GetItemCatList(){-->
 
-                <!--this.$axios.get(corecloudItemCat)-->
-                    <!--.then(res => {-->
-                        <!--console.log("类目信息",res.data.data)-->
-                        <!--let data = res.data.data-->
-                        <!--// 获取一级类目-->
-                        <!--let stairData  = utils.DelTwoLevel(utils.ModifyCategory(data));-->
-                        <!--this.showTwoFormConfig["formItemList"][0]["optList"] = stairData;-->
-                        <!--// 获取二级类目-->
-                        <!--let twoData  = utils.DelThreeLevel(utils.ModifyCategory(data));-->
-                        <!--let twoDataList = [];-->
-                        <!--twoData.forEach((item)=>{-->
-                            <!--let children = item['children']-->
-                            <!--if(children){-->
-                                <!--children.forEach((item2)=>{-->
-                                    <!--twoDataList.push(item2)-->
-                                <!--})-->
-                            <!--}-->
-                        <!--})-->
-                        <!--console.log("最终数据",twoDataList)-->
-                        <!--this.showThreeFormConfig["formItemList"][0]["optList"] = twoDataList;-->
-                        <!--/****获取每级列表****/-->
-                        <!--// 一级-->
-                        <!--this.stairTableData = data;-->
-                        <!--let twoList = [];-->
-                        <!--let threeList = [];-->
-                        <!--data.forEach((item)=>{-->
-                            <!--let children = item.children-->
-                            <!--if(children){-->
-                                <!--children.forEach((item2)=>{-->
-                                    <!--twoList.push(item2)-->
-                                    <!--console.log("as",twoList)-->
-                                    <!--let children2 = item2.children;-->
-                                    <!--if(children2){-->
-                                        <!--children2.forEach((item3)=>{-->
-                                            <!--threeList.push(item3)-->
-                                        <!--})-->
-                                    <!--}-->
-                                <!--})-->
-                            <!--}-->
-                        <!--})-->
-                        <!--// this.twoTableData = twoList;-->
-                        <!--// this.threeTableData = threeList;-->
-                    <!--});-->
+
             <!--},-->
             <!--/**-->
              <!--*  用id获取类目通用函数-->
              <!--*/-->
             <!--getItemCat(id,requestType){-->
-                <!--console.log(`${corecloudItemCat}/${id}`)-->
-                <!--this.$axios.get(`${corecloudItemCat}/${id}`).then((res)=>{-->
-                    <!--console.log("类目信息",res.data.data[0].children)-->
-                    <!--let data  = res.data.data[0].children;-->
-                    <!--console.log("最终数据",data)-->
-                    <!--if(requestType === 'two'){-->
-                        <!--this.twoTableData = data;-->
-                    <!--}else if(requestType === 'three'){-->
-                        <!--this.threeTableData = data;-->
-                    <!--}-->
 
-                <!--})-->
             <!--},-->
             <!--handleClick(){-->
-                <!--console.log(111)-->
+
             <!--}-->
         <!--},-->
         <!--created() {-->
