@@ -11,6 +11,12 @@ const state = {
 
 const mutations = {
     SET_GOODS(state, payload) {
+        if(payload){
+            payload.forEach((item,index)=>{
+                item['No'] = index+1;
+                item['isOperaText'] = [`修改`,`删除`]
+            })
+        }
         state.list = payload
     },
     SET_GOODS_TOTAL(state, payload) {
@@ -33,7 +39,6 @@ const mutations = {
 
 const actions = {
     getGoods(ctx, payload) {
-        console.log("121212",payload);
         ctx.commit('SET_GOODS_PAGINATION', payload);
         let pageSize = ctx.state.pagination.pageSize;
         let skip = (ctx.state.pagination.current - 1) * pageSize;
@@ -58,6 +63,16 @@ const actions = {
         });
     },
     deleteGoods(ctx, payload) {
+        let list = ctx.state.list;
+        let current = ctx.state.pagination.current;
+        if(list.length === 1 && current !==1){
+            let current = ctx.state.pagination.current - 1;
+            ctx.commit("SET_GOODS_PAGINATION", {
+                pagination: {
+                    current: current,
+                    pageSize: 10,
+                }});
+        }
         db.goods.remove({_id: payload._id}, (err, newDocs) => {
             ctx.dispatch("getGoods");
             if (payload) {
