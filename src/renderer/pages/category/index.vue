@@ -112,32 +112,32 @@
             <!--</el-col>-->
         <!--</el-row>-->
 <!--&lt;!&ndash;        一级分类&ndash;&gt;-->
-        <!--<Dialogform-->
-                <!--:show.sync="show"-->
-                <!--:dialogConfig="dialogConfig"-->
-                <!--:formConfig="dialogFormConfig"-->
-                <!--:value="stairForm"-->
-                <!--refName="stairForm"-->
-                <!--ref="dialogRef"-->
-        <!--&gt;</Dialogform>-->
+        <!--&lt;!&ndash;<Dialogform&ndash;&gt;-->
+                <!--&lt;!&ndash;:show.sync="show"&ndash;&gt;-->
+                <!--&lt;!&ndash;:dialogConfig="dialogConfig"&ndash;&gt;-->
+                <!--&lt;!&ndash;:formConfig="dialogFormConfig"&ndash;&gt;-->
+                <!--&lt;!&ndash;:value="stairForm"&ndash;&gt;-->
+                <!--&lt;!&ndash;refName="stairForm"&ndash;&gt;-->
+                <!--&lt;!&ndash;ref="dialogRef"&ndash;&gt;-->
+        <!--&lt;!&ndash;&gt;</Dialogform>&ndash;&gt;-->
         <!--&lt;!&ndash;        二级分类&ndash;&gt;-->
-        <!--<Dialogform-->
-                <!--:show.sync="showTwo"-->
-                <!--:dialogConfig="dialogConfig"-->
-                <!--:formConfig="showTwoFormConfig"-->
-                <!--:value="twoForm"-->
-                <!--refName="twoForm"-->
-                <!--ref="twoDialogRef"-->
-        <!--&gt;</Dialogform>-->
+        <!--&lt;!&ndash;<Dialogform&ndash;&gt;-->
+                <!--&lt;!&ndash;:show.sync="showTwo"&ndash;&gt;-->
+                <!--&lt;!&ndash;:dialogConfig="dialogConfig"&ndash;&gt;-->
+                <!--&lt;!&ndash;:formConfig="showTwoFormConfig"&ndash;&gt;-->
+                <!--&lt;!&ndash;:value="twoForm"&ndash;&gt;-->
+                <!--&lt;!&ndash;refName="twoForm"&ndash;&gt;-->
+                <!--&lt;!&ndash;ref="twoDialogRef"&ndash;&gt;-->
+        <!--&lt;!&ndash;&gt;</Dialogform>&ndash;&gt;-->
         <!--&lt;!&ndash;        三级分类&ndash;&gt;-->
-        <!--<Dialogform-->
-                <!--:show.sync="showThree"-->
-                <!--:dialogConfig="dialogConfig"-->
-                <!--:formConfig="showThreeFormConfig"-->
-                <!--:value="threeForm"-->
-                <!--refName="threeForm"-->
-                <!--ref="threeDialogRef"-->
-        <!--&gt;</Dialogform>-->
+        <!--&lt;!&ndash;<Dialogform&ndash;&gt;-->
+                <!--&lt;!&ndash;:show.sync="showThree"&ndash;&gt;-->
+                <!--&lt;!&ndash;:dialogConfig="dialogConfig"&ndash;&gt;-->
+                <!--&lt;!&ndash;:formConfig="showThreeFormConfig"&ndash;&gt;-->
+                <!--&lt;!&ndash;:value="threeForm"&ndash;&gt;-->
+                <!--&lt;!&ndash;refName="threeForm"&ndash;&gt;-->
+                <!--&lt;!&ndash;ref="threeDialogRef"&ndash;&gt;-->
+        <!--&lt;!&ndash;&gt;</Dialogform>&ndash;&gt;-->
     <!--</div>-->
 <!--</template>-->
 
@@ -317,7 +317,7 @@
             <!--}-->
         <!--},-->
         <!--components: {-->
-            <!--Dialogform-->
+            <!--// Dialogform-->
         <!--},-->
         <!--methods: {-->
             <!--search() {-->
@@ -536,3 +536,93 @@
         <!--min-height: 100vh;-->
     <!--}-->
 <!--</style>-->
+<template>
+    <div>
+        <el-table
+            :data="outeData"
+        >
+            <el-table-column align="left">
+                <template slot="header" slot-scope="scope">
+                    <div  class="flex-row just-between">
+                        <span>一级类目</span>
+                        <el-button size="mini" type="text" @click="add">新增</el-button>
+                    </div>
+                </template>
+                <template slot-scope="scope">
+                    <div @click="handleClick(scope.row)" class="flex-row just-between">
+                        <div class="flex-row flex-align">
+                            <el-image
+                                    class="img"
+                                    :src="scope.row.image"
+                            ></el-image>
+                            <span class="m-l-sm">{{ scope.row.name }}</span>
+                        </div>
+                        <div>
+                            <el-button
+                                    type="text"
+                                    icon="el-icon-edit"
+                                    @click="edit">
+                            </el-button>
+                            <el-button
+                                    type="text"
+                                    icon="el-icon-close"
+                                    @click="del(scope.row.id)">
+                            </el-button>
+                        </div>
+                    </div>
+                </template>
+            </el-table-column>
+        </el-table>
+    </div>
+</template>
+
+<script>
+    export default {
+        data(){
+            return{
+                outeData: [{
+                    date: '2016-05-03',
+                    name: '王小虎',
+                    province: '上海',
+                    city: '普陀区',
+                    address: '上海市普陀区金沙江路 1518 弄',
+                    zip: 200333,
+                    image:'http://tradeany.oss-cn-qingdao.aliyuncs.com/MjAxOTA5MDgxNDM2NTXlvq7kv6HmiKrlm75fMjAxOTA5MDgyMjM2NDM=.png'
+                }, {
+                    date: '2016-05-02',
+                    name: '王小虎',
+                    province: '上海',
+                    city: '普陀区',
+                    address: '上海市普陀区金沙江路 1518 弄',
+                    zip: 200333,
+                    image:'http://tradeany.oss-cn-qingdao.aliyuncs.com/MjAxOTA5MDgxNDQ1MDLlvq7kv6HmiKrlm75fMjAxOTA5MDgyMjQ0MTY=.png'
+                }]
+            }
+        },
+        methods:{
+            //新增
+            add(){
+
+            },
+            //编辑
+            edit(){
+
+            },
+            //删除
+            del(id){
+
+            },
+            //表格列点击
+            handleClick(){
+
+            }
+        }
+    }
+</script>
+
+<style scoped>
+    .img{
+        width: 40px;
+        height: 40px
+    }
+</style>
