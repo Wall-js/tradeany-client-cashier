@@ -5,25 +5,35 @@ Vue.use(Router)
 
 export default new Router({
   routes: [
+      //登陆
     {
       path: '/',
-      name: 'landing-page',
+      name: 'login',
       component: require('@/pages/Login').default
     },
+    //收银台
     {
       path: '/home',
-      name: 'landing-page',
+      name: 'cash-register',
       component: require('@/pages/CashRegister').default
     },
+    //商品管理
     {
-      path: '/SellingGoods',
-      name: 'landing-page',
-      component: require('@/pages/ProductManagement/SellingGoods').default
+      path: '/sellingGoods',
+      name: 'selling-goods',
+      component: require('@/pages/product_management').default
     },
+    //销售统计
     {
-      path: '/LandingPage',
-      name: 'LandingPage',
+      path: '/sandingPage',
+      name: 'landing-page',
       component: require('@/components/LandingPage').default
+    },
+      //类目管理
+    {
+      path: '/category',
+      name: 'category',
+      component: require('@/pages/category').default
     },
     {
       path: '*',

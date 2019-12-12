@@ -75,7 +75,7 @@
             type: 'menuItem',
             title: '类目管理',
             icon:'el-icon-notebook-2',
-            // index: "/"
+            index: "/category"
           },
         ],
         userName:'admin',
