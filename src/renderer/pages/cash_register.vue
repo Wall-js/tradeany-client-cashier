@@ -90,12 +90,6 @@
             <el-col>
               <el-tabs v-model="rightActiveName" @tab-click="rightHandleClick">
                 <el-tab-pane label="全部" name="first">
-                  <Table
-                          :tableList="allTableList"
-                          :tableData="$store.state.Goods.list"
-                          @changeOpera="addGoods"
-                  >
-                  </Table>
                   <el-table
                           ref="singleTable"
                           :data="$store.state.Goods.list"
@@ -103,6 +97,7 @@
                           @current-change="handleCurrentChange"
                           style="width: 100%">
                     <el-table-column
+                            label="序号"
                             type="index"
                             width="50">
                     </el-table-column>
