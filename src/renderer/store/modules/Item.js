@@ -21,9 +21,9 @@ const actions = {
             dispatch("getItem")
         })
     },
-    createItem({dispatch}) {
-        let doc = {name: "123"};
-        db.item.insert(doc, (err, newDocs) => {
+    createItem({dispatch},payload) {
+        console.log(state.pagination);
+        db.item.insert(payload, (err, newDocs) => {
             dispatch("getItem")
         })
     },
