@@ -13,6 +13,7 @@ const mutations = {
     GET_GOODS(state, payload) {
         state.list = payload
     },
+
 };
 
 const actions = {
@@ -28,7 +29,7 @@ const actions = {
     },
     createGoods(ctx, payload) {
         db.goods.insert(payload, (err, newDocs) => {
-            ctx.dispatch("getItem")
+            ctx.dispatch("getAllGoods")
         })
     },
 

@@ -20,15 +20,15 @@
             <el-row style="padding-top: 14px">
                 <el-col>
                     <package-table
-                            :tableList="TableList"
-                            :tableData="TableData"
+                            :tableList="tableList"
+                            :tableData="tableData"
                             @changeOpera="changeOpera"
                     ></package-table>
                 </el-col>
             </el-row>
             <el-row>
                 <el-col>
-                    <page-break :pageTotal="pageTotal" :pageSize="PageSize"
+                    <page-break :pageTotal="pageTotal" :pageSize="pageSize"
                                 @pageChange="pageChange"></page-break>
                 </el-col>
             </el-row>
@@ -109,7 +109,11 @@
                     ],
                 },
                 //商品列表
-                TableList: [
+                tableList: [
+                    {
+                        label: '序号',
+                        prop: 'No',
+                    },
                     {
                         label: '条形码',
                         prop: 'barCode',
@@ -130,14 +134,14 @@
                         isOperaText: 'isOperaText'
                     }
                 ],
-                TableData: [
+                tableData: [
                     {
                         productQty:12121212,
                         isOperaText:['修改']
                     }
                 ],
                 pageTotal: 1,
-                PageSize: 10,
+                pageSize: 10,
                 currentPage:'1',
                 //商品录入
                 show:false,
@@ -226,9 +230,10 @@
                 refs['searchForm'].resetFields();
             },
             //商品录入
-            addProductSubmit(refs){
+            async addProductSubmit(refs){
                 refs['addProductForm'].validate((valid) => {
                     if (valid) {
+                        console.log("dsfdsfsd")
                         // this.$db.goods.insert(this.addProductForm,(err,newDocs) => {
                         //     if(newDocs){
                         //         this.$message.success('录入成功')
@@ -237,13 +242,16 @@
                         //         this.$message.success('录入失败，请重试')
                         //     }
                         // })
+                        this.$store.dispatch("createGoods",this.addProductForm)
+                        this.$message.success('录入成功')
+                        this.tableData = this.$store.state.Goods.list;
+                        this.show=false;
+                        refs['addProductForm'].resetFields();
                     } else {
                         console.log('error submit!!');
                         return false;
                     }
                 });
-
-
             },
             //关闭弹窗
             closeDialog(refs){
@@ -282,12 +290,21 @@
             submitRechargeForm () {
                 this.show = false
             },
-            getTableMsg(){
-
-            },
+            //获取数据
+            async getGoods(){
+                this.$store.dispatch("getAllGoods");
+                const list = this.$store.state.Goods.list;
+                if(list){
+                    list.forEach((item,index)=>{
+                        item['No'] = index+1;
+                        item['isOperaText'] = [`修改`,`删除`]
+                    })
+                }
+                this.tableData = list;
+            }
         },
-        mounted() {
-            this.pageChange ()
+        created() {
+            this.getGoods()
         }
     }
 </script>
