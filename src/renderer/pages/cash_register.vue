@@ -5,28 +5,29 @@
         <el-card class="min-height-lg">
           <el-row>
             <el-col class="flex-row">
-              <el-button  icon="el-icon-full-screen" size="small"></el-button>
-              <el-input type="text" placeholder="请输入会员编号"></el-input>
-              <el-button  type="primary" icon="el-icon-search" size="small"></el-button>
+              <el-input placeholder="请输入会员编号" v-model="membershipCode">
+                <template slot="prepend"><el-button  icon="el-icon-full-screen" size="small"></el-button></template>
+                <template slot="append"><el-button  type="primary" icon="el-icon-search" size="small" @click="testSave"></el-button></template>
+              </el-input>
             </el-col>
           </el-row>
           <el-row class="m-t-lg">
             <el-col class="flex-row just-between">
               <span>会员登陆</span>
               <div>
-                <el-button type="primary" size="small">二维码</el-button>
-                <el-button type="primary" size="small">清除</el-button>
+                <el-button type="primary" size="small" @click="testGet">二维码</el-button>
+                <el-button type="primary" size="small" @click="_delete">清除</el-button>
               </div>
             </el-col>
           </el-row>
           <el-divider></el-divider>
           <Panel
-                  :array="array"
+                  :array="membershipArray"
           ></Panel>
           <el-divider></el-divider>
           <el-row>
             <el-col class="flex-row just-around">
-              <el-button type="primary" size="small">会员</el-button>
+              <el-button type="primary" size="small" @click="search">会员</el-button>
               <el-button type="primary" size="small">挂单</el-button>
               <el-button type="primary" size="small">清空</el-button>
             </el-col>
@@ -70,9 +71,10 @@
         <el-card class="min-height-lg">
           <el-row>
             <el-col class="flex-row">
-              <el-button  icon="el-icon-full-screen" size="small"></el-button>
-              <el-input type="text" placeholder="请输入商品条码或用扫码枪扫码"></el-input>
-              <el-button  type="primary" icon="el-icon-search" size="small"></el-button>
+              <el-input placeholder="请输入商品条码或用扫码枪扫码" v-model="barCode">
+                <template slot="prepend"><el-button  icon="el-icon-full-screen" size="small"></el-button></template>
+                <template slot="append"><el-button  type="primary" icon="el-icon-search" size="small"></el-button></template>
+              </el-input>
             </el-col>
           </el-row>
           <el-row>
@@ -101,7 +103,7 @@
     name: "CashRegister",
     data () {
       return {
-        array:[
+        membershipArray:[
           {
             label:'名称：',
             value:'',
@@ -161,23 +163,93 @@
         ],
         ordersTableData:[],
         rightActiveName:'first',
+        membershipCode:'',
+        barCode:''
       }
     },
     methods: {
+      // 查询
+      testGet() {
+        let result;
+        this.$db.user.find({}, (err, newDocs) => {
+          console.log(22,newDocs);
+        });
+      },
+      // 插入
+      testSave() {
+        let doc = {
+          hello: '张器1'
+          , n: 5
+          , today: new Date()
+          , nedbIsAwesome: true
+          , notthere: null
+          // , notToBeSaved: undefined  // 该字段不会被保存
+          , fruits: ['apple', 'orange', 'pear']
+          , infos: {name: 'nedb'}
+        };
+        this.$db.user.insert(doc, (err, newDocs) => {
+            console.log(newDocs);
+        })
+
+      },
+      // 查询
+      search(){
+        this.$db.user.findOne({
+          membershipCode: this.membershipCode
+        }, (err, ret) => {
+          console.log("查询",ret);
+          this.membershipArray=[
+            {
+              label:'名称：',
+              value:'田珊珊',
+              span:12
+
+            },
+            {
+              label:'编号：',
+              value:'3454545',
+              span:12
+
+            }, {
+              label:'等级：',
+              value:'54545',
+              span:12
+            }, {
+              label:'积分：',
+              value:'55',
+              span:12
+            },
+          ];
+        });
+
+        },
+      // 删除
+      _delete(){
+        this.$db.user.remove({}, { multi: true }, function (err, numRemoved) {
+          console.log("删除",numRemoved)
+        });
+      },
       handleClick(){},
       rightHandleClick(){
-
       }
     },
     components: {
       Panel,
       Table
     },
-
+    computed: {
+      doneTodosCount () {
+        console.log(999999,this.$store.getters.doneTodosCount)
+        return this.$store.getters.doneTodosCount
+      }
+    }
   }
 </script>
 
 <style scoped>
   @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
-
+  .flex-row>>>.el-input-group__append{
+    background-color: #409EFF !important;
+    color: #fff;
+  }
 </style>
