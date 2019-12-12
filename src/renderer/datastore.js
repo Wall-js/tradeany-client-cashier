@@ -12,6 +12,9 @@ db.user.loadDatabase();
 db.item = new Datastore(path.join("./db", '/item.db'));
 db.item.loadDatabase();
 
+db.goods = new Datastore(path.join("./db", '/goods.db'));
+db.goods.loadDatabase();
+
 db.order = new Datastore(path.join("./db", '/order.db'));
 db.order.loadDatabase();
 
