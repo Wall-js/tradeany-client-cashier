@@ -21,7 +21,7 @@
                 <el-col>
                     <package-table
                             :tableList="tableList"
-                            :tableData="tableData"
+                            :tableData="$store.state.Goods.list"
                             @changeOpera="changeOpera"
                     ></package-table>
                 </el-col>
@@ -233,15 +233,6 @@
             async addProductSubmit(refs){
                 refs['addProductForm'].validate((valid) => {
                     if (valid) {
-                        console.log("dsfdsfsd")
-                        // this.$db.goods.insert(this.addProductForm,(err,newDocs) => {
-                        //     if(newDocs){
-                        //         this.$message.success('录入成功')
-                        //         this.show=false
-                        //     }else {
-                        //         this.$message.success('录入失败，请重试')
-                        //     }
-                        // })
                         this.$store.dispatch("createGoods",this.addProductForm)
                         this.$message.success('录入成功')
                         this.tableData = this.$store.state.Goods.list;
@@ -270,6 +261,15 @@
                     formItemList[0]['disabled'] = true;
                     formItemList[formItemList.length-2]['disabled'] = true;
                     this.addProductForm = item
+                }else if(action === '删除'){
+                    this.$confirm('此操作将删除该商品, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        this.$store.dispatch("deleteGoods",{_id:item.id})
+                    })
+
                 }
             },
             changeEdit () {
@@ -289,7 +289,6 @@
                     },
                 };
                 this.getGoods(payload)
-                this.$store.dispatch("getGoods",payload);
             },
             /**
              * 下架按钮
