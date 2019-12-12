@@ -95,7 +95,7 @@
 </template>
 
 <script>
-  import Panel from '../components/Panel/itemList';
+  import Panel from '../components/Panel';
   import Table from '../components/Table';
   export default {
     name: "收银台",

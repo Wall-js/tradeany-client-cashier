@@ -21,7 +21,10 @@ db.order.loadDatabase();
 db.payment = new Datastore(path.join(remote.app.getPath('userData'), '/payment.db'));
 db.payment.loadDatabase();
 
-db.stock = new Datastore(path.join(remote.app.getPath('userData'), '/stock.db'));
-db.stock.loadDatabase();
+db.stockLog = new Datastore(path.join(remote.app.getPath('userData'), '/stockLog.db'));
+db.stockLog.loadDatabase();
+
+db.cart = new Datastore(path.join(remote.app.getPath('userData'), '/cart.db'));
+db.cart.loadDatabase();
 
 export default db;
