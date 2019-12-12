@@ -1,5 +1,8 @@
-import {app, BrowserWindow} from 'electron'
+import {app, BrowserWindow,ipcMain} from 'electron'
 import '../renderer/store' //添加store位置解决 dispatch 无效
+
+// Install `electron-debug` with `devtron`
+require('electron-debug')({showDevTools: true});
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -22,6 +25,16 @@ function createWindow() {
         useContentSize: true,
         width: 1200
     })
+
+    //在主线程下，通过ipcMain对象监听渲染线程传过来的getPrinterList事件
+    ipcMain.on('getPrinterList', (event) => {
+
+        //在主线程中获取打印机列表
+        const list = mainWindow.webContents.getPrinters();
+
+        //通过webContents发送事件到渲染线程，同时将打印机列表也传过去
+        mainWindow.webContents.send('getPrinterList', list);
+    });
 
     mainWindow.loadURL(winURL)
 
