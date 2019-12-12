@@ -312,7 +312,11 @@
             }
         },
         created() {
-            this.getGoods()
+            this.getGoods({
+                pagination: {
+                    current: 1,
+                    pageSize: 10,
+                }})
         }
     }
 </script>
