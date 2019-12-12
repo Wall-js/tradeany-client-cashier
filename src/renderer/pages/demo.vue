@@ -15,8 +15,8 @@
             </ol>
             <p>{{$store.state.Item.pagination}}</p>
         </div>
-        <button @click="setItemPagination">setItemPagination</button>
         <button @click="getItem">getItem</button>
+        <button @click="getItemTest">getItemTest</button>
         <button @click="createItem">createItem</button>
         <button @click="deleteItem">deleteItem</button>
         <button @click="updateItem">updateItem</button>
@@ -29,21 +29,34 @@
     export default {
         name: 'demo',
         methods: {
-            setItemPagination() {
+            // setItemPagination() {
+            //     let payload = {
+            //         pagination: {
+            //             current: 1,
+            //             pageSize: 10,
+            //         }
+            //     };
+            //     this.$store.dispatch("setItemPagination", payload);
+            //     // console.log(this.$store.state.Counter.main)
+            //
+            // },
+            getItem() {
+                let payload = {
+                    pagination: {
+                        current: 2,
+                        pageSize: 3,
+                    }
+                };
+                this.$store.dispatch("getItem", payload);
+                // console.log(this.$store.state.Counter.main)
+
+            },
+            getItemTest() {
                 let payload = {
                     pagination: {
                         current: 1,
                         pageSize: 10,
                     }
-                };
-                this.$store.dispatch("setItemPagination", payload);
-                // console.log(this.$store.state.Counter.main)
-
-            },
-            getItem() {
-                let payload = {
-                    current: 2,
-                    pageSize: 3,
                 };
                 this.$store.dispatch("getItem", payload);
                 // console.log(this.$store.state.Counter.main)
