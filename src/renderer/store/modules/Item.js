@@ -9,6 +9,7 @@ const state = {
     },
 };
 
+
 const mutations = {
     GET_ITEM(state, payload) {
         state.list = payload
@@ -118,6 +119,7 @@ const actions = {
 export default {
     namespaced: true,
     state,
+    getters,
     mutations,
     actions
 }

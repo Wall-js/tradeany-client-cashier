@@ -10,7 +10,7 @@ const defaultState = {
             level: undefined,
         },
         subOrder: [],
-        // total: 0,
+        total: 0,
         activeKey: 'total'
     },
     cacheOrder: [],
@@ -19,9 +19,11 @@ const defaultState = {
 
 const state = Object.assign({}, defaultState);
 
-const getters = {
-    total: state => {
-        state.order.subOrder.length > 0 ? state.order.subOrder.reduce((total, item, index) => {
+
+const mutations = {
+    // 清空收银台
+    TOTAL(state) {
+        state.order.total = state.order.subOrder.length > 0 ? state.order.subOrder.reduce((total, item, index) => {
             const a = numeral(item.goods_price);
             const b = a.multiply(item.quantity);
             const c = b.add(total);
@@ -32,9 +34,7 @@ const getters = {
             }
         }, 0) : 0;
     },
-};
 
-const mutations = {
     // 清空收银台
     ClEAR_ALL(state) {
         state = defaultState;
@@ -87,6 +87,7 @@ const mutations = {
     // 挂单
     SET_CACHE_ORDER(state) {
         state.cacheOrder.push(state.order);
+        state.order = defaultState.order;
     },
 
     // 提单
@@ -121,6 +122,7 @@ const actions = {
             if (doc) {
                 doc.quantity = payload.quantity ? payload.quantity : 1;
                 ctx.commit("CREATE_SUBORDER", doc);
+                ctx.commit("TOTAL")
             }
             if (payload) {
                 if (payload.callback) {
@@ -132,10 +134,12 @@ const actions = {
     // 删除商品
     deleteSubOrder(ctx, payload) {
         ctx.commit("DELETE_SUBORDER", payload)
+        ctx.commit("TOTAL")
     },
     // 编辑商品数量
     updateSubOrder(ctx, payload) {
         ctx.commit("UPDATE_SUBORDER", payload)
+        ctx.commit("TOTAL")
     },
 
     // 挂单
