@@ -21,6 +21,11 @@ export default new Router({
       component: require('@/pages/ProductManagement/SellingGoods').default
     },
     {
+      path: '/LandingPage',
+      name: 'LandingPage',
+      component: require('@/components/LandingPage').default
+    },
+    {
       path: '*',
       redirect: '/'
     }

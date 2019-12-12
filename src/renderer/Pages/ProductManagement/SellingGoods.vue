@@ -13,7 +13,6 @@
                             :tableList="TableList"
                             :tableData="TableData"
                             @changeOpera="changeOpera"
-                            v-loading="loading"
                     ></packageTable>
                 </el-col>
             </el-row>
@@ -39,7 +38,7 @@
         layout: 'home',
         data () {
             return {
-                loading:'false',
+                // loading:'false',
                 /**
                  *form表单
                  **/
@@ -128,10 +127,10 @@
 
                 //所有记录
                 TableList: [
-                    // {
-                    //   type: 'selection',
-                    //   width: '55',
-                    // },
+                    {
+                      type: 'selection',
+                      width: '55',
+                    },
                     {
                         prop: 'name',
                         label: '产品名',

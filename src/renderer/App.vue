@@ -6,9 +6,10 @@
               :itemList="itemList"
               :bgColor = "bgColor"
               router
+              v-show="isShow"
       ></SideMenu>
       <el-container id="header-main" direction="vertical">
-        <Header :userName="userName" />
+        <Header :userName="userName"   v-show="isShow"/>
         <el-main>
           <router-view></router-view>
         </el-main>
@@ -33,7 +34,7 @@
             type: 'menuItem',
             title: '收 银 台',
             icon:'el-icon-full-screen',
-            // index: "/"
+            index: "/home"
           },
           {
             type: 'submenu',
@@ -48,7 +49,7 @@
                 routers: [
                   {
                     labelName: '在售产品',
-                    index: "/"
+                    index: "/SellingGoods"
                   },
                   {
                     labelName: '云仓产品',
@@ -68,7 +69,7 @@
             type: 'menuItem',
             title: '销售统计',
             icon:'el-icon-s-data',
-            // index: "/"
+            index: "/LandingPage"
           },
           {
             type: 'menuItem',
@@ -78,6 +79,17 @@
           },
         ],
         userName:'admin',
+        isShow:false
+      }
+    },
+    methods:{
+
+    },
+    watch:{
+      $route(to,from){
+        if(this.$route.path !== '/'){
+          this.isShow = true
+        }
       }
     },
   }
