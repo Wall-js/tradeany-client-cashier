@@ -32,6 +32,20 @@ const mutations = {
 };
 
 const actions = {
+    getOneItem(ctx, payload) {
+        ctx.commit('SET_ITEM_PAGINATION', payload);
+        let pageSize = ctx.state.pagination.pageSize;
+        let skip = (ctx.state.pagination.current - 1) * pageSize;
+        db.item.findOne({_id: 1}).exec((err, docs) => {
+            ctx.dispatch('getItemTotal');
+            ctx.commit('GET_ITEM', docs);
+            if (payload) {
+                if (payload.callback) {
+                    payload.callback(err)
+                }
+            }
+        });
+    },
 
     getItem(ctx, payload) {
         ctx.commit('SET_ITEM_PAGINATION', payload);

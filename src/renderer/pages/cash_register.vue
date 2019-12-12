@@ -5,9 +5,10 @@
         <el-card class="min-height-lg">
           <el-row>
             <el-col class="flex-row">
-              <el-button  icon="el-icon-full-screen" size="small"></el-button>
-              <el-input type="text" placeholder="请输入会员编号"></el-input>
-              <el-button  type="primary" icon="el-icon-search" size="small"></el-button>
+              <el-input placeholder="请输入会员编号" v-model="membershipCode">
+                <template slot="prepend"><el-button  icon="el-icon-full-screen" size="small"></el-button></template>
+                <template slot="append"><el-button  type="primary" icon="el-icon-search" size="small"></el-button></template>
+              </el-input>
             </el-col>
           </el-row>
           <el-row class="m-t-lg">
@@ -21,13 +22,13 @@
           </el-row>
           <el-divider></el-divider>
           <Panel
-                  :array="array"
+                  :array="membershipArray"
           ></Panel>
           <el-divider></el-divider>
           <el-row>
             <el-col class="flex-row just-around">
               <el-button type="primary" size="small">会员</el-button>
-              <el-button type="primary" size="small">挂单</el-button>
+              <el-button type="primary" size="small" @click="setCacheOrder">挂单</el-button>
               <el-button type="primary" size="small">清空</el-button>
             </el-col>
           </el-row>
@@ -38,8 +39,15 @@
                 <el-tab-pane label="购物区" name="first">
                   <Table
                           :tableList="shopTableList"
-                          :tableData="shopTableData"
-                  ></Table>
+                          :tableData="$store.state.Cashier.order.subOrder"
+                          @changeOpera="changeOpera"
+                  >
+                    <el-table-column slot="stock" label="数量">
+                        <template slot-scope="scope">
+                          <el-input-number v-model="scope.row.stock" :min="0" :max="10000"  size="mini" @change="handleChange"></el-input-number>
+                        </template>
+                    </el-table-column>
+                  </Table>
                   <el-divider></el-divider>
                   <el-row type="flex" justify="center">
                     <el-col  class="flex-row just-between flex-align" :span="18" >
@@ -59,7 +67,9 @@
                   <Table
                           :tableList="ordersTableList"
                           :tableData="ordersTableData"
-                  ></Table>
+                          @changeOpera="changeCacheOrder"
+                  >
+                  </Table>
                 </el-tab-pane>
               </el-tabs>
             </el-col>
@@ -70,9 +80,10 @@
         <el-card class="min-height-lg">
           <el-row>
             <el-col class="flex-row">
-              <el-button  icon="el-icon-full-screen" size="small"></el-button>
-              <el-input type="text" placeholder="请输入商品条码或用扫码枪扫码"></el-input>
-              <el-button  type="primary" icon="el-icon-search" size="small"></el-button>
+              <el-input placeholder="请输入商品条码或用扫码枪扫码" v-model="barCode">
+                <template slot="prepend"><el-button  icon="el-icon-full-screen" size="small"></el-button></template>
+                <template slot="append"><el-button  type="primary" icon="el-icon-search" size="small" @click="createSubOrder"></el-button></template>
+              </el-input>
             </el-col>
           </el-row>
           <el-row>
@@ -101,7 +112,7 @@
     name: "CashRegister",
     data () {
       return {
-        array:[
+        membershipArray:[
           {
             label:'名称：',
             value:'',
@@ -125,32 +136,46 @@
         ],
         activeName:'first',
         shopTableList:[
+            {
+                prop:'No',
+                label:'序号'
+            },
           {
-            prop:'time',
+            prop:'name',
             label:'名称'
           }, {
-            prop:'time',
+            prop:'goods_price',
             label:'单价'
           }, {
-            prop:'time',
-            label:'数量'
+            slot:'stock',
+            type:'slot',
+            prop: 'stock',
+            label: '库存数量',
           }, {
-            type:'operation',
-            prop:'time',
-            label:'操作',
+            prop: 'operation',
+            label: '操作',
+            type: 'operation',
             isOperaText: 'isOperaText'
           }
         ],
-        shopTableData:[],
-        ordersTableList:[
+        shopTableData:[
           {
-            prop:'time',
-            label:'类型'
-          }, {
-            prop:'time',
+            No:'1',
+            name:'22',
+            goods_price:'33',
+            stock:'1',
+            isOperaText:['删除']
+          }
+        ],
+        ordersTableList:[
+           {
+            prop:'No',
+            label:'序号'
+            },{
+            prop:'name',
             label:'名称'
           }, {
-            prop:'time',
+            prop:'price',
             label:'总价'
           }, {
             type:'operation',
@@ -159,25 +184,83 @@
             isOperaText: 'isOperaText'
           }
         ],
-        ordersTableData:[],
+        ordersTableData:[
+            {
+                type:'22',
+                name:'33',
+                price:'1',
+                isOperaText:['提单','删除']
+            }
+        ],
         rightActiveName:'first',
+        membershipCode:'',
+        barCode:'',
+
       }
     },
     methods: {
+      // 查询
+      testGet() {
+        let result;
+        this.$db.user.find({}, (err, newDocs) => {
+          console.log(22,newDocs);
+        });
+      },
       handleClick(){},
       rightHandleClick(){
+      },
+        // 添加商品
+       createSubOrder() {
+        this.$store.dispatch("Cashier/createSubOrder",{"barCode":this.barCode});
+         // let subOrder=this.$store.state.Cashier.order.subOrder;
+         // console.log(11,subOrder)
+         // this.shopTableData=subOrder;
+         subOrder.forEach((item,index)=>{
+           item['No'] = index+1;
+          item['isOperaText']=['删除'];
+        });
+      },
+        // 商品删除
+      changeOpera(item,action,type){
+        if(action==='删除'){
+            let payload={
+                "_id":item.No
+            };
+          this.$store.dispatch("Cashier/deleteSubOrder",payload);
+        }
+      },
+        // 编辑商品数量
+      handleChange(value){
+        console.log(value)
+      },
+        // 挂单
+      setCacheOrder(){
+          this.$store.dispatch("setCacheOrder");
+      },
+        // 挂单操作
+      changeCacheOrder(item,action,type){
+          if(action==='提单'){
+              this.$store.dispatch("Cashier/getCacheOrder",item.No);
+          }else if(action==='删除'){
+              this.$store.dispatch("Cashier/deleteCacheOrder",item.No);
+          }
+        }
 
-      }
     },
     components: {
       Panel,
       Table
     },
+    computed: {
 
+    }
   }
 </script>
 
 <style scoped>
   @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
-
+  .flex-row>>>.el-input-group__append{
+    background-color: #409EFF !important;
+    color: #fff;
+  }
 </style>

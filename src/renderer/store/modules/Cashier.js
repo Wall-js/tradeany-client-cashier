@@ -52,6 +52,7 @@ const mutations = {
 
     // 添加商品
     CREATE_SUBORDER(state, payload) {
+        console.log(payload);
         const index = state.order.subOrder.findIndex((v) => (v._id === payload._id));
         if (index !== -1) {
             state.order.subOrder[index].quantity += 1;
@@ -116,8 +117,11 @@ const actions = {
     // 添加商品
     createSubOrder(ctx, payload) {
         db.goods.findOne({barCode: payload.barCode}, (err, doc) => {
-            doc.quantity = payload.quantity ? payload.quantity : 1;
-            ctx.commit("CREATE_SUBORDER", doc);
+            console.log(doc);
+            if (doc) {
+                doc.quantity = payload.quantity ? payload.quantity : 1;
+                ctx.commit("CREATE_SUBORDER", doc);
+            }
             if (payload) {
                 if (payload.callback) {
                     payload.callback(err)
