@@ -85,8 +85,14 @@
     methods:{
 
     },
+    created(){
+      if(this.$route.path !== '/'){
+        this.isShow = true
+      }
+    },
     watch:{
       $route(to,from){
+        console.log("当前路由",this.$route.path);
         if(this.$route.path !== '/'){
           this.isShow = true
         }
