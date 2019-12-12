@@ -280,9 +280,13 @@
              * 分页数据
              * @param item
              */
-            pageChange (item) {
-                this.$store.state.Goods.pagination.current = item;
-                console.log(this.$store.state.Goods.pagination.current)
+            async pageChange (item) {
+                let params = {
+                    pageSize:10,
+                    current:item
+                }
+                this.$store.dispatch('setGoodsPagination',params);
+                this.getGoods()
             },
             /**
              * 下架按钮
