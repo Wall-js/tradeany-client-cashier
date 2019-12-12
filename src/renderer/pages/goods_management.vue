@@ -28,7 +28,7 @@
             </el-row>
             <el-row>
                 <el-col>
-                    <page-break :pageTotal="pageTotal" :pageSize="pageSize"
+                    <page-break :pageTotal="$store.state.Goods.pagination.total" :pageSize="$store.state.Goods.pagination.pageSize"
                                 @pageChange="pageChange"></page-break>
                 </el-col>
             </el-row>
@@ -140,7 +140,7 @@
                         isOperaText:['修改']
                     }
                 ],
-                pageTotal: 1,
+                pageTotal: this.$store.state.Goods.pagination.total,
                 pageSize: 10,
                 currentPage:'1',
                 //商品录入
@@ -281,8 +281,8 @@
              * @param item
              */
             pageChange (item) {
-                this.currentPage = item;
-                this.getTableMsg();
+                this.$store.state.Goods.pagination.current = item;
+                console.log(this.$store.state.Goods.pagination.current)
             },
             /**
              * 下架按钮
@@ -292,8 +292,9 @@
             },
             //获取数据
             async getGoods(){
-                this.$store.dispatch("getAllGoods");
+                this.$store.dispatch("getGoods");
                 const list = this.$store.state.Goods.list;
+                console.log(this.$store.state.Goods.pagination)
                 if(list){
                     list.forEach((item,index)=>{
                         item['No'] = index+1;
