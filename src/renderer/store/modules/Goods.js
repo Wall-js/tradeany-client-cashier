@@ -7,6 +7,7 @@ const state = {
         pageSize: 10,
         total: 0,
     },
+    currentRouter:''
 };
 
 const mutations = {
@@ -35,6 +36,9 @@ const mutations = {
 
         }
     },
+    SET_CURRENT_ROUTER(state,payload){
+        state.currentRouter = payload
+    }
 };
 
 const actions = {
@@ -103,7 +107,11 @@ const actions = {
 
         })
     },
+    getCurrentRouter(ctx, payload){
+        ctx.commit('SET_CURRENT_ROUTER', payload);
+    }
 };
+
 
 export default {
     namespaced: true,

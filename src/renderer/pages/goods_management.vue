@@ -11,13 +11,13 @@
                 </div>
             </Form>
         </el-card>
-        <el-card>
+        <el-card class="m-t-sm">
             <el-row>
                 <el-col>
                     <el-button type="primary" size="small" @click="()=>{this.show=true}">商品录入</el-button>
                 </el-col>
             </el-row>
-            <el-row>
+            <el-row class="m-t-sm">
                 <el-col>
                     <package-table
                             :tableList="tableList"
@@ -231,10 +231,10 @@
                                 _id:addProductForm['_id'],
                                 data:{...addProductForm}
                             }
-                            this.$store.dispatch("updateGoods",payload)
+                            this.$store.dispatch("Goods/updateGoods",payload)
                             this.$message.success('修改成功')
                         }else {
-                            this.$store.dispatch("createGoods",this.addProductForm)
+                            this.$store.dispatch("Goods/createGoods",this.addProductForm)
                             this.$message.success('录入成功')
                         }
 
@@ -270,7 +270,7 @@
                         cancelButtonText: '取消',
                         type: 'warning'
                     }).then(() => {
-                        this.$store.dispatch("deleteGoods",{_id:item._id})
+                        this.$store.dispatch("Goods/deleteGoods",{_id:item._id})
                     })
 
                 }
@@ -283,7 +283,7 @@
              * @param item
              */
             pageChange (item) {
-                this.$store.dispatch("getGoods",{
+                this.$store.dispatch("Goods/getGoods",{
                     pagination: {
                         current: item,
                         pageSize: 10,
@@ -297,9 +297,19 @@
                 this.show = false
             },
         },
+        beforeCreate(){
+            //获取当前路由
+            console.log(this.$route);
+            this.$store.dispatch("Goods/getCurrentRouter",{
+                pagination: {
+                    current: 1,
+                    pageSize: 10,
+                }});
+
+        },
         created() {
             //获取数据
-            this.$store.dispatch("getGoods",{
+            this.$store.dispatch("Goods/getGoods",{
                 pagination: {
                     current: 1,
                     pageSize: 10,
