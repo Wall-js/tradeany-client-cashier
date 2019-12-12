@@ -26,7 +26,7 @@
     name: 'tradeany-client-cashier',
     data () {
       return {
-        name:'tianshan',
+        // isCollapsed:false,
         bgColor:'#1564AF',
         title: 'TRADEANY',
         itemList: [
