@@ -17,18 +17,23 @@ const mutations = {
         state.pagination.total = payload
     },
     SET_ITEM_PAGINATION(state, payload) {
-        state.pagination.current = payload.current;
-        state.pagination.pageSize = payload.pageSize;
+        if (payload) {
+            if (payload.pagination) {
+                if (payload.pagination.current) {
+                    state.pagination.current = payload.pagination.current;
+                }
+                if (payload.pagination.pageSize) {
+                    state.pagination.pageSize = payload.pagination.pageSize;
+                }
+            }
+
+        }
     },
 };
 
 const actions = {
-    setItemPagination(ctx, payload) {
-        ctx.commit("SET_ITEM_PAGINATION", payload);
-        ctx.dispatch('getItem');
-    },
     getItem(ctx, payload) {
-        // db.item.find({}, (err, docs) => {
+        ctx.commit('SET_ITEM_PAGINATION', payload);
         let pageSize = ctx.state.pagination.pageSize;
         let skip = (ctx.state.pagination.current - 1) * pageSize;
         db.item.find({}).skip(skip).limit(pageSize).exec((err, docs) => {
