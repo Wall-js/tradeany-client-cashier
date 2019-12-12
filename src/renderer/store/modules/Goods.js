@@ -16,9 +16,17 @@ const mutations = {
     GET_GOODS_TOTAL(state, payload) {
         state.pagination.total = payload
     },
+    SET_GOODS_PAGINATION(state, payload) {
+        state.pagination.current = payload.current;
+        state.pagination.pageSize = payload.pageSize
+    },
 };
 
 const actions = {
+    setGoodsPagination(ctx, payload) {
+        ctx.commit("SET_GOODS_PAGINATION", payload);
+    },
+
     getGoodsTotal(ctx, payload) {
         db.goods.count({}, function (err, count) {
             ctx.commit("GET_GOODS_TOTAL", count);
