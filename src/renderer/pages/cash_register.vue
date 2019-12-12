@@ -102,27 +102,28 @@
                     <el-table-column
                             label="序号"
                             type="index"
-                            width="50">
+                            width="100"
+                          >
                     </el-table-column>
                     <el-table-column
                             property="barCode"
                             label="条形码"
-                            width="120">
+                           >
                     </el-table-column>
                     <el-table-column
                             property="name"
                             label="商品名称"
-                            width="120">
+                            >
                     </el-table-column>
                     <el-table-column
                             property="price"
                             label="单价"
-                            width="120">
+                           >
                     </el-table-column>
                     <el-table-column
                             property="stock"
                             label="库存数量"
-                            width="120">
+                            >
                     </el-table-column>
                   </el-table>
                 </el-tab-pane>
