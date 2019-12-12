@@ -98,7 +98,7 @@
   import Panel from '../components/Panel';
   import Table from '../components/Table';
   export default {
-    name: "收银台",
+    name: "CashRegister",
     data () {
       return {
         array:[

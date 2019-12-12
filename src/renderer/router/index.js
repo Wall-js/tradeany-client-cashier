@@ -19,15 +19,21 @@ export default new Router({
     },
     //商品管理
     {
-      path: '/selling-goods',
-      name: 'selling-goods',
-      component: require('@/pages/product_management').default
+      path: '/goods-management',
+      name: 'goods-management',
+      component: require('@/pages/GoodsManagement').default
     },
     //销售统计
     {
       path: '/sanding-page',
       name: 'landing-page',
       component: require('@/components/LandingPage').default
+    },
+    //库存管理
+    {
+      path: '/stock-management',
+      name: '/stock-management',
+      component: require('@/pages/StockManagement').default
     },
       //类目管理
     {
