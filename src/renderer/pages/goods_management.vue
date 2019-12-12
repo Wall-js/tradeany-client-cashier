@@ -215,13 +215,13 @@
              */
             //查询
             search() {
-                this.$store.dispatch("Goods/filterGoods",{
-                    pagination: {
-                        current: 1,
-                        pageSize: 10,
-                    },
-                    form:this.searchForm
-                })
+                // this.$store.dispatch("Goods/filterGoods",{
+                //     pagination: {
+                //         current: 1,
+                //         pageSize: 10,
+                //     },
+                //     form:this.searchForm
+                // })
             },
             //重置
             reset(refs) {
