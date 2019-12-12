@@ -42,9 +42,9 @@
                           :tableData="$store.state.Cashier.order.subOrder"
                           @changeOpera="changeOpera"
                   >
-                    <el-table-column slot="stock" label="数量">
+                    <el-table-column slot="stock" label="数量" min-width="120">
                         <template slot-scope="scope">
-                          <el-input-number v-model="scope.row.quantity" :min="0" :max="10000"  size="mini" @change="handleChange"></el-input-number>
+                          <el-input-number v-model="scope.row.quantity" :min="1" :max="100"  size="mini" @change="handleChange"></el-input-number>
                         </template>
                     </el-table-column>
                   </Table>
@@ -194,15 +194,11 @@
         ],
         activeName:'first',
         shopTableList:[
-            {
-                prop:'No',
-                label:'序号'
-            },
           {
-            prop:'productName',
+            prop:'name',
             label:'名称'
           }, {
-            prop:'productPrice',
+            prop:'price',
             label:'单价'
           }, {
             slot:'stock',
