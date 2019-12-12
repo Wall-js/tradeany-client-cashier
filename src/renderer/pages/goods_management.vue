@@ -124,6 +124,7 @@
                         prop: 'productQty',
                     },
                     {
+                        type:'operation',
                         prop: 'operation',
                         label:'操作',
                         isOperaText: 'isOperaText'
@@ -228,7 +229,14 @@
             addProductSubmit(refs){
                 refs['addProductForm'].validate((valid) => {
                     if (valid) {
-                       console.log(this.addProductForm)
+                        // this.$db.goods.insert(this.addProductForm,(err,newDocs) => {
+                        //     if(newDocs){
+                        //         this.$message.success('录入成功')
+                        //         this.show=false
+                        //     }else {
+                        //         this.$message.success('录入失败，请重试')
+                        //     }
+                        // })
                     } else {
                         console.log('error submit!!');
                         return false;
@@ -246,11 +254,14 @@
                     this.$refs['dialogForm']['$refs']['addProductForm'].resetFields();
                 }
             },
+            //商品操作
             changeOpera (item, action, type) {
-                if (action === '下架') {
-                    this.show = true
-                }
-                if (action === '查看详情') {
+                if (action === '修改') {
+                    this.show = true;
+                    let formItemList = this.addProductFormConfig['formItemList'];
+                    formItemList[0]['disabled'] = true;
+                    formItemList[formItemList.length-2]['disabled'] = true;
+                    this.addProductForm = item
                 }
             },
             changeEdit () {
