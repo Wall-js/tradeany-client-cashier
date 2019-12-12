@@ -28,6 +28,9 @@ const mutations = {
     GET_CACHE_ORDER(state, payload) {
         state.order = state.cacheOrder.find((value, index) => index === payload);
     },
+    DELETE_CACHE_ORDER(state, payload) {
+        state.cacheOrder = state.cacheOrder.filter((value, index) => index !== payload)
+    },
 };
 
 const actions = {
@@ -54,6 +57,7 @@ const actions = {
     },
     // 挂单删除
     deleteCacheOrder(ctx, payload) {
+        ctx.commit("DELETE_CACHE_ORDER")
     },
 };
 
