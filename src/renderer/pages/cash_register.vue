@@ -65,7 +65,7 @@
                 </el-tab-pane>
                 <el-tab-pane label="挂单区" name="second">
                   <Table
-                          :tableList="ordersTableList"
+                          :tableList="shopTableList"
                           :tableData="$store.state.Cashier.cacheOrder"
                           @changeOpera="changeCacheOrder"
                   >
@@ -89,13 +89,51 @@
           <el-row>
             <el-col>
               <el-tabs v-model="rightActiveName" @tab-click="rightHandleClick">
-                <el-tab-pane label="全部" name="first">未定样式</el-tab-pane>
-                <el-tab-pane label="个人洗护" name="second">未定样式</el-tab-pane>
-                <el-tab-pane label="母婴专区" name="third">未定样式</el-tab-pane>
-                <el-tab-pane label="家居生活" name="fourth">未定样式</el-tab-pane>
-                <el-tab-pane label="零食/饮品" name="fifth">未定样式</el-tab-pane>
-                <el-tab-pane label="美容美妆" name="sixth">未定样式</el-tab-pane>
-                <el-tab-pane label="保健养生" name="seventh">未定样式</el-tab-pane>
+                <el-tab-pane label="全部" name="first">
+                  <Table
+                          :tableList="allTableList"
+                          :tableData="$store.state.Goods.list"
+                          @changeOpera="addGoods"
+                  >
+                  </Table>
+                  <el-table
+                          ref="singleTable"
+                          :data="$store.state.Goods.list"
+                          highlight-current-row
+                          @current-change="handleCurrentChange"
+                          style="width: 100%">
+                    <el-table-column
+                            type="index"
+                            width="50">
+                    </el-table-column>
+                    <el-table-column
+                            property="barCode"
+                            label="条形码"
+                            width="120">
+                    </el-table-column>
+                    <el-table-column
+                            property="name"
+                            label="商品名称"
+                            width="120">
+                    </el-table-column>
+                    <el-table-column
+                            property="price"
+                            label="单价"
+                            width="120">
+                    </el-table-column>
+                    <el-table-column
+                            property="stock"
+                            label="库存数量"
+                            width="120">
+                    </el-table-column>
+                  </el-table>
+                </el-tab-pane>
+                <!--<el-tab-pane label="个人洗护" name="second">未定样式</el-tab-pane>-->
+                <!--<el-tab-pane label="母婴专区" name="third">未定样式</el-tab-pane>-->
+                <!--<el-tab-pane label="家居生活" name="fourth">未定样式</el-tab-pane>-->
+                <!--<el-tab-pane label="零食/饮品" name="fifth">未定样式</el-tab-pane>-->
+                <!--<el-tab-pane label="美容美妆" name="sixth">未定样式</el-tab-pane>-->
+                <!--<el-tab-pane label="保健养生" name="seventh">未定样式</el-tab-pane>-->
               </el-tabs>
             </el-col>
           </el-row>
@@ -117,6 +155,12 @@
           >
           </Form>
         </el-col>
+      </el-row>
+      <el-row slot="footer">
+        <div class="float-right">
+          <el-button type="primary" size="mini" @click="SubmitDialog">提交</el-button>
+          <el-button size="mini">取消</el-button>
+        </div>
       </el-row>
     </Dialog>
   </div>
@@ -203,6 +247,26 @@
                 isOperaText:['提单','删除']
             }
         ],
+        //商品列表
+        allTableList: [
+          {
+            label: '序号',
+            prop: 'No',
+          },
+          {
+            label: '条形码',
+            prop: 'barCode',
+          },{
+            label: '商品名称',
+            prop: 'name',
+          },{
+            label: '单价',
+            prop: 'price',
+          },{
+            label: '库存数量',
+            prop: 'stock',
+          },
+        ],
         rightActiveName:'first',
         membershipCode:'',
         barCode:'',
@@ -232,18 +296,18 @@
               placeholder: '请输入价格',
             },{
               type: 'btnGroup',
-              operate: [
-                {
-                  name: '确认',
-                  type: 'primary',
-                  handleClick: this.SubmitDialog
-                },
-                {
-                  name: '取消',
-                  handleClick: this.closeDialog,
-                  style: 'margin-left:10px'
-                }
-              ]
+              // operate: [
+              //   {
+              //     name: '确认',
+              //     type: 'primary',
+              //     handleClick: this.SubmitDialog
+              //   },
+              //   {
+              //     name: '取消',
+              //     handleClick: this.closeDialog,
+              //     style: 'margin-left:10px'
+              //   }
+              // ]
             }
           ],
         },
@@ -264,13 +328,7 @@
         // 添加商品
        createSubOrder() {
         this.$store.dispatch("Cashier/createSubOrder",{"barCode":this.barCode});
-         // let subOrder=this.$store.state.Cashier.order.subOrder;
-         // console.log(11,subOrder)
-         // this.shopTableData=subOrder;
-        //  subOrder.forEach((item,index)=>{
-        //    item['No'] = index+1;
-        //   item['isOperaText']=['删除'];
-        // });
+
       },
         // 商品删除
       changeOpera(item,action,type){
@@ -305,11 +363,21 @@
         this.show=true;
       },
       SubmitDialog(){
+       console.log( this.categoryForm)
 
       },
       closeDialog(){
         this.show=false;
+      },
+      // 添加购物车
+      addGoods(item,action,type){
+        console.log(item)
+        // this.$store.dispatch("Cashier/createSubOrder",{"barCode":this.barCode});
+      },
+      handleCurrentChange(val){
+        console.log(val)
       }
+
     },
     components: {
       Panel,
