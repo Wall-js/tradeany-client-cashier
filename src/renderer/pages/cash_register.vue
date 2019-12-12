@@ -386,6 +386,7 @@
           this.$message.error("暂无结算商品")
         }else {
           this.show=true;
+          console.log(this.$store.state.Cashier.order);
         }
       },
       SubmitDialog(){
@@ -414,7 +415,15 @@
         }
       },
       //确认结算
-      settlementForm(){}
+      settlementForm(){
+        if(this.accountForm.isPrinter){
+          this.$store.dispatch("Cashier/createOrder",this.$store.state.Cashier.order);
+          console.log("打印小票")
+        }else{
+          this.$store.dispatch("Cashier/createOrder",this.$store.state.Cashier.order);
+        }
+        this.show = false
+      }
 
     },
     components: {
