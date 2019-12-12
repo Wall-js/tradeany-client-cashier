@@ -20,7 +20,7 @@
         <button @click="createItem">createItem</button>
         <button @click="deleteItem">deleteItem</button>
         <button @click="updateItem">updateItem</button>
-        <button @click="$store.dispatch('deleteAllItem')">deleteAllItem</button>
+        <button @click="$store.dispatch('Item/deleteAllItem')">deleteAllItem</button>
 
     </div>
 </template>
@@ -41,13 +41,14 @@
             //
             // },
             getItem() {
+                // console.log(this.$store);
                 let payload = {
                     pagination: {
                         current: 2,
                         pageSize: 3,
                     }
                 };
-                this.$store.dispatch("getItem", payload);
+                this.$store.dispatch("Item/getItem", payload);
                 // console.log(this.$store.state.Counter.main)
 
             },
@@ -58,33 +59,37 @@
                         pageSize: 10,
                     }
                 };
-                this.$store.dispatch("getItem", payload);
+                this.$store.dispatch("Item/getItem", payload);
                 // console.log(this.$store.state.Counter.main)
-
             },
+
             deleteItem() {
                 let payload = {
                     _id: "MV2IqSUy70cbwWKA",
                 };
-                this.$store.dispatch("deleteItem", payload);
+                this.$store.dispatch("Item/deleteItem", payload);
             },
+
             createItem() {
                 let payload = {name: "111", quantity: 10, createTime: new Date()};
-                this.$store.dispatch("createItem", payload);
+                this.$store.dispatch("Item/createItem", payload);
             },
+
             updateItem() {
                 let payload = {
                     _id: "MV2IqSUy70cbwWKA",
                     data: {"name": "qweqwe", "quantity": 100}
                 };
-                this.$store.dispatch("updateItem", payload);
+                this.$store.dispatch("Item/updateItem", payload);
             },
+
             inc() {
-                this.$store.dispatch("incCounter");
+                this.$store.dispatch("Item/incCounter");
                 // console.log(this.$store.state.Counter.main)
             },
+
             dec() {
-                this.$store.dispatch("decCounter");
+                this.$store.dispatch("Item/decCounter");
                 // console.log(this.$store.state.Counter.main)
 
             },
