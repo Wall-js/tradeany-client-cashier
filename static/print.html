@@ -44,15 +44,19 @@
         console.log(order);
         //执行渲染
         let html = `<div class="wrapper"><div class="welcome">欢迎光临</div>
-                <div>会员名称：</div><div>${order.username}</div><div>会员卡号：</div><div>${order.uid}</div><div>订单号：</div><div>${order.orderNo}</div><hr/>
+                <div>会员名称：${order.consumer.name}</div><div></div>
+<!--                <div>会员卡号：</div><div>${order.uid}</div><div>订单号：</div><div>${order.orderNo}</div>-->
+                <hr/>
                 <table border="0" class="product"><tr><th align="left">商品名称</th><th align="left">单价</th><th align="left">数量</th><th align="left">价格</th></tr>`;
 
-        for (let index = 0;  index< order.subOrderList.length; index++) {
-            let sub_order = order.subOrderList[index]
-            html += `<tr><td align="left">${sub_order.itemName} ${sub_order.skuName}</td><td align="left">${sub_order.price}</td>
-                            <td align="left">${sub_order.qty}</td><td align="left">${sub_order.payFee}</td></tr>`
+        for (let index = 0;  index< order.subOrder.length; index++) {
+            let sub_order = order.subOrder[index]
+            html += `<tr><td align="left">${sub_order.name}</td><td align="left">${sub_order.price}</td>
+                            <td align="left">${sub_order.quantity}</td><td align="left">${sub_order.price} * ${sub_order.quantity}</td></tr>`
         }
-        html += `</table><br/><div>商品总数：${order.totalQty}</div><div>金额总计：￥${order.payFee}</div><div>销售时间：${order.payTime}</div><br/><hr/><br/><div class="thank">谢谢惠顾，欢迎下次光临!</div></div>`
+        // var nowTime = new Date().Format("yyyy-MM-dd hh:mm");
+        // console.log(nowTime)
+        html += `</table><br/><div>金额总计：￥${order.total}</div><div>销售时间：</div><br/><hr/><br/><div class="thank">谢谢惠顾，欢迎下次光临!</div></div>`
         document.getElementById('app').innerHTML = html;
         ipcRenderer.sendToHost('pong') //向webview所在页面的进程传达消息
     })
