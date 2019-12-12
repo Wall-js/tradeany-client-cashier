@@ -12,6 +12,8 @@
         </div>
         <button @click="getItem">getItem</button>
         <button @click="createItem">createItem</button>
+        <button @click="deleteItem">deleteItem</button>
+        <button @click="updateItem">updateItem</button>
         <button @click="$store.dispatch('deleteAllItem')">deleteAllItem</button>
 
     </div>
@@ -26,9 +28,22 @@
                 // console.log(this.$store.state.Counter.main)
 
             },
+            deleteItem() {
+                let payload = {
+                    _id: "MV2IqSUy70cbwWKA",
+                };
+                this.$store.dispatch("deleteItem", payload);
+            },
             createItem() {
-                let doc = {name:"111",quantity:10};
-                this.$store.dispatch("createItem",doc);
+                let payload = {name: "111", quantity: 10};
+                this.$store.dispatch("createItem", payload);
+            },
+            updateItem() {
+                let payload = {
+                    _id: "MV2IqSUy70cbwWKA",
+                    data: {"name": "qweqwe", "quantity": 100}
+                };
+                this.$store.dispatch("updateItem", payload);
             },
             inc() {
                 this.$store.dispatch("incCounter");
