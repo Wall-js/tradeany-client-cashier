@@ -7,10 +7,6 @@
         <!--<button @click="inc">+</button>-->
         <!--<button @click="dec">-</button>-->
         <!--</div>-->
-        <div>
-            <!--<p>{{$store.state.Cashier.order.total}}</p>-->
-            <!--<p>{{$store.state.Item.getters.total}}</p>-->
-        </div>
 
         <div>
             <ol>
