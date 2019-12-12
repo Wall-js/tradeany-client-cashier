@@ -1,4 +1,5 @@
 import db from "../../datastore";
+import numeral from 'numeral';
 
 const defaultState = {
     order: {
@@ -16,15 +17,13 @@ const defaultState = {
     cacheOrder: [],
 };
 
-
 const state = Object.assign({}, defaultState);
-
 
 const mutations = {
     // 清空收银台
-    TOTAL(state) {
+    TOTAL_ORDER(state) {
         state.order.total = state.order.subOrder.length > 0 ? state.order.subOrder.reduce((total, item, index) => {
-            const a = numeral(item.goods_price);
+            const a = numeral(item.price);
             const b = a.multiply(item.quantity);
             const c = b.add(total);
             if (index === state.order.subOrder.length - 1) {
@@ -47,7 +46,8 @@ const mutations = {
 
     // 清空商品
     CLEAN_SUBORDER(state) {
-        state.order.subOrder = []
+        state.order.subOrder = [];
+        state.order.total = 0
     },
 
     // 添加商品
@@ -63,41 +63,47 @@ const mutations = {
 
     // 删除商品
     DELETE_SUBORDER(state, payload) {
-        const subOrder = state.order.subOrder.filter(v => v._id !== payload._id);
-
-        if (index !== -1) {
-            state.order.subOrder[index].quantity += 1;
-        } else {
-            state.order.subOrder.push(payload);
-        }
-        state.cacheOrder.push(state.order);
+        // const subOrder = state.order.subOrder.filter(v => v._id !== payload._id);
+        //
+        // if (index !== -1) {
+        //     state.order.subOrder[index].quantity += 1;
+        // } else {
+        //     state.order.subOrder.push(payload);
+        // }
+        // state.cacheOrder.push(state.order);
+        // state.order.subOrder.splice(payload.index,1);
+        state.order.subOrder = state.order.subOrder.filter((value, index) => index !== payload.index)
+        // state.order.subOrder[payload.index].quantity = payload.quantity
     },
 
     // 编辑商品数量
     UPDATE_SUBORDER(state, payload) {
-        const index = state.order.subOrder.findIndex((v) => (v._id === payload._id));
-        if (index !== -1) {
-            state.order.subOrder[index].quantity += 1;
-        } else {
-            state.order.subOrder.push(payload);
-        }
-        state.cacheOrder.push(state.order);
+        // const index = state.order.subOrder.findIndex((v) => (v._id === payload._id));
+        // if (index !== -1) {
+        //     state.order.subOrder[index].quantity = payload.quantity;
+        // } else {
+        //     state.order.subOrder.push(payload);
+        // }
+        // state.cacheOrder.push(state.order);
+        state.order.subOrder[payload.index].quantity = payload.quantity
     },
 
     // 挂单
     SET_CACHE_ORDER(state) {
         state.cacheOrder.push(state.order);
         state.order = defaultState.order;
+        console.log(defaultState);
+        console.log(state)
     },
 
     // 提单
     GET_CACHE_ORDER(state, payload) {
-        state.order = state.cacheOrder.find((value, index) => index === payload);
+        state.order = state.cacheOrder.find((value, index) => index === payload.index);
     },
 
     // 挂单删除
     DELETE_CACHE_ORDER(state, payload) {
-        state.cacheOrder = state.cacheOrder.filter((value, index) => index !== payload)
+        state.cacheOrder = state.cacheOrder.filter((value, index) => index !== payload.index)
     },
 };
 
@@ -122,7 +128,7 @@ const actions = {
             if (doc) {
                 doc.quantity = payload.quantity ? payload.quantity : 1;
                 ctx.commit("CREATE_SUBORDER", doc);
-                ctx.commit("TOTAL")
+                ctx.commit("TOTAL_ORDER")
             }
             if (payload) {
                 if (payload.callback) {
@@ -133,18 +139,18 @@ const actions = {
     },
     // 删除商品
     deleteSubOrder(ctx, payload) {
-        ctx.commit("DELETE_SUBORDER", payload)
-        ctx.commit("TOTAL")
+        ctx.commit("DELETE_SUBORDER", payload);
+        ctx.commit("TOTAL_ORDER")
     },
     // 编辑商品数量
     updateSubOrder(ctx, payload) {
-        ctx.commit("UPDATE_SUBORDER", payload)
-        ctx.commit("TOTAL")
+        ctx.commit("UPDATE_SUBORDER", payload);
+        ctx.commit("TOTAL_ORDER")
     },
 
     // 挂单
     setCacheOrder(ctx) {
-        ctx.commit("SET_CACHE_ORDER", payload)
+        ctx.commit("SET_CACHE_ORDER")
     },
     // 提单
     getCacheOrder(ctx, payload) {

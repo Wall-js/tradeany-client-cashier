@@ -42,9 +42,9 @@
                           :tableData="$store.state.Cashier.order.subOrder"
                           @changeOpera="changeOpera"
                   >
-                    <el-table-column slot="stock" label="数量">
+                    <el-table-column slot="stock" label="数量" min-width="120">
                         <template slot-scope="scope">
-                          <el-input-number v-model="scope.row.quantity" :min="0" :max="10000"  size="mini" @change="handleChange"></el-input-number>
+                          <el-input-number v-model="scope.row.quantity" :min="1" :max="100"  size="mini" @change="handleChange"></el-input-number>
                         </template>
                     </el-table-column>
                   </Table>
@@ -90,12 +90,6 @@
             <el-col>
               <el-tabs v-model="rightActiveName" @tab-click="rightHandleClick">
                 <el-tab-pane label="全部" name="first">
-                  <Table
-                          :tableList="allTableList"
-                          :tableData="$store.state.Goods.list"
-                          @changeOpera="addGoods"
-                  >
-                  </Table>
                   <el-table
                           ref="singleTable"
                           :data="$store.state.Goods.list"
@@ -103,6 +97,7 @@
                           @current-change="handleCurrentChange"
                           style="width: 100%">
                     <el-table-column
+                            label="序号"
                             type="index"
                             width="50">
                     </el-table-column>
@@ -199,15 +194,11 @@
         ],
         activeName:'first',
         shopTableList:[
-            {
-                prop:'No',
-                label:'序号'
-            },
           {
-            prop:'productName',
+            prop:'name',
             label:'名称'
           }, {
-            prop:'productPrice',
+            prop:'price',
             label:'单价'
           }, {
             slot:'stock',
