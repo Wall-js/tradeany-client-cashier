@@ -16,16 +16,34 @@ const mutations = {
     GET_GOODS_TOTAL(state, payload) {
         state.pagination.total = payload
     },
+    SET_GOODS_PAGINATION(state, payload) {
+        state.pagination.current = payload.current;
+        state.pagination.pageSize = payload.pageSize
+    },
 };
 
 const actions = {
+    setGoodsPagination(ctx, payload) {
+        ctx.commit("SET_GOODS_PAGINATION", payload);
+    },
+
+    getGoodsTotal(ctx, payload) {
+        db.goods.count({}, function (err, count) {
+            ctx.commit("GET_GOODS_TOTAL", count);
+            if (payload) {
+                if (payload.callback) {
+                    payload.callback(err)
+                }
+            }
+        });
+    },
     getGoods(ctx, payload) {
         // db.goods.find({}, (err, docs) => {
         let pageSize = state.pagination.pageSize;
         let skip = (state.pagination.current - 1) * pageSize;
         db.goods.find({}).skip(skip).limit(pageSize).exec((err, docs) => {
-            ctx.dispatch('getGoodsTotal');
-            ctx.commit('GET_GOODS', docs);
+            ctx.dispatch("getGoodsTotal");
+            ctx.commit("GET_GOODS", docs);
             if (payload) {
                 if (payload.callback) {
                     payload.callback(err)
@@ -74,16 +92,7 @@ const actions = {
 
         })
     },
-    getGoodsTotal(ctx, payload) {
-        db.goods.count({}, function (err, count) {
-            ctx.commit('GET_GOODS_TOTAL', count);
-            if (payload) {
-                if (payload.callback) {
-                    payload.callback(err)
-                }
-            }
-        });
-    },
+
 
 };
 
