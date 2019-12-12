@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <script src="https://cdn.bootcss.com/vue/2.2.2/vue.min.js"></script>
     <title>小票</title>
     <style>
         @page {
@@ -31,58 +30,31 @@
         }
     </style>
 </head>
-<body>
-<div class="wrapper" id="app">
-    <div class="welcome">欢迎光临</div>
-    <div>会员名称：</div>
-    <div>{{ order.username }}</div>
-    <div>会员卡号：</div>
-    <div>{{ order.uid }}</div>
-    <div>订单号：</div>
-    <div>{{ order.orderNo}}</div>
-    <hr/>
-    <table border="0" class="product">
-        <tr>
-            <th align="left">商品名称</th>
-            <th align="left">单价</th>
-            <th align="left">数量</th>
-            <th align="left">价格</th>
-        </tr>
-        <tr v-for="sub_order in order.subOrderList">
-            <td align="left">{{ sub_order.itemName}} {{ sub_order.skuName}}</td>
-            <td align="left">{{ sub_order.price}}</td>
-            <td align="left">{{ sub_order.qty}}</td>
-            <td align="left">{{ sub_order.payFee}}</td>
-        </tr>
-    </table>
-    <br/>
-    <div>商品总数：{{ order.totalQty}}</div>
-    <div>金额总计：￥{{ order.payFee}}</div>
-    <div>销售时间：{{ order.payTime}}</div>
-    <br/>
-    <hr/>
-    <br/>
-    <div class="thank">谢谢惠顾，欢迎下次光临!</div>
-</div>
+<body id="app">
+
 </body>
 
 <script>
     //引入ipcRenderer对象
-    const {ipcRenderer} = require('electron')
-    new Vue({
-        el: "#app",
-        data: {
-            order: {},
-        },
-        mounted() {
-            ipcRenderer.on('ping', (e, order) => { //接收响应
-                console.log(e);
-                console.log(order);
-                this.order = order;
-                ipcRenderer.sendToHost('pong') //向webview所在页面的进程传达消息
-            })
-        },
-        methods: {}
+    const {ipcRenderer} = require('electron');
+
+    ipcRenderer.on('ping', (event, order) => { //接收响应
+        console.log('收到');
+        console.log(event);
+        console.log(order);
+        //执行渲染
+        let html = `<div class="wrapper"><div class="welcome">欢迎光临</div>
+                <div>会员名称：</div><div>${order.username}</div><div>会员卡号：</div><div>${order.uid}</div><div>订单号：</div><div>${order.orderNo}</div><hr/>
+                <table border="0" class="product"><tr><th align="left">商品名称</th><th align="left">单价</th><th align="left">数量</th><th align="left">价格</th></tr>`;
+
+        for (let index = 0;  index< order.subOrderList.length; index++) {
+            let sub_order = order.subOrderList[index]
+            html += `<tr><td align="left">${sub_order.itemName} ${sub_order.skuName}</td><td align="left">${sub_order.price}</td>
+                            <td align="left">${sub_order.qty}</td><td align="left">${sub_order.payFee}</td></tr>`
+        }
+        html += `</table><br/><div>商品总数：${order.totalQty}</div><div>金额总计：￥${order.payFee}</div><div>销售时间：${order.payTime}</div><br/><hr/><br/><div class="thank">谢谢惠顾，欢迎下次光临!</div></div>`
+        document.getElementById('app').innerHTML = html;
+        ipcRenderer.sendToHost('pong') //向webview所在页面的进程传达消息
     })
 </script>
 

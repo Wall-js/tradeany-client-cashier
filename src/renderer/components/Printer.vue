@@ -14,17 +14,16 @@
         data() {
             return {
                 fullPath: path.join(__static, 'print.html'),
-                printList: [],
+                printerList: [],
                 printer: ""
             };
         },
         mounted() {
             this.getPrinterList(); //首先先获取
-            this.Print();
+            this.print()
         },
         methods: {
-            Print() {
-                console.log(111);
+            print() {
                 const webview = document.querySelector("webview");
                 console.log(webview);
                 webview.addEventListener("dom-ready", () => {
@@ -77,23 +76,25 @@
                 //监听主线程获取到打印机列表后的回调
                 ipcRenderer.once("getPrinterList", (event, data) => {
                     //data就是打印机列表
-                    // 过滤可用打印机
-                    this.printList = data.filter(element => element.status === 0)
                     // 1.判断是否有打印服务
-                    if (this.printList.length <= 0) {
+                    console.log(this.printerList.length);
+                    if (this.printerList.length <= 0) {
                         this.$message({
                             message: '打印服务异常,无法找到打印机',
                             type: 'error'
                         })
-                        this.$emit('cancel')
+                    } else {
+                        this.print();
                     }
-                    for (let i in this.printList) {
-                        if (i.isDefault){
+                    // 过滤可用打印机
+                    this.printerList = data.filter(element => element.status === 0);
+                    for (let i in this.printerList) {
+                        if (data[i].isDefault) {
                             this.printer = data[i].name;
                             console.log(this.printer)
                         }
                     }
-                    console.log(this.printList)
+                    console.log(this.printerList)
                 });
             }
         }
