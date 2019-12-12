@@ -1,3 +1,4 @@
+<!--page name:'库存管理'-->
 <template>
     <div class="container">
         <el-card class="searchForm">
@@ -132,28 +133,28 @@
                     },
                     {
                         prop: 'name',
-                        label: '产品名',
+                        label: '条形码',
                         // width: '180'
                     },
                     {
                         prop: 'image',
                         type: 'image',
-                        label: '产品图',
+                        label: '名称',
                         width: '180'
                     },
                     {
                         prop: 'brandName',
-                        label: '品牌',
+                        label: '库存',
                         // width: '180'
                     },
                     {
                         prop: 'sizeName1',
-                        label: '规格名',
+                        label: '类目',
                         // width: '180'
                     },
                     {
                         prop: 'name1',
-                        label: '规格值',
+                        label: '品牌',
                         // width: '180'
                     },
                     {

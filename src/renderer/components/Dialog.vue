@@ -40,7 +40,7 @@
     },
     methods:{
       handleClose(){
-        console.log("handleClose")
+          this.$emit('handleClose')
           this.$emit('update:show', false)
         },
     },

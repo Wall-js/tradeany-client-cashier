@@ -1,21 +1,21 @@
 <template>
   <div id="app">
-    <el-container id="el-container">
+    <el-container id="el-container"  v-if="isShow">
       <SideMenu
               :title="title"
               :itemList="itemList"
               :bgColor = "bgColor"
               :isCollapsed="isCollapsed"
               router
-              v-show="isShow"
       ></SideMenu>
       <el-container id="header-main" direction="vertical">
-        <Header :userName="userName"   v-show="isShow" @handleShow="handleShow" />
+        <Header :userName="userName" @handleShow="handleShow" />
         <el-main>
           <router-view></router-view>
         </el-main>
       </el-container>
     </el-container>
+    <router-view v-else></router-view>
   </div>
 </template>
 
@@ -67,9 +67,15 @@
             icon:'el-icon-notebook-2',
             index: "/printer"
           },
+            {
+                type: 'menuItem',
+                title: 'DEMO',
+                icon: 'el-icon-notebook-2',
+                index: "/demo"
+            },
         ],
         userName:'admin',
-        isShow:false
+        isShow:true
       }
     },
     methods:{
@@ -78,18 +84,18 @@
       }
     },
     created(){
-      if(this.$route.path !== '/'){
-        this.isShow = true
-      }
+      // if(this.$route.path !== '/'){
+      //   this.isShow = true
+      // }
     },
-    watch:{
-      $route(to,from){
-        console.log("当前路由",this.$route.path);
-        if(this.$route.path !== '/'){
-          this.isShow = true
-        }
-      }
-    },
+    // watch:{
+    //   $route(to,from){
+    //     console.log("当前路由",this.$route.path);
+    //     if(this.$route.path !== '/'){
+    //       this.isShow = true
+    //     }
+    //   }
+    // },
   }
 </script>
 
