@@ -1,23 +1,23 @@
 <!--page name:'商品管理'-->
 <template>
-    <div class="container">
-        <el-card class="searchForm">
+    <div>
+        <el-card>
             <Form :value="searchForm"
-                    :formConfig="searchFormConfig"
-                    refName="searchForm"
+                   :formConfig="searchFormConfig"
+                   refName="searchForm"
             >
                 <div slot="codeInput" class="float-right m-l-sm">
                     <el-button  icon="el-icon-full-screen" size="small" ></el-button>
                 </div>
             </Form>
         </el-card>
-        <el-card class="mainBox">
+        <el-card class="m-t-sm">
             <el-row>
                 <el-col>
                     <el-button type="primary" size="small" @click="()=>{this.show=true}">商品录入</el-button>
                 </el-col>
             </el-row>
-            <el-row style="padding-top: 14px">
+            <el-row class="m-t-sm">
                 <el-col>
                     <package-table
                             :tableList="tableList"
@@ -125,7 +125,7 @@
                         prop: 'productPrice',
                     },{
                         label: '库存数量',
-                        prop: 'productQty',
+                        prop: 'stock',
                     },
                     {
                         type:'operation',
@@ -134,15 +134,6 @@
                         isOperaText: 'isOperaText'
                     }
                 ],
-                tableData: [
-                    {
-                        productQty:12121212,
-                        isOperaText:['修改']
-                    }
-                ],
-                pageTotal: this.$store.state.Goods.pagination.total,
-                pageSize: 10,
-                currentPage:'1',
                 //商品录入
                 show:false,
                 dialogConfig:{
@@ -189,7 +180,7 @@
                         },{
                             type: 'input',
                             label: '库存数量',
-                            prop: 'productQty',
+                            prop: 'stock',
                             style:'width:300px',
                             placeholder: '请输入数量',
                         }, {
@@ -209,6 +200,7 @@
                         }
                     ],
                 },
+                isEdit:false
             }
         },
         components: {
@@ -230,12 +222,22 @@
                 refs['searchForm'].resetFields();
             },
             //商品录入
-            async addProductSubmit(refs){
+            addProductSubmit(refs){
                 refs['addProductForm'].validate((valid) => {
                     if (valid) {
-                        this.$store.dispatch("createGoods",this.addProductForm)
-                        this.$message.success('录入成功')
-                        this.tableData = this.$store.state.Goods.list;
+                        if(this.isEdit){
+                            let addProductForm = this.addProductForm
+                            let payload = {
+                                _id:addProductForm['_id'],
+                                data:{...addProductForm}
+                            }
+                            this.$store.dispatch("Goods/updateGoods",payload)
+                            this.$message.success('修改成功')
+                        }else {
+                            this.$store.dispatch("Goods/createGoods",this.addProductForm)
+                            this.$message.success('录入成功')
+                        }
+
                         this.show=false;
                         refs['addProductForm'].resetFields();
                     } else {
@@ -247,7 +249,7 @@
             //关闭弹窗
             closeDialog(refs){
                 if(refs){
-                    this.show=false
+                    this.show=false;
                     refs['addProductForm'].resetFields();
                 }else {
                     this.$refs['dialogForm']['$refs']['addProductForm'].resetFields();
@@ -256,18 +258,19 @@
             //商品操作
             changeOpera (item, action, type) {
                 if (action === '修改') {
+                    this.isEdit = true;
                     this.show = true;
                     let formItemList = this.addProductFormConfig['formItemList'];
                     formItemList[0]['disabled'] = true;
                     formItemList[formItemList.length-2]['disabled'] = true;
-                    this.addProductForm = item
+                    this.addProductForm = {...item}
                 }else if(action === '删除'){
                     this.$confirm('此操作将删除该商品, 是否继续?', '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
                         type: 'warning'
                     }).then(() => {
-                        this.$store.dispatch("deleteGoods",{_id:item.id})
+                        this.$store.dispatch("Goods/deleteGoods",{_id:item._id})
                     })
 
                 }
@@ -275,20 +278,17 @@
             changeEdit () {
 
             },
-
             /**
              * 分页数据
              * @param item
              */
-            async pageChange (item) {
-                console.log("执行分")
-                let payload = {
+            pageChange (item) {
+                this.$store.dispatch("Goods/getGoods",{
                     pagination: {
                         current: item,
                         pageSize: 10,
                     },
-                };
-                this.getGoods(payload)
+                });
             },
             /**
              * 下架按钮
@@ -296,50 +296,29 @@
             submitRechargeForm () {
                 this.show = false
             },
-            //获取数据
-            getGoods(payload){
-                this.$store.dispatch("getGoods",payload);
-                const list = this.$store.state.Goods.list;
-                console.log(this.$store.state.Goods.list)
-                console.log(this.$store.state.Goods.pagination)
-                if(list){
-                    list.forEach((item,index)=>{
-                        item['No'] = index+1;
-                        item['isOperaText'] = [`修改`,`删除`]
-                    })
-                }
-                this.tableData = list;
-            }
         },
-        created() {
-            this.getGoods({
+        beforeCreate(){
+            //获取当前路由
+            console.log(this.$route);
+            this.$store.dispatch("Goods/getCurrentRouter",{
                 pagination: {
                     current: 1,
                     pageSize: 10,
-                }})
-        }
+                }});
+
+        },
+        created() {
+            //获取数据
+            this.$store.dispatch("Goods/getGoods",{
+                pagination: {
+                    current: 1,
+                    pageSize: 10,
+                }});
+        },
+
     }
 </script>
 
 <style scoped>
-    .container {
-        margin: 0 auto;
-    }
-
-    .mainBox {
-        margin: 10px 0 30px !important;
-        min-height: 100vh;
-    }
-
-    .searchForm {
-        margin-top: 10px;
-    }
-
-    .mainBox-btn {
-        margin-bottom: 8px;
-        margin-top: 5px;
-        float: right;
-    }
-
 </style>
 
