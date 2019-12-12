@@ -10,7 +10,7 @@
               v-show="isShow"
       ></SideMenu>
       <el-container id="header-main" direction="vertical">
-        <Header :userName="userName"  v-show="isShow" @handleShow="handleShow" />
+        <Header :userName="userName"   v-show="isShow" @handleShow="handleShow" />
         <el-main>
           <router-view></router-view>
         </el-main>
@@ -33,38 +33,21 @@
         itemList: [
           {
             type: 'menuItem',
-            title: '收 银 台',
+            title: '收银台',
             icon:'el-icon-full-screen',
             index: "/home"
           },
           {
-            type: 'submenu',
+            type: 'menuItem',
             title: '商品管理',
-            index: "1",
             icon:"el-icon-s-goods",
-            routers: [
-              {
-                type: 'itemGroup',
-                title: '商品管理',
-                index: "/",
-                routers: [
-                  {
-                    labelName: '在售产品',
-                    index: "/selling-goods"
-                  },
-                  {
-                    labelName: '云仓产品',
-                    index: "/"
-                  },
-                ],
-              },
-            ],
+            index: "/goods-management"
           },
           {
             type: 'menuItem',
             title: '库存管理',
             icon:"el-icon-s-shop",
-            // index: "/"
+            index: "/stock-management"
           },
           {
             type: 'menuItem',
@@ -92,13 +75,11 @@
     methods:{
       handleShow(){
         this.isCollapsed=!this.isCollapsed;
-      },
+      }
     },
     created(){
       if(this.$route.path !== '/'){
         this.isShow = true
-      }else {
-        this.isShow = false
       }
     },
     watch:{
@@ -106,8 +87,6 @@
         console.log("当前路由",this.$route.path);
         if(this.$route.path !== '/'){
           this.isShow = true
-        }else {
-          this.isShow = false
         }
       }
     },
