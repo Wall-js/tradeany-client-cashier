@@ -99,6 +99,7 @@ const mutations = {
     // 提单
     GET_CACHE_ORDER(state, payload) {
         state.order = state.cacheOrder.find((value, index) => index === payload.index);
+        state.cacheOrder = state.cacheOrder.filter((value, index) => index !== payload.index)
     },
 
     // 挂单删除

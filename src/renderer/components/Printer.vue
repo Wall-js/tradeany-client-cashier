@@ -20,7 +20,6 @@
         },
         mounted() {
             this.getPrinterList(); //首先先获取
-            this.print()
         },
         methods: {
             print() {
@@ -45,7 +44,7 @@
                         ],
                         "totalQty": "2",
                         "payFee": "10.00",
-                        "payTime": "2019-12-11 12:12:12",
+                        "payTime": "2019-12-11 12:12",
                     };
                     //在send时将arr传递过去
                     webview.send("ping", order); //向webview嵌套的页面响应事件
@@ -54,9 +53,10 @@
                     console.log(event.channel); // Prints "pong" 在此监听事件中接收webview嵌套页面所响应的事件
                     if (event.channel == "pong") {
                         console.log("通信成功");
+                        console.log(this.printer);
                         webview.print(
                             {
-                                //是否是静默打印,true为静默打印，false会弹出打印设置框
+                                //是否是静默打印,true 为静默打印，false 会弹出打印设置框
                                 silent: true,
                                 printBackground: true,
                                 //打印机的名称，this.print1为在getPrinterList()方法中获取到的打印机名字。
@@ -76,16 +76,6 @@
                 //监听主线程获取到打印机列表后的回调
                 ipcRenderer.once("getPrinterList", (event, data) => {
                     //data就是打印机列表
-                    // 1.判断是否有打印服务
-                    console.log(this.printerList.length);
-                    if (this.printerList.length <= 0) {
-                        this.$message({
-                            message: '打印服务异常,无法找到打印机',
-                            type: 'error'
-                        })
-                    } else {
-                        this.print();
-                    }
                     // 过滤可用打印机
                     this.printerList = data.filter(element => element.status === 0);
                     for (let i in this.printerList) {
@@ -94,7 +84,17 @@
                             console.log(this.printer)
                         }
                     }
-                    console.log(this.printerList)
+                    console.log(this.printerList);
+                    // 判断是否有打印服务
+                    console.log(this.printerList.length);
+                    if (this.printerList.length <= 0) {
+                        this.$message({
+                            message: '打印服务异常,无法找到打印机服务',
+                            type: 'error'
+                        })
+                    } else {
+                        this.print();
+                    }
                 });
             }
         }
