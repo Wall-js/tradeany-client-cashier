@@ -11,7 +11,7 @@
                 </div>
             </Form>
         </el-card>
-        <el-card class="m-t-sm">
+        <el-card class="m-t-sm min-height-lg">
             <el-row>
                 <el-col>
                     <el-button type="primary" size="small" @click="()=>{this.show=true}">商品录入</el-button>
@@ -73,7 +73,7 @@
                  **/
                 searchForm: {
                     barCode:'',
-                    productName:''
+                    name:''
                 },
                 searchFormConfig: {
                     line_type: true,
@@ -88,7 +88,7 @@
                         },{
                             type: 'input',
                             label: '商品名称：',
-                            prop: 'productName',
+                            prop: 'name',
                             style:'width:300px',
                             placeholder: '请输入商品名称',
                         }, {
@@ -119,10 +119,10 @@
                         prop: 'barCode',
                     },{
                         label: '商品名称',
-                        prop: 'productName',
+                        prop: 'name',
                     },{
                         label: '单价',
-                        prop: 'productPrice',
+                        prop: 'price',
                     },{
                         label: '库存数量',
                         prop: 'stock',
@@ -142,9 +142,9 @@
                 },
                 addProductForm:{
                     barCode:'',
-                    productName:'',
-                    productPrice:'',
-                    productQty:''
+                    name:'',
+                    price:'',
+                    stock:''
                 },
                 addProductFormConfig: {
                     labelWidth:'120px',
@@ -162,7 +162,7 @@
                         },{
                             type: 'input',
                             label: '商品名称',
-                            prop: 'productName',
+                            prop: 'name',
                             style:'width:300px',
                             placeholder: '请输入商品名称',
                             rules:[
@@ -171,7 +171,7 @@
                         },{
                             type: 'input',
                             label: '单价',
-                            prop: 'productPrice',
+                            prop: 'price',
                             style:'width:300px',
                             placeholder: '请输入单价',
                             rules:[
@@ -275,9 +275,6 @@
 
                 }
             },
-            changeEdit () {
-
-            },
             /**
              * 分页数据
              * @param item
@@ -290,22 +287,11 @@
                     },
                 });
             },
-            /**
-             * 下架按钮
-             * */
-            submitRechargeForm () {
-                this.show = false
-            },
         },
         beforeCreate(){
             //获取当前路由
-            console.log(this.$route);
-            this.$store.dispatch("Goods/getCurrentRouter",{
-                pagination: {
-                    current: 1,
-                    pageSize: 10,
-                }});
-
+            console.log(this.$route.path);
+            this.$store.dispatch("Goods/getCurrentRouter",this.$route.path);
         },
         created() {
             //获取数据

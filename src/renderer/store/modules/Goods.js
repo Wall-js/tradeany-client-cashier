@@ -13,10 +13,20 @@ const state = {
 const mutations = {
     SET_GOODS(state, payload) {
         if(payload){
-            payload.forEach((item,index)=>{
-                item['No'] = index+1;
-                item['isOperaText'] = [`修改`,`删除`]
-            })
+            let currentRouter = state.currentRouter;
+            if(currentRouter === '/goods-management'){
+                payload.forEach((item,index)=>{
+                    item['No'] = index+1;
+                    item['isOperaText'] = [`修改`,`删除`]
+
+                })
+            }else if(currentRouter === '/stock-management'){
+                payload.forEach((item,index)=>{
+                    item['No'] = index+1;
+                    item['isOperaText'] = [`修改`]
+                })
+            }
+
         }
         state.list = payload
     },
