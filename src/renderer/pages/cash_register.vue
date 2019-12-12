@@ -53,10 +53,10 @@
                     <el-col  class="flex-row just-between flex-align" :span="18" >
                       <div>
                         <span>总价</span>
-                        <h4>￥{{$store.state.Cashier.total}}</h4>
+                        <h4>￥{{$store.state.Cashier.order.total}}</h4>
                       </div>
                       <div>
-                        <el-button type="primary" size="small">
+                        <el-button type="primary" size="small" @click="Category()">
                           结算
                         </el-button>
                       </div>
@@ -102,12 +102,31 @@
         </el-card>
       </el-col>
     </el-row>
+    <!--结算弹窗-->
+    <Dialog
+            :show.sync="show"
+            :dialogConfig="dialogConfig"
+            @handleClose="closeDialog"
+    >
+      <el-row slot="content">
+        <el-col>
+          <Form
+                  :value="categoryForm"
+                  :formConfig="FormConfig"
+                  ref="FormConfig"
+          >
+          </Form>
+        </el-col>
+      </el-row>
+    </Dialog>
   </div>
 </template>
 
 <script>
   import Panel from '../components/Panel';
   import Table from '../components/Table';
+  import Dialog from '../components/Dialog';
+  import Form from '../components/Form';
   export default {
     name: "CashRegister",
     data () {
@@ -187,7 +206,47 @@
         rightActiveName:'first',
         membershipCode:'',
         barCode:'',
-
+        // 商品结算
+        show:false,
+        dialogConfig:{
+          title:'商品结算',
+          width:'500px',
+        },
+        categoryForm:{
+          price:''
+        },
+        FormConfig: {
+          labelWidth:'120px',
+          formItemList: [
+           {
+              type: 'input',
+              label: '实收金额',
+              prop: 'amount',
+              style:'width:300px',
+              placeholder: '请输入金额',
+            },{
+              type: 'input',
+              label: '找零',
+              prop: 'price',
+              style:'width:300px',
+              placeholder: '请输入价格',
+            },{
+              type: 'btnGroup',
+              operate: [
+                {
+                  name: '确认',
+                  type: 'primary',
+                  handleClick: this.SubmitDialog
+                },
+                {
+                  name: '取消',
+                  handleClick: this.closeDialog,
+                  style: 'margin-left:10px'
+                }
+              ]
+            }
+          ],
+        },
       }
     },
     methods: {
@@ -230,8 +289,8 @@
         // 挂单
       setCacheOrder(){
           this.$store.dispatch("Cashier/setCacheOrder");
-          console.log(this.$store.getters.total)
-        console.log(this.$store.state.Cashier.cacheOrder)
+          // console.log(this.$store.getters.total)
+        // console.log(this.$store.state.Cashier.cacheOrder)
       },
         // 挂单操作
       changeCacheOrder(item,action,type){
@@ -240,12 +299,23 @@
           }else if(action==='删除'){
               this.$store.dispatch("Cashier/deleteCacheOrder",item.No);
           }
-        }
+        },
+      // 计算提交
+      Category(){
+        this.show=true;
+      },
+      SubmitDialog(){
 
+      },
+      closeDialog(){
+        this.show=false;
+      }
     },
     components: {
       Panel,
-      Table
+      Table,
+      Dialog,
+      Form
     },
     computed: {
 
