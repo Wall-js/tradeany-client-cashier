@@ -9,6 +9,7 @@ const state = {
     },
 };
 
+
 const mutations = {
     GET_ITEM(state, payload) {
         state.list = payload

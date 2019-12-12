@@ -1,5 +1,11 @@
 import db from "../../datastore"
 
+const model = {
+    barCode:'',
+    name:'',
+    price:'',
+    stock:'',
+};
 const state = {
     list: [],
     pagination: {
@@ -13,10 +19,20 @@ const state = {
 const mutations = {
     SET_GOODS(state, payload) {
         if(payload){
-            payload.forEach((item,index)=>{
-                item['No'] = index+1;
-                item['isOperaText'] = [`修改`,`删除`]
-            })
+            let currentRouter = state.currentRouter;
+            if(currentRouter === '/goods-management'){
+                payload.forEach((item,index)=>{
+                    item['No'] = index+1;
+                    item['isOperaText'] = [`修改`,`删除`]
+
+                })
+            }else if(currentRouter === '/stock-management'){
+                payload.forEach((item,index)=>{
+                    item['No'] = index+1;
+                    item['isOperaText'] = [`修改`]
+                })
+            }
+
         }
         state.list = payload
     },
@@ -47,6 +63,21 @@ const actions = {
         let pageSize = ctx.state.pagination.pageSize;
         let skip = (ctx.state.pagination.current - 1) * pageSize;
         db.goods.find({}).skip(skip).limit(pageSize).exec((err, docs) => {
+            ctx.dispatch('getGoodsTotal');
+            ctx.commit('SET_GOODS', docs);
+            if (payload) {
+                if (payload.callback) {
+                    payload.callback(err)
+                }
+            }
+        });
+    },
+    //商品过滤
+    filterGoods(ctx, payload){
+        ctx.commit('SET_GOODS_PAGINATION', payload);
+        let pageSize = ctx.state.pagination.pageSize;
+        let skip = (ctx.state.pagination.current - 1) * pageSize;
+        db.goods.find({ 'name': payload.form.name}).skip(skip).limit(pageSize).exec((err, docs) => {
             ctx.dispatch('getGoodsTotal');
             ctx.commit('SET_GOODS', docs);
             if (payload) {
@@ -109,7 +140,7 @@ const actions = {
     },
     getCurrentRouter(ctx, payload){
         ctx.commit('SET_CURRENT_ROUTER', payload);
-    }
+    },
 };
 
 

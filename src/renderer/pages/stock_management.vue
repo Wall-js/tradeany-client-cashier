@@ -11,7 +11,7 @@
                 </div>
             </Form>
         </el-card>
-        <el-card class="m-t-sm">
+        <el-card class="m-t-sm min-height-lg">
             <el-row>
                 <el-col>
                     <package-table
@@ -28,7 +28,7 @@
                 </el-col>
             </el-row>
         </el-card>
-        <!--商品录入弹窗-->
+        <!--修改库存弹窗-->
         <Dialog
                 :show.sync="show"
                 :dialogConfig="dialogConfig"
@@ -37,9 +37,9 @@
             <el-row slot="content">
                 <el-col>
                     <Form
-                            :value="addProductForm"
-                            :formConfig="addProductFormConfig"
-                            refName="addProductForm"
+                            :value="editStockForm"
+                            :formConfig="editStockFormConfig"
+                            refName="editStockForm"
                             ref="dialogForm"
                     >
                         <div slot="codeInput" class="float-right m-l-sm">
@@ -68,7 +68,7 @@
                  **/
                 searchForm: {
                     barCode:'',
-                    productName:''
+                    name:''
                 },
                 searchFormConfig: {
                     line_type: true,
@@ -83,7 +83,7 @@
                         },{
                             type: 'input',
                             label: '商品名称：',
-                            prop: 'productName',
+                            prop: 'name',
                             style:'width:300px',
                             placeholder: '请输入商品名称',
                         }, {
@@ -114,10 +114,10 @@
                         prop: 'barCode',
                     },{
                         label: '商品名称',
-                        prop: 'productName',
+                        prop: 'name',
                     },{
                         label: '单价',
-                        prop: 'productPrice',
+                        prop: 'price',
                     },{
                         label: '库存数量',
                         prop: 'stock',
@@ -132,16 +132,16 @@
                 //商品录入
                 show:false,
                 dialogConfig:{
-                    title:'商品录入',
+                    title:'修改库存',
                     width:'500px',
                 },
-                addProductForm:{
+                editStockForm:{
                     barCode:'',
-                    productName:'',
-                    productPrice:'',
-                    productQty:''
+                    name:'',
+                    price:'',
+                    stock:''
                 },
-                addProductFormConfig: {
+                editStockFormConfig: {
                     labelWidth:'120px',
                     formItemList: [
                         {
@@ -156,24 +156,6 @@
                             ],
                         },{
                             type: 'input',
-                            label: '商品名称',
-                            prop: 'productName',
-                            style:'width:300px',
-                            placeholder: '请输入商品名称',
-                            rules:[
-                                {required: true, message: '请输入商品名称', trigger: 'blur'}
-                            ],
-                        },{
-                            type: 'input',
-                            label: '单价',
-                            prop: 'productPrice',
-                            style:'width:300px',
-                            placeholder: '请输入单价',
-                            rules:[
-                                {required: true, message: '请输入单价', trigger: 'blur'}
-                            ],
-                        },{
-                            type: 'input',
                             label: '库存数量',
                             prop: 'stock',
                             style:'width:300px',
@@ -184,7 +166,7 @@
                                 {
                                     name: '确认',
                                     type: 'primary',
-                                    handleClick: this.addProductSubmit
+                                    handleClick: this.editStockSubmit
                                 },
                                 {
                                     name: '取消',
@@ -195,7 +177,6 @@
                         }
                     ],
                 },
-                isEdit:false
             }
         },
         components: {
@@ -216,25 +197,19 @@
             reset(refs) {
                 refs['searchForm'].resetFields();
             },
-            //商品录入
-            addProductSubmit(refs){
-                refs['addProductForm'].validate((valid) => {
+            //修改库存
+            editStockSubmit(refs){
+                refs['editStockForm'].validate((valid) => {
                     if (valid) {
-                        if(this.isEdit){
-                            let addProductForm = this.addProductForm
-                            let payload = {
-                                _id:addProductForm['_id'],
-                                data:{...addProductForm}
-                            }
-                            this.$store.dispatch("Goods/updateGoods",payload)
-                            this.$message.success('修改成功')
-                        }else {
-                            this.$store.dispatch("Goods/createGoods",this.addProductForm)
-                            this.$message.success('录入成功')
+                        let editStockForm = this.editStockForm
+                        let payload = {
+                            _id:editStockForm['_id'],
+                            data:{...editStockForm}
                         }
-
+                        this.$store.dispatch("Goods/updateGoods",payload)
+                        this.$message.success('修改成功')
                         this.show=false;
-                        refs['addProductForm'].resetFields();
+                        refs['editStockForm'].resetFields();
                     } else {
                         console.log('error submit!!');
                         return false;
@@ -245,33 +220,19 @@
             closeDialog(refs){
                 if(refs){
                     this.show=false;
-                    refs['addProductForm'].resetFields();
+                    refs['editStockForm'].resetFields();
                 }else {
-                    this.$refs['dialogForm']['$refs']['addProductForm'].resetFields();
+                    this.$refs['dialogForm']['$refs']['editStockForm'].resetFields();
                 }
             },
             //商品操作
             changeOpera (item, action, type) {
                 if (action === '修改') {
-                    this.isEdit = true;
                     this.show = true;
-                    let formItemList = this.addProductFormConfig['formItemList'];
+                    let formItemList = this.editStockFormConfig['formItemList'];
                     formItemList[0]['disabled'] = true;
-                    formItemList[formItemList.length-2]['disabled'] = true;
-                    this.addProductForm = {...item}
-                }else if(action === '删除'){
-                    this.$confirm('此操作将删除该商品, 是否继续?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning'
-                    }).then(() => {
-                        this.$store.dispatch("Goods/deleteGoods",{_id:item._id})
-                    })
-
+                    this.editStockForm = {...item}
                 }
-            },
-            changeEdit () {
-
             },
             /**
              * 分页数据
@@ -285,12 +246,11 @@
                     },
                 });
             },
-            /**
-             * 下架按钮
-             * */
-            submitRechargeForm () {
-                this.show = false
-            },
+        },
+        beforeCreate(){
+            //获取当前路由
+            console.log(this.$route.path);
+            this.$store.dispatch("Goods/getCurrentRouter",this.$route.path);
         },
         created() {
             //获取数据
