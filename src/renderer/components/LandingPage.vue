@@ -46,11 +46,13 @@
                 this.$electron.shell.openExternal(link)
             },
             testGet() {
-                let result;
-                this.$db.user.find({}, (err, newDocs) => {
-                    console.log(newDocs);
-                });
-                console.log(result);
+                // let result;
+                // this.$db.user.find({}, (err, newDocs) => {
+                //     console.log(newDocs);
+                // });
+                // console.log(result);
+                let docs = itemCat.get();
+                console.log(docs)
             },
             testSave() {
                 let doc = {
@@ -63,14 +65,17 @@
                     , fruits: ['apple', 'orange', 'pear']
                     , infos: {name: 'nedb'}
                 };
-                this.$db.user.insert(doc, (err, newDocs) => {
-                    console.log(newDocs);
-                })
+                // this.$db.user.insert(doc, (err, newDocs) => {
+                //     console.log(newDocs);
+                // })
+                itemCat.save(doc)
             },
             testDel() {
-                this.$db.user.remove({}, {multi: true}, (err, newDocs) => {
-                    console.log(newDocs);
-                })
+                // this.$db.user.remove({}, {multi: true}, (err, newDocs) => {
+                //     console.log(newDocs);
+                // })
+                itemCat.del()
+
             }
         }
     }

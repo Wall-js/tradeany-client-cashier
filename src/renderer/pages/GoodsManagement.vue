@@ -9,11 +9,11 @@
         <el-card class="mainBox">
             <el-row style="padding-top: 14px">
                 <el-col>
-                    <packageTable
+                    <package-table
                             :tableList="TableList"
                             :tableData="TableData"
                             @changeOpera="changeOpera"
-                    ></packageTable>
+                    ></package-table>
                 </el-col>
             </el-row>
             <el-row>
@@ -28,11 +28,10 @@
 
 <script>
 
-    import pageBreak from '../../components/Pagination'
-    import Search from '../../components/Form'
-    import Form from '../../components/Form'
-    import packageTable from '../../components/Table'
-    import Dialog from '../../components/Dialog';
+    import PageBreak from '../components/Pagination'
+    import Search from '../components/Form'
+    import PackageTable from '../components/Table'
+    import Dialog from '../components/Dialog';
 
     export default {
         layout: 'home',
@@ -51,61 +50,46 @@
                     formItemList: [
                         {
                             type: 'input',
-                            prop: 'a',
-                            label: '品牌：',
-                            placeholder: '请输入内容',
-                            labelWidth: '100px',
-                        },
-                        {
-                            type: 'input',
-                            prop: 'b',
                             label: '商品名称：',
-                            placeholder: '请输入内容',
-                            labelWidth: '100px',
-                        },
-                        {
+                            prop: 'line_name',
+                            placeholder: '请输入',
+                            labelWidth:'120px',
+                        },{
                             type: 'select',
-                            label: '状态',
-                            prop: 'c ',
-                            labelWidth: '80px',
+                            label: '商品分类：',
+                            prop: 'line_name',
+                            labelWidth:'120px',
                             optList: [
                                 {
                                     value: '选项1',
-                                    label: '已付款'
+                                    label: '全部'
                                 }, {
                                     value: '选项2',
                                     label: '已成托'
-                                }
-                            ]
-                        },
-                        {
+                                }]
+                        },{
+                            type: 'input',
+                            label: '品牌：',
+                            prop: 'line_name',
+                            placeholder: '请输入',
+                            labelWidth:'120px',
+                        },{
                             type: 'rangeInput',
                             prop: 'price',
+                            label: '商品价格：',
                             propList:['min','max'],
                             unit:'元',
                             numConfig:{
                                 precision:2,
                                 step:0.1,
                                 min:0,
-                                // max:'',
-                            },
-                            style:"width:100px",
-                            label: '商品价格：',
-                            placeholder: '请输入内容',
-                            labelWidth: '100px',
-                        },
-                        {
-                            type: "date",
-                            prop: "d",
-                            label: '发布时间：',
-                            dataType:"daterange",
-                            middleWord:"-",
-                            startPlaceholder:"开始时间",
-                            endPlaceholder:"结束时间",
-                            style:"width:200px",
-                            labelWidth:"100px",
-                        },
-                        {
+                            }},{
+                            type: 'input',
+                            label: '物理仓：',
+                            prop: 'line_name',
+                            placeholder: '请输入',
+                            labelWidth:'120px',
+                        }, {
                             type: 'btnGroup',
                             operate: [
                                 {
@@ -119,9 +103,7 @@
                                     style: 'margin-left:10px'
                                 }
                             ]
-
                         }
-
                     ],
                 },
 
@@ -146,19 +128,23 @@
                         prop: 'brandName',
                         label: '品牌',
                         // width: '180'
-                    },{
+                    },
+                    {
                         prop: 'sizeName1',
                         label: '规格名',
                         // width: '180'
-                    }, {
+                    },
+                    {
                         prop: 'name1',
                         label: '规格值',
                         // width: '180'
-                    },{
+                    },
+                    {
                         prop: 'name2',
                         label: '规格值',
                         // width: '180'
-                    },{
+                    },
+                    {
                         prop: 'cloudPrice',
                         label: '运营价格',
                         // width: '180'
@@ -179,19 +165,21 @@
                         type: 'operation',
                         isOperaText: 'isOperaText'
                         // width: '150',
-                    }],
-                TableData: [],
+                    }
+                    ],
+                TableData: [
+
+                ],
                 pageTotal: 1,
                 PageSize: 10,
                 currentPage:'1',
             }
         },
         components: {
-            pageBreak,
+            PageBreak,
             Search,
-            packageTable,
+            PackageTable,
             Dialog,
-            Form
         },
         methods: {
             changeOpera (item, action, type) {

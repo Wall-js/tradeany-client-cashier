@@ -19,9 +19,9 @@ export default new Router({
     },
     //商品管理
     {
-      path: '/selling-goods',
-      name: 'selling-goods',
-      component: require('@/pages/product_management').default
+      path: '/goods-management',
+      name: 'goods-management',
+      component: require('@/pages/GoodsManagement').default
     },
     //销售统计
     {
@@ -29,11 +29,27 @@ export default new Router({
       name: 'landing-page',
       component: require('@/components/LandingPage').default
     },
+    //库存管理
+    {
+      path: '/stock-management',
+      name: '/stock-management',
+      component: require('@/pages/StockManagement').default
+    },
       //类目管理
     {
       path: '/category',
       name: 'category',
       component: require('@/pages/category').default
+    },
+      {
+          path: '/demo',
+          name: 'demo',
+          component: require('@/pages/demo').default
+      },
+    {
+      path: '/printer',
+      name: 'printer',
+      component: require('@/components/Printer').default
     },
     {
       path: '*',
