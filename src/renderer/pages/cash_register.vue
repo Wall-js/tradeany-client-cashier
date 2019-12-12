@@ -365,12 +365,9 @@
         this.show=false;
       },
       // 添加购物车
-      addGoods(item,action,type){
-        console.log(item)
-        // this.$store.dispatch("Cashier/createSubOrder",{"barCode":this.barCode});
-      },
       handleCurrentChange(val){
-        console.log(val)
+        console.log(val.barCode)
+        this.$store.dispatch("Cashier/createSubOrder",{"barCode":this.barCode});
       }
 
     },
