@@ -286,7 +286,6 @@
                     current:item
                 }
                 this.$store.dispatch('setGoodsPagination',params);
-                this.getGoods()
             },
             /**
              * 下架按钮
@@ -298,6 +297,7 @@
             async getGoods(){
                 this.$store.dispatch("getGoods");
                 const list = this.$store.state.Goods.list;
+                console.log(this.$store.state.Goods.list)
                 console.log(this.$store.state.Goods.pagination)
                 if(list){
                     list.forEach((item,index)=>{
