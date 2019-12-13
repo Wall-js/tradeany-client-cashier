@@ -116,6 +116,7 @@
                         }
                     ],
                 },
+
                 //商品列表
                 tableList: [
                     {
@@ -216,6 +217,7 @@
              */
             //查询
             search() {
+
                 this.$store.dispatch("Goods/filterGoods",{
                     pagination: {
                         current: 1,
@@ -265,7 +267,6 @@
                         console.log(price);
                         addProductForm['price'] = price;
                         if(this.isEdit){
-
                             let payload = {
                                 _id:addProductForm['_id'],
                                 data:{...addProductForm}

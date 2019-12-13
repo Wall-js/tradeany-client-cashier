@@ -120,7 +120,7 @@
         <el-card class="min-height-lg">
           <el-row>
             <el-col class="flex-row">
-              <el-input placeholder="请输入商品条码或用扫码枪扫码" v-model="barCode" @keyup.enter.native="createSubOrder">
+              <el-input placeholder="请输入商品条码或用扫码枪扫码" v-model="barCode" @keyup.enter.native="createSubOrder" autofocus="true" clearable="true">
                 <template slot="prepend"><el-button  icon="el-icon-full-screen" size="small"></el-button></template>
                 <template slot="append"><el-button  type="primary" icon="el-icon-search" size="small" @click="createSubOrder"></el-button></template>
               </el-input>
@@ -346,7 +346,7 @@
             // 添加商品
             createSubOrder() {
                 this.$store.dispatch("Cashier/createSubOrder",{"barCode":this.barCode});
-                // this.barCode=''
+                this.barCode=''
 
             },
             // 商品删除
