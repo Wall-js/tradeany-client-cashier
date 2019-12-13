@@ -12,13 +12,14 @@ const defaultState = {
         },
         subOrder: [],
         total: 0,
-        qtyTotal:0,
+        qtyTotal: 0,
         activeKey: 'total'
     },
     cacheOrder: [],
 };
 
 const state = Object.assign({}, defaultState);
+// const state = {...defaultState};
 
 const mutations = {
     //总单
@@ -26,8 +27,8 @@ const mutations = {
         //此处添加计算小计  计算总数量
         let subOrder = state.order.subOrder;
         let qtyTotal = 0;
-        if(state.order.subOrder){
-            subOrder.forEach(item=>{
+        if (state.order.subOrder) {
+            subOrder.forEach(item => {
                 item.subTotal = item.quantity * item.price;
                 qtyTotal += item.quantity
             })
@@ -47,12 +48,39 @@ const mutations = {
 
     // 清空收银台
     ClEAR_ALL(state) {
-        state = defaultState;
+        state = {
+            order: {
+                type: undefined,
+                consumer: {
+                    uid: undefined,
+                    name: '游客',
+                    points: undefined,
+                    level: undefined,
+                },
+                subOrder: [],
+                total: 0,
+                qtyTotal: 0,
+                activeKey: 'total'
+            },
+            cacheOrder: [],
+        };
     },
 
     // 清空订单
     ClEAR_ORDER(state) {
-        state.order = defaultState.order
+        state.order = {
+            type: undefined,
+            consumer: {
+                uid: undefined,
+                name: '游客',
+                points: undefined,
+                level: undefined,
+            },
+            subOrder: [],
+            total: 0,
+            qtyTotal: 0,
+            activeKey: 'total'
+        }
     },
 
     // 清空商品
@@ -101,10 +129,21 @@ const mutations = {
 
     // 挂单
     SET_CACHE_ORDER(state) {
-        state.cacheOrder.push(state.order);
-        state.order = defaultState.order;
-        console.log(defaultState);
-        console.log(state)
+        console.log(state.order);
+        state.cacheOrder.push({...state.order});
+        state.order = {
+            type: undefined,
+            consumer: {
+                uid: undefined,
+                name: '游客',
+                points: undefined,
+                level: undefined,
+            },
+            subOrder: [],
+            total: 0,
+            qtyTotal: 0,
+            activeKey: 'total'
+        };
     },
 
     // 提单
@@ -133,17 +172,17 @@ const actions = {
         ctx.commit("CLEAN_SUBORDER")
     },
     //创建订单
-    createOrder(ctx,payload) {
-       let newOrder= ctx.state.order;
-        newOrder.createTime =new Date();
+    createOrder(ctx, payload) {
+        let newOrder = ctx.state.order;
+        newOrder.createTime = new Date();
         //修改产品库存
         let subOrder = ctx.state.order.subOrder;
-        if(subOrder){
-            var p=new Promise((resolve, reject) => {
-                subOrder.forEach(obj=>{
-                    let newPayload ={
-                        _id:obj._id,
-                        quantity:obj.quantity
+        if (subOrder) {
+            var p = new Promise((resolve, reject) => {
+                subOrder.forEach(obj => {
+                    let newPayload = {
+                        _id: obj._id,
+                        quantity: obj.quantity
                     };
                     ctx.dispatch("Goods/cutStock",newPayload,{root: true}).then(res=> {
                               resolve()
