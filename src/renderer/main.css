@@ -89,6 +89,9 @@ body,html{
 .just-between{
     justify-content: space-between;
 }
+.just-right{
+    justify-content: right;
+}
 .just-end{
     justify-content: flex-end;
 }

@@ -17,25 +17,11 @@ const state = {
 };
 
 const mutations = {
-    GET_GOODS(state, payload) {
-        state.list = payload
-    },
     SET_GOODS(state, payload) {
-        if (payload) {
-            let currentRouter = state.currentRouter;
-            if (currentRouter === '/goods-management') {
-                payload.forEach((item, index) => {
-                    item['No'] = index + 1;
-                    item['isOperaText'] = [`修改`, `删除`]
-
-                })
-            } else if (currentRouter === '/stock-management') {
-                payload.forEach((item, index) => {
-                    item['No'] = index + 1;
-                    item['isOperaText'] = [`修改`]
-                })
-            }
-
+        if(payload){
+            payload.forEach((item,index)=>{
+                item['No'] = index+1;
+            })
         }
         state.list = payload
     },
@@ -75,13 +61,12 @@ const actions = {
             }
         });
     },
-    //商品过滤
+    //商品名称过滤
     filterGoods(ctx, payload) {
         ctx.commit('SET_GOODS_PAGINATION', payload);
         let pageSize = ctx.state.pagination.pageSize;
         let skip = (ctx.state.pagination.current - 1) * pageSize;
         db.goods.find({'name': new RegExp(payload.name, 'i')}).skip(skip).limit(pageSize).exec((err, docs) => {
-            console.log(docs)
             ctx.dispatch('getGoodsTotal');
             ctx.commit('SET_GOODS', docs);
             if (payload) {
@@ -131,6 +116,25 @@ const actions = {
                     payload.callback(err)
                 }
             }
+        })
+    },
+    cutStock(ctx, payload) {
+        return new Promise((resolve, reject) => {
+            db.goods.findOne({_id: payload._id}, (err, doc) => {
+                if (doc) {
+                    console.log("doc.stock  payload.quantity",doc.stock,payload.quantity);
+                    if (doc.stock >= payload.quantity && doc.stock>0) {
+                        console.log("cutStock：", payload);
+                        let newStock = doc.stock - payload.quantity;
+                        db.goods.update({_id: payload._id}, {$set: {stock: newStock}}, {}, (err, newDocs) => {
+                            if (!err){
+                                console.log("修改goods成功");
+                                resolve()
+                            }
+                        })
+                    }
+                }
+            })
         })
     },
     createGoods(ctx, payload) {
