@@ -19,20 +19,19 @@
             </el-row>
             <el-row class="m-t-sm">
                 <el-col>
-                    <package-table
-                            :tableList="tableList"
-                            :tableData="$store.state.Goods.list"
-                            @changeOpera="changeOpera"
-                    >
-                        <el-table-column slot="operate" label="操作">
+                    <el-table
+                            :data="$store.state.Goods.list"
+                            :header-cell-style="{color:'#333333',fontWeight: 'normal',textAlign:'center',background: '#f3f3f3',borderColor:'#d7d7d6'}"
+                            :cell-style="{textAlign:'center'}"
+                            style="width: 100%">
+                        <el-table-column :prop="item.prop" :label="item.label" v-for="item in tableList"></el-table-column>
+                        <el-table-column  label="操作" >
                             <template slot-scope="scope">
-                                <div>
-                                    <el-button  @click="changeOpera(scope.row,'change')" type="text">修改</el-button>
-                                    <el-button  @click="changeOpera(scope.row,'del')" type="text">删除</el-button>
-                                </div>
+                                <el-button @click="tableChange(scope.row,'change')" type="text" size="mini">修改</el-button>
+                                <el-button @click="tableChange(scope.row,'del')" type="text" size="mini">删除</el-button>
                             </template>
                         </el-table-column>
-                    </package-table>
+                    </el-table>
                 </el-col>
             </el-row>
             <el-row>
@@ -70,7 +69,6 @@
 
     import PageBreak from '../components/Pagination'
     import Form from '../components/Form'
-    import PackageTable from '../components/Table'
     import Dialog from '../components/Dialog';
 
     export default {
@@ -135,16 +133,7 @@
                     },{
                         label: '库存数量',
                         prop: 'stock',
-                    },{
-                        slot:'operate',
-                        type: 'slot'
                     }
-                    // {
-                    //     type:'operation',
-                    //     prop: 'operation',
-                    //     label:'操作',
-                    //     isOperaText: 'isOperaText'
-                    // }
                 ],
                 //商品录入
                 show:false,
@@ -218,7 +207,6 @@
         components: {
             PageBreak,
             Form,
-            PackageTable,
             Dialog,
         },
         methods: {
@@ -300,12 +288,11 @@
                 }
             },
             //商品操作
-            changeOpera (item, action, type) {
+            tableChange(item,action) {
                 if (action === 'change') {
                     this.isEdit = true;
                     this.show = true;
                     let formItemList = this.addProductFormConfig['formItemList'];
-                    // formItemList[0]['disabled'] = true;
                     formItemList[formItemList.length-2]['disabled'] = true;
                     this.addProductForm = {...item}
                 }else if(action === 'del'){
