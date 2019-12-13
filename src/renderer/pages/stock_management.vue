@@ -18,7 +18,15 @@
                             :tableList="tableList"
                             :tableData="$store.state.Goods.list"
                             @changeOpera="changeOpera"
-                    ></package-table>
+                    >
+                        <el-table-column slot="operate" label="操作">
+                            <template slot-scope="scope">
+                                <div>
+                                    <el-button  @click="changeOpera(scope.row,'change')" type="text">修改</el-button>
+                                </div>
+                            </template>
+                        </el-table-column>
+                    </package-table>
                 </el-col>
             </el-row>
             <el-row>
@@ -121,13 +129,16 @@
                     },{
                         label: '库存数量',
                         prop: 'stock',
-                    },
-                    {
-                        type:'operation',
-                        prop: 'operation',
-                        label:'操作',
-                        isOperaText: 'isOperaText'
+                    },{
+                        slot:'operate',
+                        type: 'slot'
                     }
+                    // {
+                    //     type:'operation',
+                    //     prop: 'operation',
+                    //     label:'操作',
+                    //     isOperaText: 'isOperaText'
+                    // }
                 ],
                 //商品录入
                 show:false,
@@ -227,7 +238,7 @@
             },
             //商品操作
             changeOpera (item, action, type) {
-                if (action === '修改') {
+                if (action === 'change') {
                     this.show = true;
                     let formItemList = this.editStockFormConfig['formItemList'];
                     formItemList[0]['disabled'] = true;
@@ -247,11 +258,6 @@
                 });
             },
         },
-        beforeCreate(){
-            //获取当前路由
-            console.log(this.$route.path);
-            this.$store.dispatch("Goods/getCurrentRouter",this.$route.path);
-        },
         created() {
             //获取数据
             this.$store.dispatch("Goods/getGoods",{
@@ -260,7 +266,6 @@
                     pageSize: 10,
                 }});
         },
-
     }
 </script>
 

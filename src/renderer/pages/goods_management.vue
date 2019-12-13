@@ -23,7 +23,16 @@
                             :tableList="tableList"
                             :tableData="$store.state.Goods.list"
                             @changeOpera="changeOpera"
-                    ></package-table>
+                    >
+                        <el-table-column slot="operate" label="操作">
+                            <template slot-scope="scope">
+                                <div>
+                                    <el-button  @click="changeOpera(scope.row,'change')" type="text">修改</el-button>
+                                    <el-button  @click="changeOpera(scope.row,'del')" type="text">删除</el-button>
+                                </div>
+                            </template>
+                        </el-table-column>
+                    </package-table>
                 </el-col>
             </el-row>
             <el-row>
@@ -126,13 +135,16 @@
                     },{
                         label: '库存数量',
                         prop: 'stock',
-                    },
-                    {
-                        type:'operation',
-                        prop: 'operation',
-                        label:'操作',
-                        isOperaText: 'isOperaText'
+                    },{
+                        slot:'operate',
+                        type: 'slot'
                     }
+                    // {
+                    //     type:'operation',
+                    //     prop: 'operation',
+                    //     label:'操作',
+                    //     isOperaText: 'isOperaText'
+                    // }
                 ],
                 //商品录入
                 show:false,
@@ -289,14 +301,14 @@
             },
             //商品操作
             changeOpera (item, action, type) {
-                if (action === '修改') {
+                if (action === 'change') {
                     this.isEdit = true;
                     this.show = true;
                     let formItemList = this.addProductFormConfig['formItemList'];
                     // formItemList[0]['disabled'] = true;
                     formItemList[formItemList.length-2]['disabled'] = true;
                     this.addProductForm = {...item}
-                }else if(action === '删除'){
+                }else if(action === 'del'){
                     this.$confirm('此操作将删除该商品, 是否继续?', '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
@@ -319,11 +331,6 @@
                     },
                 });
             },
-        },
-        beforeCreate(){
-            //获取当前路由
-            console.log(this.$route.path);
-            this.$store.dispatch("Goods/getCurrentRouter",this.$route.path);
         },
         created() {
             //获取数据
