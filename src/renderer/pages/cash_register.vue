@@ -316,7 +316,7 @@
                 accountForm:{
                     payment:'',
                     looseChange:'',
-                    isPrinter:''
+                    isPrinter:true
                 },
                 isSettlement:true,
                 totalQty:0,
@@ -378,6 +378,7 @@
                 }else {
                     this.show=true;
                     this.accountForm.payment = '';
+                    this.accountForm.isPrinter = true;
                     this.$store.state.Cashier.order.subOrder.forEach(item =>{
                         this.totalQty+=item.quantity
                     })
