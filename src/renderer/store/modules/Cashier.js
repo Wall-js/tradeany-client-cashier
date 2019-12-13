@@ -193,7 +193,6 @@ const actions = {
             });
             let promise = new Promise((resolve, reject) => {
                 p.then(res => {
-                    console.log("12121")
                     // 插入数据
                     db.order.insert(newOrder, (err, newDocs) => {
                         if (payload) {
@@ -201,11 +200,9 @@ const actions = {
                                 payload.callbacks(err)
                             }
                         }
-                        console.log("55555555555555555555555555555555555", !err, err)
                         if (err) {
                             reject('订单创建失败')
                         } else {
-                            console.log("333", err)
                             ctx.commit("ClEAR_ORDER");
                             resolve();
                         }
@@ -213,7 +210,7 @@ const actions = {
                 }, err => {
                     reject(err);
                 })
-            })
+            });
             return promise
         }
 
