@@ -18,5 +18,7 @@ db.goods.loadDatabase();
 db.order = new Datastore(path.join("./db", '/order.db'));
 db.order.loadDatabase();
 
+db.outbound = new Datastore(path.join("./db", '/outbound_detail.db'));
+db.outbound.loadDatabase();
 
 export default db;
