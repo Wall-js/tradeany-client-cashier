@@ -20,7 +20,7 @@
             </div>
             <Table
                     :tableList="tableList"
-                    :tableData="tableData"
+                    :tableData="$store.state.Order.list"
                     @changeOpera="changeOpera"
                     expandTable="expandTable"
             >
@@ -207,7 +207,19 @@
             changeOpera(item,action){
 
             }
-        }
+        },
+        computed: {
+            // 获取订单
+            getOrder(){
+                let data=[];
+                console.log(this.$store.state.Order.list)
+                this.$store.state.Order.list.forEach((item)=>{
+                    console.log(item);
+                    data.push(item)
+                });
+                return this.$store.state.Order.list
+            }
+        },
     }
 </script>
 

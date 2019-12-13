@@ -32,10 +32,24 @@ const mutations = {
     GET_ORDER_TOTAL(state, payload) {
         state.pagination.total = payload
     },
+    SET_ORDER_PAGINATION(state, payload) {
+        if (payload) {
+            if (payload.pagination) {
+                if (payload.pagination.current) {
+                    state.pagination.current = payload.pagination.current;
+                }
+                if (payload.pagination.pageSize) {
+                    state.pagination.pageSize = payload.pagination.pageSize;
+                }
+            }
+
+        }
+    },
 };
 
 const actions = {
     getOrder(ctx, payload) {
+        ctx.commit('SET_ORDER_PAGINATION', payload);
         let pageSize = state.pagination.pageSize;
         let skip = (state.pagination.current - 1) * pageSize;
         db.order.find({}).skip(skip).limit(pageSize).exec((err, docs) => {
@@ -48,11 +62,12 @@ const actions = {
             }
         });
     },
-    //商品过滤
+    //订单过滤
     filterOrder(ctx, payload){
         let pageSize = ctx.state.pagination.pageSize;
         let skip = (ctx.state.pagination.current - 1) * pageSize;
-        db.order.find({ 'createTime': payload.form.createTime}).skip(skip).limit(pageSize).exec((err, docs) => {
+        console.log(payload.filter.startTime);
+        db.order.find({ 'createTime':{$lt: payload.filter.startTime}}).skip(skip).limit(pageSize).exec((err, docs) => {
             ctx.commit('GET_ORDER', docs);
             if (payload) {
                 if (payload.callback) {
@@ -91,10 +106,21 @@ const actions = {
             }
         })
     },
-    createOrder(ctx, payload) {
-        payload.createTime =new Date();
-        db.order.insert(payload, (err, newDocs) => {
-            ctx.dispatch("getOrder");
+    // createOrder(ctx, payload) {
+    //     payload.createTime =new Date();
+    //     db.order.insert(payload, (err, newDocs) => {
+    //         ctx.dispatch("getOrder");
+    //         if (payload) {
+    //             if (payload.callback) {
+    //                 payload.callback(err)
+    //             }
+    //         }
+    //     })
+    // },
+    createOrder(ctx) {
+        ctx.state.order.createTime =new Date();
+        // payload.createTime =new Date();
+        db.order.insert( ctx.state.order, (err, newDocs) => {
             if (payload) {
                 if (payload.callback) {
                     payload.callback(err)

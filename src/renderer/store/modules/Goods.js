@@ -61,12 +61,12 @@ const actions = {
             }
         });
     },
-    //商品过滤
+    //商品名称过滤
     filterGoods(ctx, payload) {
         ctx.commit('SET_GOODS_PAGINATION', payload);
         let pageSize = ctx.state.pagination.pageSize;
         let skip = (ctx.state.pagination.current - 1) * pageSize;
-        db.goods.find({'name': payload.form.name}).skip(skip).limit(pageSize).exec((err, docs) => {
+        db.goods.find({'name': new RegExp(payload.name, 'i')}).skip(skip).limit(pageSize).exec((err, docs) => {
             ctx.dispatch('getGoodsTotal');
             ctx.commit('SET_GOODS', docs);
             if (payload) {
@@ -76,6 +76,7 @@ const actions = {
             }
         });
     },
+
     getGoodsTotal(ctx, payload) {
         db.goods.count({}, function (err, count) {
             ctx.commit("SET_GOODS_TOTAL", count);
