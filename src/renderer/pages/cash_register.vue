@@ -57,7 +57,7 @@
                             label="数量"
                             width="150">
                       <template slot-scope="scope">
-                        <el-input-number v-model="scope.row.quantity" :min="1" :max="100"  size="mini" @change="handleChange(scope)"></el-input-number>
+                        <el-input-number v-model="scope.row.quantity" :min="1" :max="scope.row.stock"  size="mini" @change="handleChange(scope)"></el-input-number>
                       </template>
                     </el-table-column>
                     <el-table-column
@@ -443,8 +443,10 @@
                       let payload = {...this.$store.state.Cashier.order.subOrder};
                       payload.type = 0
                       this.$store.dispatch("OutboundDetails/createOutboundDetails",payload);
+                    },err=>{
+                      this.$message.success(err);
+                      console.log("1111111111111111111111111111111",err)
                     });
-
                 }else{
                     this.$store.dispatch("Cashier/createOrder",this.$store.state.Cashier.order);
                 }
@@ -543,7 +545,7 @@
             getGoods(){
                 let data=[];
                 this.$store.state.Cashier.order.subOrder.slice().forEach((item,index)=>{
-                    let obj={name:item.name,price:item.price,quantity:item.quantity}
+                    let obj={name:item.name,price:item.price,quantity:item.quantity,stock:item.stock}
                     // item['quantity'] = item.quantity;
                     data.push(obj)
                 });

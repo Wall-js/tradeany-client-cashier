@@ -274,11 +274,19 @@
                             this.$message.success('修改成功')
 
                         }else {
-                            this.$store.dispatch("Goods/createGoods",addProductForm)
-                            this.$message.success('录入成功')
+                            this.$store.dispatch("Goods/createGoods",addProductForm).then(res=>{
+                                this.$message.success('录入成功')
+                                this.show=false;
+                                refs['addProductForm'].resetFields();
+                            },err=>{
+                                if(err === 'isRepeat'){
+                                    this.$message.error("条形码不可重复")
+                                }else {
+                                    this.$message.error("录入失败")
+                                }
+                            })
                         }
-                        this.show=false;
-                        refs['addProductForm'].resetFields();
+
                     } else {
                         console.log('error submit!!');
                         return false;

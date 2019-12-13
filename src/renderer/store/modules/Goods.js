@@ -141,23 +141,60 @@ const actions = {
                             if (!err){
                                 console.log("修改goods成功");
                                 resolve()
+                            }else {
+                                reject('修改失败')
                             }
                         })
+                    }else {
+                        reject('下单数量大于库存数量')
                     }
+                }else {
+                    reject('无此产品')
                 }
             })
         })
     },
     createGoods(ctx, payload) {
-        db.goods.insert(payload, (err, newDocs) => {
-            ctx.dispatch("getGoods");
-            if (payload) {
-                if (payload.callback) {
-                    payload.callback(err)
-                }
-            }
+        let promise = new Promise((resolve, reject)=>{
 
-        })
+            db.goods.find({'barCode': payload.barCode}, function (err, docs) {
+                if (payload) {
+                    if (payload.callback) {
+                        payload.callback(err)
+                    }
+                }
+                console.log("12212",payload.barCode);
+                let isRepeat = false;
+                if(docs){
+                    docs.forEach(item=>{
+                        if(payload.barCode === item.barCode){
+                            isRepeat=true;
+                            reject('isRepeat')
+                        }
+                    })
+                    if(isRepeat === false){
+                        console.log("数据库",docs,err);
+                        if(payload.barCode === docs.barCode){
+                            reject(false)
+                        }else {
+                            db.goods.insert(payload, (err, newDocs) => {
+                                ctx.dispatch("getGoods");
+                                if (payload) {
+                                    if (payload.callback) {
+                                        payload.callback(err)
+                                    }
+                                }
+                                resolve(true)
+                            });
+
+                        }
+                    }
+                }
+
+            });
+        });
+        return promise
+
     },
     getCurrentRouter(ctx, payload) {
         ctx.commit('SET_CURRENT_ROUTER', payload);

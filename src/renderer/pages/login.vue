@@ -49,7 +49,7 @@
             submitForm(loginForm){
                 this.$refs[loginForm].validate((valid) => {
                     if (valid) {
-                        if(this.loginForm.username === 'admin' || this.loginForm.password === '1234qwer'){
+                        if(this.loginForm.username === 'admin' || this.loginForm.password === '123456'){
                             this.$router.push('/home')
                         }else {
                             this.$message.error('用户名或密码错误')
