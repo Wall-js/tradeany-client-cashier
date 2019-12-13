@@ -146,28 +146,31 @@ const actions = {
                         quantity:obj.quantity
                     };
                     ctx.dispatch("Goods/cutStock",newPayload,{root: true}).then(res=> {
-                        console.log("修改产品：");
                               resolve()
                         }
 
                     );
                 })
             });
-            p.then(res=>{
-                // 插入数据
-                db.order.insert( newOrder, (err, newDocs) => {
-
-                    console.log("创建订单 插入数据：",newDocs);
-                    if (payload) {
-                        if (payload.callback) {
-                            payload.callbacks(err)
+            let ok = new Promise((resolve, reject) => {
+                p.then(res=>{
+                    // 插入数据
+                    db.order.insert( newOrder, (err, newDocs) => {
+                        // if (payload) {
+                        //     if (payload.callback) {
+                        //         payload.callbacks(err)
+                        //     }
+                        // }
+                        console.log("1212",err)
+                        if (!err) {
+                            console.log("333",err)
+                            ctx.commit("ClEAR_ORDER");
+                            resolve()
                         }
-                    }
-                    if (!err) {
-                        ctx.commit("ClEAR_ORDER")
-                    }
+                    })
                 })
-            })
+            });
+            return ok;
         }
 
     },

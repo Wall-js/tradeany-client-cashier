@@ -104,7 +104,7 @@ const actions = {
     },
 
     getFilterOutboundDetailsTotal(ctx, payload) {
-        db.goods.count(payload.filterCondition, function (err, count) {
+        db.outbound.count(payload.filterCondition, function (err, count) {
             ctx.commit("SET_OUTBOUND_DETAILS_TOTAL", count);
             if (payload) {
                 if (payload.callback) {
@@ -116,7 +116,7 @@ const actions = {
 
 
     getOutboundDetailsTotal(ctx, payload) {
-        db.goods.count({}, function (err, count) {
+        db.outbound.count({}, function (err, count) {
             ctx.commit("SET_OUTBOUND_DETAILS_TOTAL", count);
             if (payload) {
                 if (payload.callback) {

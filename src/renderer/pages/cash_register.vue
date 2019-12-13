@@ -28,7 +28,7 @@
           <el-row>
             <el-col class="flex-row just-around">
               <el-button type="primary" size="small">会员</el-button>
-              <el-button type="primary" size="small" @click="setCacheOrder">挂单</el-button>
+              <el-button type="primary" size="small" @click="setCacheOrder">提单</el-button>
               <el-button type="primary" size="small" @click="cleanSubOrder">清空</el-button>
             </el-col>
           </el-row>
@@ -434,16 +434,17 @@
             //确认结算
             settlementForm(){
                 if(this.accountForm.isPrinter){
-                    this.$store.dispatch("Cashier/createOrder",this.$store.state.Cashier.order);
-                    // this.$router.push("/printer")
-                    //打印订单
-                    // this.isShowPrinter=true;
-                    console.log(this.$store.state.Cashier.order);
-                    this.getPrinterList(this.$store.state.Cashier.order);
-                    //新建入库明细
-                  let payload = {...this.$store.state.Cashier.order};
-                  payload.type = 0
-                  this.$store.dispatch("OutboundDetails/createOutboundDetails",payload);
+                    this.$store.dispatch("Cashier/createOrder",this.$store.state.Cashier.order).then(res=>{
+                      //打印订单
+                      // this.isShowPrinter=true;
+                      console.log(this.$store.state.Cashier.order);
+                      this.getPrinterList(this.$store.state.Cashier.order);
+                      //新建入库明细
+                      let payload = {...this.$store.state.Cashier.order.subOrder};
+                      payload.type = 0
+                      this.$store.dispatch("OutboundDetails/createOutboundDetails",payload);
+                    });
+
                 }else{
                     this.$store.dispatch("Cashier/createOrder",this.$store.state.Cashier.order);
                 }
