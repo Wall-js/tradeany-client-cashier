@@ -5,7 +5,7 @@ const model = {
     // outboundNo: '',
     type: 0,
     typeName:'',//0是出库   1入库
-    goodsName: '',
+    name: '',
     barCode: '',
     price: 0,
     stock: 0,
@@ -33,6 +33,7 @@ const mutations = {
                 }
             })
         }
+        console.log("asdasdf",payload)
         state.list = payload
     },
     SET_OUTBOUND_DETAILS_TOTAL(state, payload) {
@@ -59,7 +60,8 @@ const actions = {
         let pageSize = state.pagination.pageSize;
         let skip = (state.pagination.current - 1) * pageSize;
         db.outbound.find({}).skip(skip).limit(pageSize).exec((err, docs) => {
-            ctx.dispatch('getOutboundDetailsTotal');
+            ctx.dispatch('getOutboundDetailsTotal',);
+            console.log("454545",docs);
             ctx.commit('GET_OUTBOUND_DETAILS', docs);
             if (payload) {
                 if (payload.callback) {
@@ -73,8 +75,9 @@ const actions = {
         ctx.commit('SET_OUTBOUND_DETAILS_PAGINATION', payload);
         let pageSize = ctx.state.pagination.pageSize;
         let skip = (ctx.state.pagination.current - 1) * pageSize;
-        db.outbound.find({'goodsName': new RegExp(payload.name, 'i')}).skip(skip).limit(pageSize).exec((err, docs) => {
-            ctx.dispatch('getOutboundDetailsTotal');
+        payload.filterCondition = {'name': new RegExp(payload.name, 'i')};
+        db.outbound.find(payload.filterCondition).skip(skip).limit(pageSize).exec((err, docs) => {
+            ctx.dispatch('getFilterOutboundDetailsTotal');
             ctx.commit('GET_OUTBOUND_DETAILS', docs);
             if (payload) {
                 if (payload.callback) {
@@ -88,8 +91,9 @@ const actions = {
         ctx.commit('SET_OUTBOUND_DETAILS_PAGINATION', payload);
         let pageSize = ctx.state.pagination.pageSize;
         let skip = (ctx.state.pagination.current - 1) * pageSize;
-        db.outbound.find({'type': payload.type}).skip(skip).limit(pageSize).exec((err, docs) => {
-            ctx.dispatch('getOutboundDetailsTotal');
+        payload.filterCondition = {'type': payload.type};
+        db.outbound.find(payload.filterCondition).skip(skip).limit(pageSize).exec((err, docs) => {
+            ctx.dispatch('getFilterOutboundDetailsTotal', payload);
             ctx.commit('GET_OUTBOUND_DETAILS', docs);
             if (payload) {
                 if (payload.callback) {
@@ -98,6 +102,18 @@ const actions = {
             }
         });
     },
+
+    getFilterOutboundDetailsTotal(ctx, payload) {
+        db.goods.count(payload.filterCondition, function (err, count) {
+            ctx.commit("SET_OUTBOUND_DETAILS_TOTAL", count);
+            if (payload) {
+                if (payload.callback) {
+                    payload.callback(err)
+                }
+            }
+        });
+    },
+
 
     getOutboundDetailsTotal(ctx, payload) {
         db.goods.count({}, function (err, count) {

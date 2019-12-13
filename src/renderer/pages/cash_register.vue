@@ -439,7 +439,11 @@
                     //打印订单
                     // this.isShowPrinter=true;
                     console.log(this.$store.state.Cashier.order);
-                    this.getPrinterList(this.$store.state.Cashier.order)
+                    this.getPrinterList(this.$store.state.Cashier.order);
+                    //新建入库明细
+                  let payload = {...this.$store.state.Cashier.order};
+                  payload.type = 0
+                  this.$store.dispatch("OutboundDetails/createOutboundDetails",payload);
                 }else{
                     this.$store.dispatch("Cashier/createOrder",this.$store.state.Cashier.order);
                 }

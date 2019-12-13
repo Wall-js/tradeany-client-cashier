@@ -15,22 +15,22 @@
             <el-row>
                 <el-col>
                     <el-table
-                            :data="$store.state.Goods.list"
+                            :data="$store.state.OutboundDetails.list"
                             :header-cell-style="{color:'#333333',fontWeight: 'normal',textAlign:'center',background: '#f3f3f3',borderColor:'#d7d7d6'}"
                             :cell-style="{textAlign:'center'}"
                             style="width: 100%">
                         <el-table-column :prop="item.prop" :label="item.label" v-for="item in tableList"></el-table-column>
-                        <el-table-column  label="操作" >
-                            <template slot-scope="scope">
-                                <el-button @click="tableChange(scope.row,'change')" type="text" size="mini">修改</el-button>
-                            </template>
-                        </el-table-column>
+                        <!--<el-table-column  label="操作" >-->
+                            <!--<template slot-scope="scope">-->
+                                <!--<el-button @click="tableChange(scope.row,'change')" type="text" size="mini">修改</el-button>-->
+                            <!--</template>-->
+                        <!--</el-table-column>-->
                     </el-table>
                 </el-col>
             </el-row>
             <el-row>
                 <el-col>
-                    <page-break :pageTotal="$store.state.Goods.pagination.total" :pageSize="$store.state.Goods.pagination.pageSize"
+                    <page-break :pageTotal="$store.state.OutboundDetails.pagination.total" :pageSize="$store.state.OutboundDetails.pagination.pageSize"
                                 @pageChange="pageChange"></page-break>
                 </el-col>
             </el-row>
@@ -128,7 +128,12 @@
                     },{
                         label: '库存数量',
                         prop: 'stock',
-                    }
+                    },
+                    {
+                        label: '状态',
+                        prop: 'typeName',
+                    },
+
                 ],
                 //商品录入
                 show:false,
@@ -271,13 +276,15 @@
             },
         },
         created() {
-            //获取数据
-            this.$store.dispatch("Goods/getGoods",{
+            //获取出入库明细
+            this.$store.dispatch("OutboundDetails/getOutboundDetails",{
                 pagination: {
                     current: 1,
                     pageSize: 10,
                 }});
+            console.log("zhii")
         },
+
     }
 </script>
 
