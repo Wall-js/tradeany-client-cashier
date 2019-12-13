@@ -217,7 +217,6 @@
              */
             //查询
             search() {
-
                 this.$store.dispatch("Goods/filterGoods",{
                     pagination: {
                         current: 1,
@@ -234,14 +233,14 @@
                         current: 1,
                         pageSize: 10,
                     }});
-
             },
             //商品录入
             //判断字符串是否是数字
             addProductSubmit(refs){
                 refs['addProductForm'].validate((valid) => {
                     if (valid) {
-                        let addProductForm = this.addProductForm;
+                        this.searchForm.name = '';
+                        let addProductForm = {...this.addProductForm};
                         //价格和库存为数字
                         let stock = addProductForm['stock'];
                         let price = addProductForm['price'];
@@ -264,20 +263,20 @@
                         }else {
                             price = price +'.00'
                         }
-                        console.log(price);
                         addProductForm['price'] = price;
                         if(this.isEdit){
                             let payload = {
                                 _id:addProductForm['_id'],
                                 data:{...addProductForm}
-                            }
+                            };
+
                             this.$store.dispatch("Goods/updateGoods",payload);
                             this.$message.success('修改成功')
+
                         }else {
                             this.$store.dispatch("Goods/createGoods",addProductForm)
                             this.$message.success('录入成功')
                         }
-
                         this.show=false;
                         refs['addProductForm'].resetFields();
                     } else {
@@ -303,7 +302,6 @@
                     let formItemList = this.addProductFormConfig['formItemList'];
                     formItemList[formItemList.length-2]['disabled'] = true;
                     this.addProductForm = {...item};
-                    this.searchForm.name = ''
                 }else if(action === 'del'){
                     this.$confirm('此操作将删除该商品, 是否继续?', '提示', {
                         confirmButtonText: '确定',
@@ -321,12 +319,24 @@
              * @param item
              */
             pageChange (item) {
-                this.$store.dispatch("Goods/getGoods",{
-                    pagination: {
-                        current: item,
-                        pageSize: 10,
-                    },
-                });
+                //分查询分
+                if(this.searchForm.name === ''){
+                    this.$store.dispatch("Goods/getGoods",{
+                        pagination: {
+                            current: item,
+                            pageSize: 10,
+                        },
+                    });
+                }else {
+                    this.$store.dispatch("Goods/filterGoods",{
+                        pagination: {
+                            current: item,
+                            pageSize: 10,
+                        },
+                        name:this.searchForm.name
+                    })
+                }
+
             },
         },
         created() {

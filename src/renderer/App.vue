@@ -46,6 +46,7 @@
           {
             type: 'submenu',
             title: '库存管理',
+            index: "/stock-management",
             icon:"el-icon-s-shop",
             routers: [
               {

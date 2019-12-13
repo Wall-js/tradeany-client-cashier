@@ -67,8 +67,19 @@ const actions = {
         let pageSize = ctx.state.pagination.pageSize;
         let skip = (ctx.state.pagination.current - 1) * pageSize;
         db.goods.find({'name': new RegExp(payload.name, 'i')}).skip(skip).limit(pageSize).exec((err, docs) => {
-            ctx.commit("SET_GOODS_TOTAL", docs.length);
+            ctx.dispatch('getFilterGoodsTotal',payload);
             ctx.commit('SET_GOODS', docs);
+            if (payload) {
+                if (payload.callback) {
+                    payload.callback(err)
+                }
+            }
+        });
+    },
+
+    getFilterGoodsTotal(ctx, payload) {
+        db.goods.count({'name': new RegExp(payload.name, 'i')}, function (err, count) {
+            ctx.commit("SET_GOODS_TOTAL", count);
             if (payload) {
                 if (payload.callback) {
                     payload.callback(err)
