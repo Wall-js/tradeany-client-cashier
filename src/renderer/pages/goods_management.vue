@@ -263,7 +263,8 @@
                         }else {
                             price = price +'.00'
                         }
-                        addProductForm['price'] = price;
+                        addProductForm['price'] = price*1;
+                        addProductForm['stock'] = stock*1;
                         if(this.isEdit){
                             let payload = {
                                 _id:addProductForm['_id'],

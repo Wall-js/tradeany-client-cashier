@@ -132,7 +132,7 @@
                 <el-tab-pane label="全部" name="first">
                   <el-table
                           ref="singleTable"
-                          :data="$store.state.Goods.list"
+                          :data="getAllGoods"
                           :header-cell-style="{color:'#333333',fontWeight: 'normal',textAlign:'center',background: '#f3f3f3',borderColor:'#d7d7d6'}"
                           :cell-style="{textAlign:'center'}"
                           highlight-current-row
@@ -165,6 +165,12 @@
                     >
                     </el-table-column>
                   </el-table>
+                  <el-row>
+                    <el-col>
+                      <page-break :pageTotal="$store.state.Goods.pagination.total" :pageSize="$store.state.Goods.pagination.pageSize"
+                                  @pageChange="pageChange"></page-break>
+                    </el-col>
+                  </el-row>
                 </el-tab-pane>
                 <!--<el-tab-pane label="个人洗护" name="second">未定样式</el-tab-pane>-->
                 <!--<el-tab-pane label="母婴专区" name="third">未定样式</el-tab-pane>-->
@@ -270,6 +276,7 @@
     import Dialog from '../components/Dialog';
     import Form from '../components/Form';
     import KeyBoard from '../components/KeyBoard';
+    import PageBreak from '../components/Pagination'
 
     import path from 'path'
     const ipcRenderer = require("electron").ipcRenderer;
@@ -538,8 +545,17 @@
             Table,
             Dialog,
             Form,
-            KeyBoard
+            KeyBoard,
+            PageBreak
         },
+      created() {
+        //获取数据;
+        this.$store.dispatch("Goods/getGoods",{
+          pagination: {
+            current: 1,
+            pageSize: 10,
+          }});
+      },
         computed: {
             // 获取商品
             getGoods(){
@@ -560,7 +576,11 @@
                     data.push(item)
                 });
                 return data
-            }
+            },
+            // 获取全部商品
+           getAllGoods(){
+              return this.$store.state.Goods.list
+           }
         },
         watch:{
             'accountForm.payment'(val){
