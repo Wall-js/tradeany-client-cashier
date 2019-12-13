@@ -176,6 +176,7 @@ min:0,
     label-position="right"
     :label-width="formConfig.labelWidth"
     size='small'
+    :rules="rules"
     :ref="refName"
   >
     <el-card v-if='formConfig.elCard' v-for="(cardItem) in formConfig.elCard" :style="cardItem.style" :class="cardItem.paddingBottom">

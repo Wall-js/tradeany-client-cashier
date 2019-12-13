@@ -228,11 +228,23 @@
                 refs['searchForm'].resetFields();
             },
             //商品录入
+            //判断字符串是否是数字
             addProductSubmit(refs){
                 refs['addProductForm'].validate((valid) => {
                     if (valid) {
                         let addProductForm = this.addProductForm;
+                        //价格和库存为数字
+                        let stock = addProductForm['stock'];
                         let price = addProductForm['price'];
+                        var reg = /^[0-9]+.?[0-9]*$/;
+                        if (!reg.test(price)) {
+                            this.$message.error("价格应该输入数字")
+                            return
+                        }
+                        if (!reg.test(stock)) {
+                            this.$message.error("库存应该输入数字")
+                            return
+                        }
                         if(price.indexOf('.')>-1){
                             let l = price.slice(price.indexOf('.')+1);
                             if(l.length === 1){

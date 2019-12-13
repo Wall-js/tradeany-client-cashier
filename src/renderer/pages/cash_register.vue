@@ -149,60 +149,64 @@
       <el-main slot="content">
         <el-row>
           <el-col :span="10">
-            <el-col class="noteTitle">
-              ----------欢迎光临----------
+            <el-col>
+              <h3 style="text-align: center">------欢迎光临------</h3>
             </el-col>
-            <el-divider></el-divider>
-            <el-table
-                    :data="accountTableData"
-                    style="width: 100%">
-              <el-table-column
-                      prop="name"
-                      label="品名"
-              >
-              </el-table-column>
-              <el-table-column
-                      prop="price"
-                      label="单价"
-                   >
-              </el-table-column>
-              <el-table-column
-                      prop="count"
-                      label="数量"
-              >
-              </el-table-column>
-              <el-table-column
-                      prop="subtotal"
-                      label="小计"
-              >
-              </el-table-column>
-            </el-table>
-            <el-divider></el-divider>
-            <el-col class="flex-row just-between">
-              <div>
-                <span>数量：</span>
-                <span>12121</span>
-              </div>
-              <div>
-                <span>金额：</span>
-                <span>12121</span>
-              </div>
+            <el-col class="flex-row flex-align">
+              <h3>会员名称：</h3>
+              <span>{{$store.state.Cashier.order.consumer.name}}</span>
             </el-col>
-            <el-col class="noteTitle">
-              ----------欢迎光临----------
+            <el-col style="border-top: 1px solid #dddddd;overflow: hidden;">
+              <el-table
+                      :data="$store.state.Cashier.order.subOrder"
+                      :header-cell-style="{textAlign: 'center'}"
+                      :cell-style="{textAlign: 'center'}"
+                      style="width: 100%">
+                <el-table-column
+                        prop="name"
+                        label="商品名称"
+
+                >
+                </el-table-column>
+                <el-table-column
+                        prop="price"
+                        label="单价"
+                >
+                </el-table-column>
+                <el-table-column
+                        prop="quantity"
+                        label="数量"
+                >
+                </el-table-column>
+                <!--<el-table-column-->
+                <!--prop="subtotal"-->
+                <!--label="小计"-->
+                <!--&gt;-->
+                <!--</el-table-column>-->
+              </el-table>
+            </el-col>
+            <el-col class="flex-row just-end m-t-lg">
+              <div class="flex-row just-between flex-align">
+                <h4>数量：</h4>
+                <h2 style="color:#409EFF">{{totalQty}}</h2>
+              </div>
+              <div class="flex-row just-between flex-align m-l-lg">
+                <h4>总金额：</h4>
+                <h2 style="color:#409EFF">{{$store.state.Cashier.order.total}}</h2>
+              </div>
             </el-col>
           </el-col>
           <el-col :span="14" class="flex-column just-between flex-align">
 
-            <el-form :model="accountForm" :rules="accountFormRules" ref="accountForm" label-width="100px" class="demo-ruleForm" size="small">
-              <el-form-item label="实收金额：" prop="payment">
-                <el-input-number v-model="accountForm.payment" :precision="2" :step="0.1"  @change="paymentChange"></el-input-number>
+            <el-form :model="accountForm" ref="accountForm" label-width="100px" class="demo-ruleForm" size="small">
+              <el-form-item label="实收金额：">
+                <el-input type="text" autofocus v-model="accountForm.payment" @input="paymentChange" @change="looseChange"></el-input>
               </el-form-item>
-              <el-form-item label="找零：" prop="looseChange">
-                <el-input-number v-model="accountForm.looseChange" :precision="2" :step="0.1"  :disabled="true"></el-input-number>
+              <el-form-item label="找零：" prop="looseChange" >
+                <el-input type="text" autofocus v-model="accountForm.looseChange" disabled></el-input>
               </el-form-item>
               <div>
-                小键盘
+                <KeyBoard></KeyBoard>
               </div>
               <el-form-item>
                 <el-checkbox v-model="accountForm.isPrinter" class="m-l-sm">是否打印小票</el-checkbox>
@@ -225,6 +229,7 @@
   import Table from '../components/Table';
   import Dialog from '../components/Dialog';
   import Form from '../components/Form';
+  import KeyBoard from '../components/KeyBoard';
 
   import path from 'path'
   const ipcRenderer = require("electron").ipcRenderer;
@@ -339,10 +344,15 @@
 
         },
         isSettlement:true,
+        totalQty:0,
         total:this.$store.state.Cashier.order.total,
-          fullPath: path.join(__static, 'print.html'),
-          printerList: [],
-          printer: "",
+
+        //打印小票
+        fullPath: path.join(__static, 'print.html'),
+        printerList: [],
+        printer: "",
+        //小键盘
+        option:'',
       }
     },
     methods: {
@@ -387,14 +397,18 @@
               this.$store.dispatch("Cashier/deleteCacheOrder",{index:item.No});
           }
         },
-      // 计算提交
+      // 结算提交
       Category(){
-          let total = this.$store.state.Cashier.order.total;
+        let total = this.$store.state.Cashier.order.total;
         if(total === 0){
           this.$message.error("暂无结算商品")
         }else {
           this.show=true;
-          console.log(this.$store.state.Cashier.order);
+          this.$store.state.Cashier.order.subOrder.forEach(item =>{
+              this.totalQty+=item.quantity
+          })
+
+
         }
       },
       SubmitDialog(){
@@ -411,12 +425,21 @@
         this.createSubOrder();
       },
       //结算
-      //实付金额输入监听
-      paymentChange(val){
+      paymentChange (value){
+        console.log(value)
+        if(!this.checkNumber(value)){
+          this.$message.error("请输入数字")
+        }else {
+          this.accountForm['looseChange'] = '';
+        }
+      },
+      //计算找零
+      looseChange(value){
+        value *= 1;
         let total = this.$store.state.Cashier.order.total;
-        if(val>=total){
+        if(value>=total){
           this.isSettlement = false;
-          this.accountForm['looseChange'] = val - total
+          this.accountForm['looseChange'] = (value - total).toFixed(2)
         }else {
           this.$message.error('请输入正确金额');
           this.isSettlement = true
@@ -513,12 +536,14 @@
             });
         },
 
+
     },
     components: {
       Panel,
       Table,
       Dialog,
-      Form
+      Form,
+      KeyBoard
     },
     computed: {
 
