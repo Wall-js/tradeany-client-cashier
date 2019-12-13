@@ -2,7 +2,7 @@
     <div>
         <el-card>
             <el-row type="flex" justify="center" :gutter="20">
-                <el-col :span="6" v-for="item in statistics" class="flex-column just-between flex-align">
+                <el-col :span="6" v-for="item in getData" class="flex-column just-between flex-align">
                     <h1>{{item.title}}</h1>
                     <h3 class="statistics-data">{{item.data}}</h3>
                 </el-col>
@@ -20,7 +20,7 @@
             </div>
             <Table
                     :tableList="tableList"
-                    :tableData="$store.state.Order.list"
+                    :tableData="Order"
                     expandTable="expandTable"
             >
                 <div slot="expandTable">
@@ -53,28 +53,8 @@
     export default {
         data(){
             return{
-                //统计
-                statistics:[
-                    {
-                        title:'当月订单量',
-                        data:'0',
-                    },
-                    {
-                        title:'当月销售额',
-                        data:'0',
-                    },{
-                        title:'当日订单量',
-                        data:'0',
-                    },
-                    {
-                        title:'当日销售额',
-                        data:'0',
-                    },
-                ],
                 //搜索
                 searchForm:{
-                    barCode:'',
-                    name:'',
                     createTime:''
                 },
                 searchFormConfig:{
@@ -163,6 +143,7 @@
              */
             //查询
             search() {
+                console.log(this.searchForm)
             },
             //重置
             reset(refs) {
@@ -184,26 +165,41 @@
                     current: 1,
                     pageSize: 10,
                 }});
-            this.$store.dispatch("OrderCensus/getTodayCensus")
-            this.$store.dispatch("OrderCensus/getMouthCensus")
-            this.statistics=[
-                {
-                    title:'当月订单量',
-                    data:this.$store.state.OrderCensus.mouth.orderQuantity,
-                },
-                {
-                    title:'当月销售额',
-                    data:this.$store.state.OrderCensus.mouth.orderTotal,
-                },{
-                    title:'当日订单量',
-                    data:this.$store.state.OrderCensus.today.orderQuantity,
-                },
-                {
-                    title:'当日销售额',
-                    data:this.$store.state.OrderCensus.today.orderTotal,
-                },
-            ]
+            this.$store.dispatch("OrderCensus/getTodayCensus");
+            this.$store.dispatch("OrderCensus/getMouthCensus");
         },
+        computed: {
+            // 获取统计数据
+            getData(){
+               return [
+                    {
+                        title:'当月订单量',
+                        data:this.$store.state.OrderCensus.mouth.orderQuantity,
+                    },
+                    {
+                        title:'当月销售额',
+                        data:this.$store.state.OrderCensus.mouth.orderTotal,
+                    },{
+                        title:'当日订单量',
+                        data:this.$store.state.OrderCensus.today.orderQuantity,
+                    },
+                    {
+                        title:'当日销售额',
+                        data:this.$store.state.OrderCensus.today.orderTotal,
+                    },
+                ]
+            },
+            // 获取订单
+            Order(){
+                 let data=[];
+                this.$store.state.Order.list.forEach((item)=>{
+                    item['name'] = item.consumer.name;
+                    data.push(item)
+                });
+                return data
+           }
+
+        }
 
     }
 </script>
