@@ -83,7 +83,7 @@
         <el-card class="min-height-lg">
           <el-row>
             <el-col class="flex-row">
-              <el-input placeholder="请输入商品条码或用扫码枪扫码" v-model="barCode">
+              <el-input placeholder="请输入商品条码或用扫码枪扫码" v-model="barCode" @keyup.enter.native="createSubOrder">
                 <template slot="prepend"><el-button  icon="el-icon-full-screen" size="small"></el-button></template>
                 <template slot="append"><el-button  type="primary" icon="el-icon-search" size="small" @click="createSubOrder"></el-button></template>
               </el-input>
@@ -97,7 +97,7 @@
                           ref="singleTable"
                           :data="$store.state.Goods.list"
                           highlight-current-row
-                          @current-change="handleCurrentChange"
+                          @row-click="handleCurrentChange"
                           style="width: 100%">
                     <el-table-column
                             label="序号"
@@ -521,6 +521,7 @@
       Form
     },
     computed: {
+
       // 获取商品
       getGoods(){
         this.$store.state.Cashier.order.subOrder.forEach((item,index)=>{

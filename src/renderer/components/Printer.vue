@@ -15,7 +15,26 @@
             return {
                 fullPath: path.join(__static, 'print.html'),
                 printerList: [],
-                printer: ""
+                printer: "",
+                order:{
+                    "consumer": {
+                        "name": "游客"
+                    },
+                    "subOrder": [{
+                        "barCode": "123",
+                        "name": "123",
+                        "price": "123",
+                        "stock": "",
+                        "_id": "YpZ8rKIf97buUWO6",
+                        "quantity": 1
+                    }],
+                    "total": "123.00",
+                    "activeKey": "total",
+                    "createTime": {
+                        "$$date": 1576170350636
+                    },
+                    "_id": "eXJAdvyb4ALR4Y6w"
+                }
             };
         },
         mounted() {
@@ -29,29 +48,30 @@
                     console.log("dom-ready");
                     //dom-ready---webview加载完成
                     webview.openDevTools();  //这个方法可以打开print.html的控制台
-                    var order = {
-                        "username": "张萌",
-                        "uid": "213456768765342",
-                        "orderNo": "234657687645342",
-                        "subOrderList": [
-                            {
-                                "itemName": "卫龙辣条 大包装",
-                                "skuName": "20根",
-                                "price": "5.00",
-                                "qty": "2",
-                                "payFee": "10.00"
-                            },
-                        ],
-                        "totalQty": "2",
-                        "payFee": "10.00",
-                        "payTime": "2019-12-11 12:12",
-                    };
+
+                    // var order = {
+                    //     "username": "张萌",
+                    //     "uid": "213456768765342",
+                    //     "orderNo": "234657687645342",
+                    //     "subOrderList": [
+                    //         {
+                    //             "itemName": "卫龙辣条 大包装",
+                    //             "skuName": "20根",
+                    //             "price": "5.00",
+                    //             "qty": "2",
+                    //             "payFee": "10.00"
+                    //         },
+                    //     ],
+                    //     "totalQty": "2",
+                    //     "payFee": "10.00",
+                    //     "payTime": "2019-12-11 12:12",
+                    // };
                     //在send时将arr传递过去
-                    webview.send("ping", order); //向webview嵌套的页面响应事件
+                    webview.send("ping", this.order); //向webview嵌套的页面响应事件
                 });
                 webview.addEventListener("ipc-message", event => {
                     console.log(event.channel); // Prints "pong" 在此监听事件中接收webview嵌套页面所响应的事件
-                    if (event.channel == "pong") {
+                    if (event.channel === "pong") {
                         console.log("通信成功");
                         console.log(this.printer);
                         webview.print(
