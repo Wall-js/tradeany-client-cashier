@@ -15,6 +15,9 @@
             ></Form>
         </el-card>
         <el-card class="m-t-lg">
+            <div slot="header" class="clearfix">
+                <span>订单列表</span>
+            </div>
             <Table
                     :tableList="tableList"
                     :tableData="tableData"
@@ -98,13 +101,84 @@
                         }
                     ],
                 },
+                // 表格
                 tableList:[
+                    {
+                        type: 'selection',
+                        width: '55',
+                    },{
+                        prop: 'name',
+                        label: '商品名称',
+                    },{
+                        prop: 'price',
+                        label: '商品价格',
+                    },{
+                        prop: 'quantity',
+                        label: '数量',
+                    },{
+                        prop: 'time',
+                        label: '下单时间',
+                    },{
+                        prop: 'state',
+                        label: '订单状态',
+                    } ,{
+                        type:'operation',
+                        prop: 'operation',
+                        label: '操作',
+                        isOperaText:'isOperaText'
+                    }],
+                tableData: [
+                    {   name: '542452424',
+                        price: '13216556165132156156',
+                        quantity: '￥0.00',
+                        time: '45245242422',
+                        state:'已下单',
+                        isOperaText: ['查看','发货'],
+                        expandData:[
+                            {
+                                time:'121212',
+                                img:['https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1573005451&di=33b5bb8deb665c9f32fe63ee6ee2c593&src=http://www.hlj.gov.cn/pic/0/10/16/40/10164098_926904.jpg']
+                            },
+                        ],
+                    },
+                    {   name: '542452424',
+                        price: '13216556165132156156',
+                        quantity: '￥0.00',
+                        time: '45245242422',
+                        state:'已下单',
+                        isOperaText: ['查看','发货'],
+                        expandData:[
+                            {
+                                time:'121212',
+                                img:['https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1573005451&di=33b5bb8deb665c9f32fe63ee6ee2c593&src=http://www.hlj.gov.cn/pic/0/10/16/40/10164098_926904.jpg']
+                            },
+                        ],
 
+                    },
                 ],
-                tableData:[
+                expandTableList:[
+                    {
+                        prop:'time',
+                        label:'商品规格'
+                    },
+                    {
+                        prop:'time',
+                        label:'商品条码',
 
+                    },{
+                        type:'array',
+                        prop:'img',
+                        label:'图片'
+                    },
+                    {
+                        prop:'time',
+                        label:'数量'
+                    },
+                    {
+                        prop:'time',
+                        label:'单价'
+                    },
                 ],
-                expandTableList:[],
             }
         },
         components: {
@@ -129,6 +203,10 @@
             reset(refs) {
                 refs['searchForm'].resetFields();
             },
+            // 操作
+            changeOpera(item,action){
+
+            }
         }
     }
 </script>

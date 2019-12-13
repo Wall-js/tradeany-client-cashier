@@ -176,6 +176,7 @@ min:0,
     label-position="right"
     :label-width="formConfig.labelWidth"
     size='small'
+    :rules="rules"
     :ref="refName"
   >
     <el-card v-if='formConfig.elCard' v-for="(cardItem) in formConfig.elCard" :style="cardItem.style" :class="cardItem.paddingBottom">
@@ -312,10 +313,10 @@ min:0,
                   :clearable="true"
                   :placeholder="item.placeholder"
                   :style="item.style"
+                  :controls="item.controls"
           ></el-input>
           <el-input-number
                   v-else-if="item.type === 'numberInput'"
-                  size="mini"
                   v-model="value[item.prop]"
                   :precision="item.precision"
                   :step="item.step"

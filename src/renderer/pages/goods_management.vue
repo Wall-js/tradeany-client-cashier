@@ -23,7 +23,16 @@
                             :tableList="tableList"
                             :tableData="$store.state.Goods.list"
                             @changeOpera="changeOpera"
-                    ></package-table>
+                    >
+                        <el-table-column slot="operate" label="操作">
+                            <template slot-scope="scope">
+                                <div>
+                                    <el-button  @click="changeOpera(scope.row,'change')" type="text">修改</el-button>
+                                    <el-button  @click="changeOpera(scope.row,'del')" type="text">删除</el-button>
+                                </div>
+                            </template>
+                        </el-table-column>
+                    </package-table>
                 </el-col>
             </el-row>
             <el-row>
@@ -126,13 +135,16 @@
                     },{
                         label: '库存数量',
                         prop: 'stock',
-                    },
-                    {
-                        type:'operation',
-                        prop: 'operation',
-                        label:'操作',
-                        isOperaText: 'isOperaText'
+                    },{
+                        slot:'operate',
+                        type: 'slot'
                     }
+                    // {
+                    //     type:'operation',
+                    //     prop: 'operation',
+                    //     label:'操作',
+                    //     isOperaText: 'isOperaText'
+                    // }
                 ],
                 //商品录入
                 show:false,
@@ -151,7 +163,7 @@
                     formItemList: [
                         {
                             type: 'input',
-                            label: '条形码',
+                            label: '条形码：',
                             prop: 'barCode',
                             style:'width:246px',
                             placeholder: '请输入或通过扫码枪获取条形码',
@@ -161,7 +173,7 @@
                             ],
                         },{
                             type: 'input',
-                            label: '商品名称',
+                            label: '商品名称：',
                             prop: 'name',
                             style:'width:300px',
                             placeholder: '请输入商品名称',
@@ -170,7 +182,7 @@
                             ],
                         },{
                             type: 'input',
-                            label: '单价',
+                            label: '单价：',
                             prop: 'price',
                             style:'width:300px',
                             placeholder: '请输入单价',
@@ -179,7 +191,7 @@
                             ],
                         },{
                             type: 'input',
-                            label: '库存数量',
+                            label: '库存数量：',
                             prop: 'stock',
                             style:'width:300px',
                             placeholder: '请输入数量',
@@ -228,11 +240,37 @@
                 refs['searchForm'].resetFields();
             },
             //商品录入
+            //判断字符串是否是数字
             addProductSubmit(refs){
                 refs['addProductForm'].validate((valid) => {
                     if (valid) {
+                        let addProductForm = this.addProductForm;
+                        //价格和库存为数字
+                        let stock = addProductForm['stock'];
+                        let price = addProductForm['price'];
+                        var reg = /^[0-9]+.?[0-9]*$/;
+                        if (!reg.test(price)) {
+                            this.$message.error("价格应该输入数字")
+                            return
+                        }
+                        if (!reg.test(stock)) {
+                            this.$message.error("库存应该输入数字")
+                            return
+                        }
+                        if(price.indexOf('.')>-1){
+                            let l = price.slice(price.indexOf('.')+1);
+                            if(l.length === 1){
+                                price = price +'0'
+                            }else if(l.length >=2){
+                                price = parseFloat(price).toFixed(2)+'';
+                            }
+                        }else {
+                            price = price +'.00'
+                        }
+                        console.log(price);
+                        addProductForm['price'] = price;
                         if(this.isEdit){
-                            let addProductForm = this.addProductForm
+
                             let payload = {
                                 _id:addProductForm['_id'],
                                 data:{...addProductForm}
@@ -240,7 +278,7 @@
                             this.$store.dispatch("Goods/updateGoods",payload)
                             this.$message.success('修改成功')
                         }else {
-                            this.$store.dispatch("Goods/createGoods",this.addProductForm)
+                            this.$store.dispatch("Goods/createGoods",addProductForm)
                             this.$message.success('录入成功')
                         }
 
@@ -263,14 +301,14 @@
             },
             //商品操作
             changeOpera (item, action, type) {
-                if (action === '修改') {
+                if (action === 'change') {
                     this.isEdit = true;
                     this.show = true;
                     let formItemList = this.addProductFormConfig['formItemList'];
                     // formItemList[0]['disabled'] = true;
                     formItemList[formItemList.length-2]['disabled'] = true;
                     this.addProductForm = {...item}
-                }else if(action === '删除'){
+                }else if(action === 'del'){
                     this.$confirm('此操作将删除该商品, 是否继续?', '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
@@ -293,11 +331,6 @@
                     },
                 });
             },
-        },
-        beforeCreate(){
-            //获取当前路由
-            console.log(this.$route.path);
-            this.$store.dispatch("Goods/getCurrentRouter",this.$route.path);
         },
         created() {
             //获取数据

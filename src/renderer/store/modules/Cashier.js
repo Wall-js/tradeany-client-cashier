@@ -12,6 +12,7 @@ const defaultState = {
         },
         subOrder: [],
         total: 0,
+        qtyTotal:0,
         activeKey: 'total'
     },
     cacheOrder: [],
@@ -20,8 +21,18 @@ const defaultState = {
 const state = Object.assign({}, defaultState);
 
 const mutations = {
-    // 清空收银台
+    //总单
     TOTAL_ORDER(state) {
+        //此处添加计算小计  计算总数量
+        let subOrder = state.order.subOrder;
+        let qtyTotal = 0;
+        if(state.order.subOrder){
+            subOrder.forEach(item=>{
+                item.subTotal = item.quantity * item.price;
+                qtyTotal += item.quantity
+            })
+        }
+        state.order.qtyTotal = qtyTotal;
         state.order.total = state.order.subOrder.length > 0 ? state.order.subOrder.reduce((total, item, index) => {
             const a = numeral(item.price);
             const b = a.multiply(item.quantity);
@@ -125,25 +136,48 @@ const actions = {
     createOrder(ctx,payload) {
        let newOrder= ctx.state.order;
         newOrder.createTime =new Date();
-        // payload.createTime =new Date();
-        db.order.insert( newOrder, (err, newDocs) => {
-            if (payload) {
-                if (payload.callback) {
-                    payload.callback(err)
-                }
-            }
-            if (!err) {
-                ctx.commit("ClEAR_ORDER")
-            }
-        });
-    },
+        //修改产品库存
+        let subOrder = ctx.state.order.subOrder;
+        if(subOrder){
+            var p=new Promise((resolve, reject) => {
+                subOrder.forEach(obj=>{
+                    let newPayload ={
+                        _id:obj._id,
+                        quantity:obj.quantity
+                    };
+                    ctx.dispatch("Goods/cutStock",newPayload,{root: true}).then(res=> {
+                        console.log("修改产品：");
+                              resolve()
+                        }
 
-    // 添加商品
+                    );
+                })
+            });
+            p.then(res=>{
+                // 插入数据
+                db.order.insert( newOrder, (err, newDocs) => {
+
+                    console.log("创建订单 插入数据：",newDocs);
+                    if (payload) {
+                        if (payload.callback) {
+                            payload.callbacks(err)
+                        }
+                    }
+                    if (!err) {
+                        ctx.commit("ClEAR_ORDER")
+                    }
+                })
+            })
+        }
+
+    },
+    // 添加商品到订单
     createSubOrder(ctx, payload) {
         db.goods.findOne({barCode: payload.barCode}, (err, doc) => {
             console.log(doc);
             if (doc) {
                 doc.quantity = payload.quantity ? payload.quantity : 1;
+                doc.quantity = doc.quantity <= doc.stock ? doc.quantity : doc.stock;
                 ctx.commit("CREATE_SUBORDER", doc);
                 ctx.commit("TOTAL_ORDER")
             }

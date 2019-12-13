@@ -107,7 +107,6 @@ isOperaText: 'isOperaText'
                                    v-for="(item,itemIndex) in scope.row[tableColumn.isOperaText]"
                                    :key="itemIndex"
                         >{{item}}</el-button>
-
                     </div>
                 </div>
                 <!--<el-button type="primary" size="small" @click="changeOpera(scope.row,'isButton')"-->
