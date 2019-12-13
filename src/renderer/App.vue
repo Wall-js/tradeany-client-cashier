@@ -55,24 +55,24 @@
             icon:'el-icon-s-data',
             index: "/sales-statistics"
           },
-          {
-            type: 'menuItem',
-            title: '类目管理',
-            icon:'el-icon-notebook-2',
-            index: "/category"
-          },
-          {
-            type: 'menuItem',
-            title: '打印',
-            icon:'el-icon-notebook-2',
-            index: "/printer"
-          },
-            {
-                type: 'menuItem',
-                title: 'DEMO',
-                icon: 'el-icon-notebook-2',
-                index: "/demo"
-            },
+          // {
+          //   type: 'menuItem',
+          //   title: '类目管理',
+          //   icon:'el-icon-notebook-2',
+          //   index: "/category"
+          // },
+          // {
+          //   type: 'menuItem',
+          //   title: '打印',
+          //   icon:'el-icon-notebook-2',
+          //   index: "/printer"
+          // },
+          //   {
+          //       type: 'menuItem',
+          //       title: 'DEMO',
+          //       icon: 'el-icon-notebook-2',
+          //       index: "/demo"
+          //   },
         ],
         userName:'admin',
         isShow:true

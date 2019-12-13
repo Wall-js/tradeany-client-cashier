@@ -433,6 +433,7 @@
       Form
     },
     computed: {
+
       // 获取商品
       getGoods(){
         this.$store.state.Cashier.order.subOrder.forEach((item,index)=>{

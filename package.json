@@ -1,6 +1,6 @@
 {
   "name": "tradeany-client-cashier",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "author": "Wall <307606056@qq.com>",
   "description": "An electron-vue project",
   "license": null,
@@ -17,7 +17,8 @@
     "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
     "test": "npm run unit && npm run e2e",
     "unit": "karma start test/unit/karma.conf.js",
-    "postinstall": ""
+    "postinstall": "electron-builder install-app-deps",
+    "publish": "electron-builder --publish onTagOrDraft"
   },
   "build": {
     "productName": "tradeany-client-cashier",

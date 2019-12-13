@@ -2,6 +2,10 @@
 # https://simulatedgreg.gitbooks.io/electron-vue/content/en/testing.html#on-the-subject-of-ci-testing
 version: 0.1.{build}
 
+environment:
+  access_token:
+    secure: hAhA6jTRYQIkuxZW9vThF/fjbNeLvlmEVG4wsNHX7m95svXkr0sGO5jdFX9CEdwz
+
 branches:
   only:
     - master
@@ -28,5 +32,5 @@ install:
 build_script:
   #- yarn test
   - yarn build
-
+  - npm run publish
 test: off
