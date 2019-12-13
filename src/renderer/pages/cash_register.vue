@@ -442,7 +442,7 @@
             // webview.addEventListener("dom-ready", () => {
                 console.log("dom-ready");
                 //dom-ready---webview加载完成
-                webview.openDevTools();  //这个方法可以打开print.html的控制台
+                // webview.openDevTools();  //这个方法可以打开print.html的控制台
                 // var order = {
                 //     "username": "张萌",
                 //     "uid": "213456768765342",
@@ -511,7 +511,7 @@
                     this.print(order);
                 }
             });
-        }
+        },
 
     },
     components: {
@@ -540,7 +540,7 @@
           item['isOperaText'] = [`提单`,`删除`]
         });
       }
-    }
+    },
   }
 </script>
 

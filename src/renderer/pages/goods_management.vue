@@ -151,7 +151,7 @@
                     formItemList: [
                         {
                             type: 'input',
-                            label: '条形码',
+                            label: '条形码：',
                             prop: 'barCode',
                             style:'width:246px',
                             placeholder: '请输入或通过扫码枪获取条形码',
@@ -161,7 +161,7 @@
                             ],
                         },{
                             type: 'input',
-                            label: '商品名称',
+                            label: '商品名称：',
                             prop: 'name',
                             style:'width:300px',
                             placeholder: '请输入商品名称',
@@ -170,7 +170,7 @@
                             ],
                         },{
                             type: 'input',
-                            label: '单价',
+                            label: '单价：',
                             prop: 'price',
                             style:'width:300px',
                             placeholder: '请输入单价',
@@ -179,7 +179,7 @@
                             ],
                         },{
                             type: 'input',
-                            label: '库存数量',
+                            label: '库存数量：',
                             prop: 'stock',
                             style:'width:300px',
                             placeholder: '请输入数量',
@@ -231,8 +231,22 @@
             addProductSubmit(refs){
                 refs['addProductForm'].validate((valid) => {
                     if (valid) {
+                        let addProductForm = this.addProductForm;
+                        let price = addProductForm['price'];
+                        if(price.indexOf('.')>-1){
+                            let l = price.slice(price.indexOf('.')+1);
+                            if(l.length === 1){
+                                price = price +'0'
+                            }else if(l.length >=2){
+                                price = parseFloat(price).toFixed(2)+'';
+                            }
+                        }else {
+                            price = price +'.00'
+                        }
+                        console.log(price);
+                        addProductForm['price'] = price;
                         if(this.isEdit){
-                            let addProductForm = this.addProductForm
+
                             let payload = {
                                 _id:addProductForm['_id'],
                                 data:{...addProductForm}
@@ -240,7 +254,7 @@
                             this.$store.dispatch("Goods/updateGoods",payload)
                             this.$message.success('修改成功')
                         }else {
-                            this.$store.dispatch("Goods/createGoods",this.addProductForm)
+                            this.$store.dispatch("Goods/createGoods",addProductForm)
                             this.$message.success('录入成功')
                         }
 
