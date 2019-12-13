@@ -21,7 +21,6 @@
             <Table
                     :tableList="tableList"
                     :tableData="$store.state.Order.list"
-                    @changeOpera="changeOpera"
                     expandTable="expandTable"
             >
                 <div slot="expandTable">
@@ -31,12 +30,18 @@
                         <template slot-scope="props">
                             <Table
                                     :tableList="expandTableList"
-                                    :tableData="props.row.expandData"
+                                    :tableData="props.row.subOrder"
                             ></Table>
                         </template>
                     </el-table-column>
                 </div>
             </Table>
+            <el-row>
+                <el-col>
+                    <page-break :pageTotal="$store.state.Order.pagination.total" :pageSize="$store.state.Order.pagination.pageSize"
+                                @pageChange="pageChange"></page-break>
+                </el-col>
+            </el-row>
         </el-card>
     </div>
 </template>
@@ -44,7 +49,7 @@
 <script>
     import Form from '../components/Form';
     import Table from  '../components/Table'
-
+    import PageBreak from '../components/Pagination'
     export default {
         data(){
             return{
@@ -104,86 +109,53 @@
                 // 表格
                 tableList:[
                     {
-                        type: 'selection',
-                        width: '55',
-                    },{
                         prop: 'name',
-                        label: '商品名称',
+                        label: '用户名',
                     },{
-                        prop: 'price',
-                        label: '商品价格',
+                        prop: 'total',
+                        label: '商品总价',
                     },{
-                        prop: 'quantity',
+                        prop: 'qtyTotal',
                         label: '数量',
                     },{
-                        prop: 'time',
+                        prop: 'createTime',
                         label: '下单时间',
-                    },{
-                        prop: 'state',
-                        label: '订单状态',
-                    } ,{
-                        type:'operation',
-                        prop: 'operation',
-                        label: '操作',
-                        isOperaText:'isOperaText'
-                    }],
-                tableData: [
-                    {   name: '542452424',
-                        price: '13216556165132156156',
-                        quantity: '￥0.00',
-                        time: '45245242422',
-                        state:'已下单',
-                        isOperaText: ['查看','发货'],
-                        expandData:[
-                            {
-                                time:'121212',
-                                img:['https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1573005451&di=33b5bb8deb665c9f32fe63ee6ee2c593&src=http://www.hlj.gov.cn/pic/0/10/16/40/10164098_926904.jpg']
-                            },
-                        ],
                     },
-                    {   name: '542452424',
-                        price: '13216556165132156156',
-                        quantity: '￥0.00',
-                        time: '45245242422',
-                        state:'已下单',
-                        isOperaText: ['查看','发货'],
-                        expandData:[
-                            {
-                                time:'121212',
-                                img:['https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1573005451&di=33b5bb8deb665c9f32fe63ee6ee2c593&src=http://www.hlj.gov.cn/pic/0/10/16/40/10164098_926904.jpg']
-                            },
-                        ],
-
-                    },
-                ],
+                    ],
+                tableData: [],
                 expandTableList:[
                     {
-                        prop:'time',
-                        label:'商品规格'
+                        prop:'barCode',
+                        label:'商品条码'
                     },
                     {
-                        prop:'time',
-                        label:'商品条码',
+                        prop:'name',
+                        label:'商品名称',
 
                     },{
-                        type:'array',
-                        prop:'img',
-                        label:'图片'
+                        prop:'price',
+                        label:'商品价格'
                     },
                     {
-                        prop:'time',
+                        prop:'quantity',
                         label:'数量'
                     },
                     {
-                        prop:'time',
-                        label:'单价'
+                        prop:'subTotal',
+                        label:'总价'
                     },
+                    {
+                        prop:'stock',
+                        label:'库存'
+                    },
+
                 ],
             }
         },
         components: {
             Form,
-            Table
+            Table,
+            PageBreak
         },
         methods:{
             /**
@@ -191,35 +163,47 @@
              */
             //查询
             search() {
-                // this.$store.dispatch("Goods/filterGoods",{
-                //     pagination: {
-                //         current: 1,
-                //         pageSize: 10,
-                //     },
-                //     form:this.searchForm
-                // })
             },
             //重置
             reset(refs) {
                 refs['searchForm'].resetFields();
             },
-            // 操作
-            changeOpera(item,action){
+            // 分页操作
+            pageChange (item) {
+                this.$store.dispatch("Order/getOrder",{
+                    pagination: {
+                        current: item,
+                        pageSize: 10,
+                    }});
+            },
+        },
+        created() {
+            //获取数据
+            this.$store.dispatch("Order/getOrder",{
+                pagination: {
+                    current: 1,
+                    pageSize: 10,
+                }});
+            this.$store.dispatch("OrderCensus/getTodayCensus")
+            this.statistics=[
+                {
+                    title:'当月订单量',
+                    data:this.$store.state.OrderCensus.mouth.orderQuantity,
+                },
+                {
+                    title:'当月销售额',
+                    data:this.$store.state.OrderCensus.mouth.orderTotal,
+                },{
+                    title:'当日订单量',
+                    data:this.$store.state.OrderCensus.today.orderQuantity,
+                },
+                {
+                    title:'当日销售额',
+                    data:this.$store.state.OrderCensus.today.orderTotal,
+                },
+            ]
+        },
 
-            }
-        },
-        computed: {
-            // 获取订单
-            getOrder(){
-                let data=[];
-                console.log(this.$store.state.Order.list)
-                this.$store.state.Order.list.forEach((item)=>{
-                    console.log(item);
-                    data.push(item)
-                });
-                return this.$store.state.Order.list
-            }
-        },
     }
 </script>
 

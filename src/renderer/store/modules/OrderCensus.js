@@ -109,6 +109,30 @@ const actions = {
             }
         });
     },
+    getMouthCensus(ctx, payload) {
+        let todayStartTime = new Date(new Date().toLocaleDateString()).getTime();
+        let todayEndTime = todayStartTime + 24 * 60 * 60 * 1000 - 1;
+        db.order.find(
+            {
+                $where: function () {
+                    // console.log(this.createTime >= todayStartTime && this.createTime <= todayEndTime);
+                    return this.createTime >= todayStartTime && this.createTime <= todayEndTime;
+                }
+            }
+            // {$and: [{createTime: {$gte: todayStartTime}}, {createTime: {$lte: todayEndTime}}]},
+            // {createTime: {$gte: todayStartTime}}
+        ).exec((err, docs) => {
+            console.log(docs);
+            // console.log(docs[0].createTime);
+            ctx.commit('CENSUS_TODAY', docs);
+            if (payload) {
+                if (payload.callback) {
+                    payload.callback(err)
+                }
+            }
+        });
+    },
+
 };
 
 export default {

@@ -44,11 +44,33 @@
             index: "/goods-management"
           },
           {
-            type: 'menuItem',
+            type: 'submenu',
             title: '库存管理',
             icon:"el-icon-s-shop",
-            index: "/stock-management"
+            routers: [
+              {
+                type: 'itemGroup',
+                title: '库存管理',
+                index: "/stock-management",
+                routers: [
+                  {
+                    labelName: '库存管理',
+                    index: "/stock-management"
+                  },
+                  {
+                    labelName: '出入库明细',
+                    index: "/stock_out_put"
+                  },
+                ],
+              },
+            ],
           },
+          // {
+          //   type: 'menuItem',
+          //   title: '库存管理',
+          //   icon:"el-icon-s-shop",
+          //   index: "/stock-management"
+          // },
           {
             type: 'menuItem',
             title: '销售统计',
@@ -63,6 +85,12 @@
           // },
           // {
           //   type: 'menuItem',
+          //   title: '出入库明细',
+          //   icon:'el-icon-notebook-2',
+          //   index: "/stock_out_put"
+          // },
+          // {
+          //   type: 'menuItem',
           //   title: '打印',
           //   icon:'el-icon-notebook-2',
           //   index: "/printer"
@@ -73,6 +101,13 @@
                 icon: 'el-icon-notebook-2',
                 index: "/demo"
             },
+          //   {
+          //       type: 'menuItem',
+          //       title: 'DEMO',
+          //       icon: 'el-icon-notebook-2',
+          //       index: "/demo"
+          //   },
+
         ],
         userName:'admin',
         isShow:true

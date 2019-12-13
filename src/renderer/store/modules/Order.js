@@ -28,6 +28,11 @@ const state = {
 
 const mutations = {
     GET_ORDER(state, payload) {
+        payload.forEach((item)=>{
+            let d = new Date(item.createTime);
+            let times=d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
+            item['createTime'] = times;
+        });
         state.list = payload
     },
     GET_ORDER_TOTAL(state, payload) {

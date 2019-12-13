@@ -3,8 +3,8 @@
     <div>
         <el-card>
             <Form :value="searchForm"
-                   :formConfig="searchFormConfig"
-                   refName="searchForm"
+                  :formConfig="searchFormConfig"
+                  refName="searchForm"
             >
                 <div slot="codeInput" class="float-right m-l-sm">
                     <el-button  icon="el-icon-full-screen" size="small" ></el-button>
@@ -13,11 +13,6 @@
         </el-card>
         <el-card class="m-t-sm min-height-lg">
             <el-row>
-                <el-col>
-                    <el-button type="primary" size="small" @click="()=>{this.show=true}">商品录入</el-button>
-                </el-col>
-            </el-row>
-            <el-row class="m-t-sm">
                 <el-col>
                     <el-table
                             :data="$store.state.Goods.list"
@@ -28,7 +23,6 @@
                         <el-table-column  label="操作" >
                             <template slot-scope="scope">
                                 <el-button @click="tableChange(scope.row,'change')" type="text" size="mini">修改</el-button>
-                                <el-button @click="tableChange(scope.row,'del')" type="text" size="mini">删除</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -41,18 +35,18 @@
                 </el-col>
             </el-row>
         </el-card>
-        <!--商品录入弹窗-->
+        <!--修改库存弹窗-->
         <Dialog
-            :show.sync="show"
-            :dialogConfig="dialogConfig"
-            @handleClose="closeDialog"
+                :show.sync="show"
+                :dialogConfig="dialogConfig"
+                @handleClose="closeDialog"
         >
             <el-row slot="content">
                 <el-col>
                     <Form
-                            :value="addProductForm"
-                            :formConfig="addProductFormConfig"
-                            refName="addProductForm"
+                            :value="editStockForm"
+                            :formConfig="editStockFormConfig"
+                            refName="editStockForm"
                             ref="dialogForm"
                     >
                         <div slot="codeInput" class="float-right m-l-sm">
@@ -116,7 +110,6 @@
                         }
                     ],
                 },
-
                 //商品列表
                 tableList: [
                     {
@@ -140,21 +133,21 @@
                 //商品录入
                 show:false,
                 dialogConfig:{
-                    title:'商品录入',
+                    title:'修改库存',
                     width:'500px',
                 },
-                addProductForm:{
+                editStockForm:{
                     barCode:'',
                     name:'',
                     price:'',
                     stock:''
                 },
-                addProductFormConfig: {
+                editStockFormConfig: {
                     labelWidth:'120px',
                     formItemList: [
                         {
                             type: 'input',
-                            label: '条形码：',
+                            label: '条形码',
                             prop: 'barCode',
                             style:'width:246px',
                             placeholder: '请输入或通过扫码枪获取条形码',
@@ -164,25 +157,7 @@
                             ],
                         },{
                             type: 'input',
-                            label: '商品名称：',
-                            prop: 'name',
-                            style:'width:300px',
-                            placeholder: '请输入商品名称',
-                            rules:[
-                                {required: true, message: '请输入商品名称', trigger: 'blur'}
-                            ],
-                        },{
-                            type: 'input',
-                            label: '单价：',
-                            prop: 'price',
-                            style:'width:300px',
-                            placeholder: '请输入单价',
-                            rules:[
-                                {required: true, message: '请输入单价', trigger: 'blur'}
-                            ],
-                        },{
-                            type: 'input',
-                            label: '库存数量：',
+                            label: '库存数量',
                             prop: 'stock',
                             style:'width:300px',
                             placeholder: '请输入数量',
@@ -192,7 +167,7 @@
                                 {
                                     name: '确认',
                                     type: 'primary',
-                                    handleClick: this.addProductSubmit
+                                    handleClick: this.editStockSubmit
                                 },
                                 {
                                     name: '取消',
@@ -203,7 +178,6 @@
                         }
                     ],
                 },
-                isEdit:false,
             }
         },
         components: {
@@ -217,69 +191,25 @@
              */
             //查询
             search() {
-
-                this.$store.dispatch("Goods/filterGoods",{
-                    pagination: {
-                        current: 1,
-                        pageSize: 10,
-                    },
-                    name:this.searchForm.name
-                })
+                console.log('搜索数据', this.searchForm)
             },
             //重置
             reset(refs) {
                 refs['searchForm'].resetFields();
-                this.$store.dispatch("Goods/getGoods",{
-                    pagination: {
-                        current: 1,
-                        pageSize: 10,
-                    }});
-
             },
-            //商品录入
-            //判断字符串是否是数字
-            addProductSubmit(refs){
-                refs['addProductForm'].validate((valid) => {
+            //修改库存
+            editStockSubmit(refs){
+                refs['editStockForm'].validate((valid) => {
                     if (valid) {
-                        let addProductForm = this.addProductForm;
-                        //价格和库存为数字
-                        let stock = addProductForm['stock'];
-                        let price = addProductForm['price'];
-                        var reg = /^[0-9]+.?[0-9]*$/;
-                        if (!reg.test(price)) {
-                            this.$message.error("价格应该输入数字")
-                            return
+                        let editStockForm = this.editStockForm
+                        let payload = {
+                            _id:editStockForm['_id'],
+                            data:{...editStockForm}
                         }
-                        if (!reg.test(stock)) {
-                            this.$message.error("库存应该输入数字")
-                            return
-                        }
-                        if(price.indexOf('.')>-1){
-                            let l = price.slice(price.indexOf('.')+1);
-                            if(l.length === 1){
-                                price = price +'0'
-                            }else if(l.length >=2){
-                                price = parseFloat(price).toFixed(2)+'';
-                            }
-                        }else {
-                            price = price +'.00'
-                        }
-                        console.log(price);
-                        addProductForm['price'] = price;
-                        if(this.isEdit){
-                            let payload = {
-                                _id:addProductForm['_id'],
-                                data:{...addProductForm}
-                            }
-                            this.$store.dispatch("Goods/updateGoods",payload);
-                            this.$message.success('修改成功')
-                        }else {
-                            this.$store.dispatch("Goods/createGoods",addProductForm)
-                            this.$message.success('录入成功')
-                        }
-
+                        this.$store.dispatch("Goods/updateGoods",payload)
+                        this.$message.success('修改成功')
                         this.show=false;
-                        refs['addProductForm'].resetFields();
+                        refs['editStockForm'].resetFields();
                     } else {
                         console.log('error submit!!');
                         return false;
@@ -290,30 +220,18 @@
             closeDialog(refs){
                 if(refs){
                     this.show=false;
-                    refs['addProductForm'].resetFields();
+                    refs['editStockForm'].resetFields();
                 }else {
-                    this.$refs['dialogForm']['$refs']['addProductForm'].resetFields();
+                    this.$refs['dialogForm']['$refs']['editStockForm'].resetFields();
                 }
             },
             //商品操作
             tableChange(item,action) {
                 if (action === 'change') {
-                    this.isEdit = true;
                     this.show = true;
-                    let formItemList = this.addProductFormConfig['formItemList'];
-                    formItemList[formItemList.length-2]['disabled'] = true;
-                    this.addProductForm = {...item};
-                    this.searchForm.name = ''
-                }else if(action === 'del'){
-                    this.$confirm('此操作将删除该商品, 是否继续?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning'
-                    }).then(() => {
-                        this.searchForm.name = '';
-                        this.$store.dispatch("Goods/deleteGoods",{_id:item._id})
-                    })
-
+                    let formItemList = this.editStockFormConfig['formItemList'];
+                    formItemList[0]['disabled'] = true;
+                    this.editStockForm = {...item}
                 }
             },
             /**
@@ -336,12 +254,11 @@
                     current: 1,
                     pageSize: 10,
                 }});
-            console.log(this.$store.state.Goods.list)
         },
-
     }
 </script>
 
 <style scoped>
 </style>
+
 

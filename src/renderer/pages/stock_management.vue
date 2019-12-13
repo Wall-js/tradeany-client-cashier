@@ -79,14 +79,15 @@
                 searchFormConfig: {
                     line_type: true,
                     formItemList: [
+                        // {
+                        //     type: 'input',
+                        //     label: '条形码：',
+                        //     prop: 'barCode',
+                        //     style:'width:246px',
+                        //     placeholder: '请输入或通过扫码枪获取条形码',
+                        //     slotBottom:'codeInput',
+                        // },
                         {
-                            type: 'input',
-                            label: '条形码：',
-                            prop: 'barCode',
-                            style:'width:246px',
-                            placeholder: '请输入或通过扫码枪获取条形码',
-                            slotBottom:'codeInput',
-                        },{
                             type: 'input',
                             label: '商品名称：',
                             prop: 'name',

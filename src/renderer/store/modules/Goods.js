@@ -67,7 +67,7 @@ const actions = {
         let pageSize = ctx.state.pagination.pageSize;
         let skip = (ctx.state.pagination.current - 1) * pageSize;
         db.goods.find({'name': new RegExp(payload.name, 'i')}).skip(skip).limit(pageSize).exec((err, docs) => {
-            ctx.dispatch('getGoodsTotal');
+            ctx.commit("SET_GOODS_TOTAL", docs.length);
             ctx.commit('SET_GOODS', docs);
             if (payload) {
                 if (payload.callback) {
