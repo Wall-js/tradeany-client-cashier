@@ -58,10 +58,10 @@
                     labelName: '库存管理',
                     index: "/stock-management"
                   },
-                  {
-                    labelName: '出入库明细',
-                    index: "/stock_out_put"
-                  },
+                  // {
+                  //   labelName: '出入库明细',
+                  //   index: "/stock_out_put"
+                  // },
                 ],
               },
             ],
