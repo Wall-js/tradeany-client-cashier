@@ -67,12 +67,12 @@
           //   icon:'el-icon-notebook-2',
           //   index: "/printer"
           // },
-          //   {
-          //       type: 'menuItem',
-          //       title: 'DEMO',
-          //       icon: 'el-icon-notebook-2',
-          //       index: "/demo"
-          //   },
+            {
+                type: 'menuItem',
+                title: 'DEMO',
+                icon: 'el-icon-notebook-2',
+                index: "/demo"
+            },
         ],
         userName:'admin',
         isShow:true

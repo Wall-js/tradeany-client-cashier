@@ -22,7 +22,10 @@
         <button @click="deleteItem">deleteItem</button>
         <button @click="updateItem">updateItem</button>
         <button @click="$store.dispatch('Item/deleteAllItem')">deleteAllItem</button>
-
+        <div>
+            <p>{{$store.state.OrderCensus }}</p>
+            <button @click="test">test</button>
+        </div>
     </div>
 </template>
 
@@ -41,6 +44,9 @@
             //     // console.log(this.$store.state.Counter.main)
             //
             // },
+            test() {
+                this.$store.dispatch("OrderCensus/getTodayCensus")
+            },
             getItem() {
                 console.log(this.$store.state.Item.list);
                 let payload = {

@@ -15,6 +15,7 @@ const model = {
     // IdNumber: undefined,
     // UserMem: undefined,
 };
+
 const state = {
     list: [],
     totalprice:0,

@@ -1,5 +1,6 @@
 import {app, BrowserWindow,ipcMain} from 'electron'
-import '../renderer/store' //添加store位置解决 dispatch 无效
+// import '../renderer/store'
+import checkVersion from "./updateChecker"; //添加store位置解决 dispatch 无效
 
 // Install `electron-debug` with `devtron`
 require('electron-debug')({showDevTools: true});
@@ -42,8 +43,9 @@ function createWindow() {
         mainWindow = null
     })
 }
+app.on('ready', checkVersion);
 
-app.on('ready', createWindow)
+app.on('ready', createWindow);
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
