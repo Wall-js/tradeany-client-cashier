@@ -12,6 +12,7 @@ const defaultState = {
         },
         subOrder: [],
         total: 0,
+        qtyTotal:0,
         activeKey: 'total'
     },
     cacheOrder: [],
@@ -20,8 +21,18 @@ const defaultState = {
 const state = Object.assign({}, defaultState);
 
 const mutations = {
-    // 清空收银台
+    //总单
     TOTAL_ORDER(state) {
+        //此处添加计算小计  计算总数量
+        let subOrder = state.order.subOrder;
+        let qtyTotal = 0;
+        if(state.order.subOrder){
+            subOrder.forEach(item=>{
+                item.subTotal = item.quantity * item.price;
+                qtyTotal += item.quantity
+            })
+        }
+        state.order.qtyTotal = qtyTotal;
         state.order.total = state.order.subOrder.length > 0 ? state.order.subOrder.reduce((total, item, index) => {
             const a = numeral(item.price);
             const b = a.multiply(item.quantity);

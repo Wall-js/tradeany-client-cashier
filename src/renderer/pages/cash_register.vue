@@ -217,17 +217,17 @@
                         label="数量"
                 >
                 </el-table-column>
-                <!--<el-table-column-->
-                <!--prop="subtotal"-->
-                <!--label="小计"-->
-                <!--&gt;-->
-                <!--</el-table-column>-->
+                <el-table-column
+                  prop="subTotal"
+                  label="价格"
+                >
+                </el-table-column>
               </el-table>
             </el-col>
             <el-col class="flex-row just-end m-t-lg">
               <div class="flex-row just-between flex-align">
                 <h4>数量：</h4>
-                <h2 style="color:#409EFF">{{totalQty}}</h2>
+                <h2 style="color:#409EFF">{{$store.state.Cashier.order.qtyTotal}}</h2>
               </div>
               <div class="flex-row just-between flex-align m-l-lg">
                 <h4>总金额：</h4>
@@ -354,7 +354,7 @@
       },
         // 编辑商品数量
       handleChange(scope){
-        this.$store.dispatch("Cashier/updateSubOrder", {index: scope.$index, quantity: scope.row.quantity});
+        this.$store.dispatch("Cashier/updateSubOrder", {index: scope.$index, quantity: scope.row.quantity,subTotal: scope.row.subTotal});
       },
         // 挂单
       setCacheOrder(){
