@@ -5,7 +5,7 @@ const model = {
     // outboundNo: '',
     type: 0,
     typeName:'',//0是出库   1入库
-    goodsName: '',
+    name: '',
     barCode: '',
     price: 0,
     stock: 0,
@@ -33,6 +33,7 @@ const mutations = {
                 }
             })
         }
+        console.log("asdasdf",payload)
         state.list = payload
     },
     SET_OUTBOUND_DETAILS_TOTAL(state, payload) {
@@ -59,7 +60,8 @@ const actions = {
         let pageSize = state.pagination.pageSize;
         let skip = (state.pagination.current - 1) * pageSize;
         db.outbound.find({}).skip(skip).limit(pageSize).exec((err, docs) => {
-            ctx.dispatch('getOutboundDetailsTotal');
+            ctx.dispatch('getOutboundDetailsTotal',);
+            console.log("454545",docs);
             ctx.commit('GET_OUTBOUND_DETAILS', docs);
             if (payload) {
                 if (payload.callback) {
