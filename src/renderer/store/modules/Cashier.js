@@ -184,37 +184,34 @@ const actions = {
                         _id: obj._id,
                         quantity: obj.quantity
                     };
-                    ctx.dispatch("Goods/cutStock",newPayload,{root: true}).then(res=> {
-                              resolve()
-                        },err=>{
+                    ctx.dispatch("Goods/cutStock", newPayload, {root: true}).then(res => {
+                            resolve()
+                        }, err => {
                             reject(err);
                         }
                     );
                 })
             });
-            let promise = new Promise((resolve, reject)=>{
-                p.then(res=>{
-                    console.log("12121")
+            let promise = new Promise((resolve, reject) => {
+                p.then(res => {
                     // 插入数据
-                    db.order.insert( newOrder, (err, newDocs) => {
+                    db.order.insert(newOrder, (err, newDocs) => {
                         if (payload) {
                             if (payload.callback) {
                                 payload.callbacks(err)
                             }
                         }
-                        console.log("55555555555555555555555555555555555",!err,err)
                         if (err) {
                             reject('订单创建失败')
-                        }else {
-                            console.log("333",err)
+                        } else {
                             ctx.commit("ClEAR_ORDER");
                             resolve();
                         }
                     })
-                },err=>{
+                }, err => {
                     reject(err);
                 })
-            })
+            });
             return promise
         }
 
@@ -224,7 +221,7 @@ const actions = {
         db.goods.findOne({barCode: payload.barCode}, (err, doc) => {
             console.log(doc);
             if (doc) {
-                if(doc.stock>=1){
+                if (doc.stock >= 1) {
                     doc.quantity = payload.quantity ? payload.quantity : 1;
                     doc.quantity = doc.quantity <= doc.stock ? doc.quantity : doc.stock;
                     ctx.commit("CREATE_SUBORDER", doc);
