@@ -28,7 +28,7 @@
           <el-row>
             <el-col class="flex-row just-around">
               <el-button type="primary" size="small">会员</el-button>
-              <el-button type="primary" size="small" @click="setCacheOrder">提单</el-button>
+              <el-button type="primary" size="small" @click="setCacheOrder">挂单</el-button>
               <el-button type="primary" size="small" @click="cleanSubOrder">清空</el-button>
             </el-col>
           </el-row>
