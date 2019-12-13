@@ -356,9 +356,6 @@
       handleChange(scope){
         this.$store.dispatch("Cashier/updateSubOrder", {index: scope.$index, quantity: scope.row.quantity});
       },
-      update(val){
-        console.log(11,val)
-      },
         // 挂单
       setCacheOrder(){
           this.$store.dispatch("Cashier/setCacheOrder");
@@ -394,7 +391,6 @@
       },
       // 添加购物车
       handleCurrentChange(val){
-        console.log(val.barCode);
         this.barCode=val.barCode
         this.createSubOrder();
       },
@@ -519,27 +515,28 @@
       Form,
       KeyBoard
     },
-    computed: {
-
-      // 获取商品
-      getGoods(){
-        this.$store.state.Cashier.order.subOrder.forEach((item,index)=>{
-          item['No'] = index;
-          item['isOperaText'] = [`删除`]
-        });
-        return this.$store.state.Cashier.subOrder
+      computed: {
+          // 获取商品
+          getGoods(){
+              let data=[];
+              this.$store.state.Cashier.order.subOrder.slice().forEach((item,index)=>{
+                  let obj={name:item.name,price:item.price,quantity:item.quantity}
+                  // item['quantity'] = item.quantity;
+                  data.push(obj)
+              });
+              return data
+          },
+          // 获取挂单
+          getOrder(){
+              let data=[];
+              this.$store.state.Cashier.cacheOrder.forEach((item)=>{
+                  item['name'] = item.consumer.name;
+                  item['subOrderQty'] = item.subOrder.length;
+                  data.push(item)
+              });
+              return data
+          }
       },
-      // 获取挂单
-      getCacheOrder(){
-        // let list = this.$store.state.Cashier.cacheOrder
-        return this.$store.state.Cashier.cacheOrder.forEach((item,index)=>{
-          item['No'] = index;
-          item['name'] = item.consumer.name;
-          item['subOrderQty'] = item.subOrder.length;
-          item['isOperaText'] = [`提单`,`删除`]
-        });
-      }
-    },
   }
 </script>
 
