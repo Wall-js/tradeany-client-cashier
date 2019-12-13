@@ -5,8 +5,8 @@ import numeral from "numeral";
 const defaultState = {
     mouth: {
         date: undefined,
-        OrderQuantity: 0,
-        OrderTotal: 0,
+        orderQuantity: 0,
+        orderTotal: 0,
         list: [],
         pagination: {
             current: 1,
@@ -16,8 +16,8 @@ const defaultState = {
     },
     day: {
         date: undefined,
-        OrderQuantity: 0,
-        OrderTotal: 0,
+        orderQuantity: 0,
+        orderTotal: 0,
         list: [],
         pagination: {
             current: 1,
@@ -27,8 +27,8 @@ const defaultState = {
 
     },
     today: {
-        OrderQuantity: 0,
-        OrderTotal: 0,
+        orderQuantity: 0,
+        orderTotal: 0,
         list: [],
         pagination: {
             current: 1,
@@ -55,12 +55,27 @@ const state = Object.assign({}, defaultState);
 const mutations = {
     CENSUS_TODAY(state, payload) {
         state.today.list = payload;
-        state.today.OrderQuantity = payload.length;
-        state.today.total = state.today.list.length > 0 ? state.today.list.reduce((total, item, index) => {
+        state.today.orderQuantity = payload.length;
+        state.today.orderTotal = state.today.list.length > 0 ? state.today.list.reduce((total, item, index) => {
             const a = numeral(item.total);
             // const b = a.multiply(item.quantity);
             const b = a.add(total)
             if (index === state.today.list.length - 1) {
+                return b.format('0.00');
+            } else {
+                return b.value();
+            }
+        }, 0) : 0;
+    },
+
+    CENSUS_MOUTH(state, payload) {
+        state.mouth.list = payload;
+        state.mouth.orderQuantity = payload.length;
+        state.mouth.total = state.today.list.length > 0 ? state.mouth.list.reduce((total, item, index) => {
+            const a = numeral(item.total);
+            // const b = a.multiply(item.quantity);
+            const b = a.add(total)
+            if (index === state.mouth.list.length - 1) {
                 return b.format('0.00');
             } else {
                 return b.value();
