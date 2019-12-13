@@ -55,6 +55,7 @@ const state = Object.assign({}, defaultState);
 const mutations = {
     CENSUS_TODAY(state, payload) {
         state.today.list = payload;
+        state.today.OrderQuantity = payload.length;
         state.today.total = state.today.list.length > 0 ? state.today.list.reduce((total, item, index) => {
             const a = numeral(item.total);
             // const b = a.multiply(item.quantity);
