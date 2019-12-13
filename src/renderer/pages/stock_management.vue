@@ -215,7 +215,10 @@
                         let editStockForm = this.editStockForm;
                         let payload = {
                             _id:editStockForm['_id'],
-                            data:{...editStockForm}
+                            data:{
+                                ...editStockForm,
+                                stock:editStockForm.stock*1
+                            }
                         };
                         this.$store.dispatch("Goods/updateGoods",payload);
                         this.$message.success('修改成功');

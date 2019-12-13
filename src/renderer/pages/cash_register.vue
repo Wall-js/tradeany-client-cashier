@@ -537,6 +537,15 @@
                     }
                 });
             },
+          //分页
+          pageChange(item){
+            this.$store.dispatch("Goods/getGoods",{
+              pagination: {
+                current: item,
+                pageSize: 10,
+              }});
+          }
+
 
 
         },
