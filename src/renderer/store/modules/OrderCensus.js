@@ -71,10 +71,10 @@ const mutations = {
     CENSUS_MOUTH(state, payload) {
         state.mouth.list = payload;
         state.mouth.orderQuantity = payload.length;
-        state.mouth.total = state.today.list.length > 0 ? state.mouth.list.reduce((total, item, index) => {
+        state.mouth.orderTotal = state.mouth.list.length > 0 ? state.mouth.list.reduce((total, item, index) => {
             const a = numeral(item.total);
             // const b = a.multiply(item.quantity);
-            const b = a.add(total)
+            const b = a.add(total);
             if (index === state.mouth.list.length - 1) {
                 return b.format('0.00');
             } else {
@@ -110,21 +110,19 @@ const actions = {
         });
     },
     getMouthCensus(ctx, payload) {
-        let todayStartTime = new Date(new Date().toLocaleDateString()).getTime();
-        let todayEndTime = todayStartTime + 24 * 60 * 60 * 1000 - 1;
+        var date = new Date();
+        var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+        var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+        var StartTime = Date.parse(firstDay)
+        var EndTime = Date.parse(lastDay)
         db.order.find(
             {
                 $where: function () {
-                    // console.log(this.createTime >= todayStartTime && this.createTime <= todayEndTime);
-                    return this.createTime >= todayStartTime && this.createTime <= todayEndTime;
+                    return this.createTime >= StartTime && this.createTime <= EndTime;
                 }
             }
-            // {$and: [{createTime: {$gte: todayStartTime}}, {createTime: {$lte: todayEndTime}}]},
-            // {createTime: {$gte: todayStartTime}}
         ).exec((err, docs) => {
-            console.log(docs);
-            // console.log(docs[0].createTime);
-            ctx.commit('CENSUS_TODAY', docs);
+            ctx.commit('CENSUS_MOUTH', docs);
             if (payload) {
                 if (payload.callback) {
                     payload.callback(err)
