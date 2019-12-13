@@ -39,6 +39,7 @@ const mutations = {
         state.pagination.total = payload
     },
     SET_ORDER_PAGINATION(state, payload) {
+        console.log(666,payload)
         if (payload) {
             if (payload.pagination) {
                 if (payload.pagination.current) {
@@ -56,8 +57,8 @@ const mutations = {
 const actions = {
     getOrder(ctx, payload) {
         ctx.commit('SET_ORDER_PAGINATION', payload);
-        let pageSize = state.pagination.pageSize;
-        let skip = (state.pagination.current - 1) * pageSize;
+        let pageSize = ctx.state.pagination.pageSize;
+        let skip = (ctx.state.pagination.current - 1) * pageSize;
         db.order.find({}).skip(skip).limit(pageSize).exec((err, docs) => {
             ctx.dispatch('getOrderTotal');
             ctx.commit('GET_ORDER', docs);
