@@ -21,6 +21,7 @@
         <button @click="createItem">createItem</button>
         <button @click="deleteItem">deleteItem</button>
         <button @click="updateItem">updateItem</button>
+        <button @click="filterGoods">filterGoods</button>
         <button @click="$store.dispatch('Item/deleteAllItem')">deleteAllItem</button>
         <div>
             <p>{{$store.state.OrderCensus }}</p>
@@ -51,7 +52,7 @@
                 console.log(this.$store.state.Item.list);
                 let payload = {
                     pagination: {
-                        current: 2,
+                        current: 1,
                         pageSize: 3,
                     }
                 };
@@ -59,6 +60,22 @@
                 // console.log(this.$store.state.Counter.main)
 
             },
+
+            filterGoods() {
+                // console.log(this.$store.state.Item.list);
+                let payload = {
+                    name : "te",
+                    pagination: {
+                        current: 1,
+                        pageSize: 10,
+                    }
+                };
+                this.$store.dispatch("Goods/filterGoods", payload);
+                // console.log(this.$store.state.Counter.main)
+
+            },
+
+
             getItemTest() {
                 let payload = {
                     pagination: {
