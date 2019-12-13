@@ -23,4 +23,8 @@ db.order = new Datastore(path.join("./db", '/order.db'));
 db.order.loadDatabase();
 db.order.timestampData = true;
 
+db.outbound = new Datastore(path.join("./db", '/outbound_detail.db'));
+db.outbound.loadDatabase();
+db.outbound.timestampData = true;
+
 export default db;
