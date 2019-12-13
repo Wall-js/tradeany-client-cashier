@@ -4,6 +4,7 @@ const model = {
     createdTime: undefined,
     // outboundNo: '',
     type: 0,
+    typeName:'',//0是出库   1入库
     goodsName: '',
     barCode: '',
     price: 0,
@@ -21,6 +22,17 @@ const state = {
 
 const mutations = {
     GET_OUTBOUND_DETAILS(state, payload) {
+        if(payload){
+            payload.forEach((item,index) =>{
+                item['No'] = index + 1;
+                let type = item['type'];
+                if(type === 0){
+                    item['typeName'] = '出库';
+                }else if(type === 1){
+                    item['typeName'] = '入库';
+                }
+            })
+        }
         state.list = payload
     },
     SET_OUTBOUND_DETAILS_TOTAL(state, payload) {
@@ -108,26 +120,27 @@ const actions = {
             }
         })
     },
-    deleteAllOutboundDetails(ctx, payload) {
-        db.outbound.remove({}, {multi: true}, (err, newDocs) => {
-            ctx.dispatch("getOutboundDetails");
-            if (payload) {
-                if (payload.callback) {
-                    payload.callback(err)
-                }
-            }
-        })
-    },
-    updateOutboundDetails(ctx, payload) {
-        db.outbound.update({_id: payload._id}, payload.data, {}, (err, newDocs) => {
-            ctx.dispatch("getOutboundDetails");
-            if (payload) {
-                if (payload.callback) {
-                    payload.callback(err)
-                }
-            }
-        })
-    },
+    // deleteAllOutboundDetails(ctx, payload) {
+    //     db.outbound.remove({}, {multi: true}, (err, newDocs) => {
+    //         ctx.dispatch("getOutboundDetails");
+    //         if (payload) {
+    //             if (payload.callback) {
+    //                 payload.callback(err)
+    //             }
+    //         }
+    //     })
+    // },
+    // updateOutboundDetails(ctx, payload) {
+    //     db.outbound.update({_id: payload._id}, payload.data, {}, (err, newDocs) => {
+    //         ctx.dispatch("getOutboundDetails");
+    //         if (payload) {
+    //             if (payload.callback) {
+    //                 payload.callback(err)
+    //             }
+    //         }
+    //     })
+    // },
+    //创建出入库明细
     createOutboundDetails(ctx, payload) {
         payload.createTime = new Date();
         db.outbound.insert(payload, (err, newDocs) => {

@@ -191,24 +191,36 @@
              */
             //查询
             search() {
-                console.log('搜索数据', this.searchForm)
+                this.$store.dispatch("Goods/filterGoods",{
+                    pagination: {
+                        current: 1,
+                        pageSize: 10,
+                    },
+                    name:this.searchForm.name
+                })
             },
             //重置
             reset(refs) {
                 refs['searchForm'].resetFields();
+                this.$store.dispatch("Goods/getGoods",{
+                    pagination: {
+                        current: 1,
+                        pageSize: 10,
+                    }});
             },
             //修改库存
             editStockSubmit(refs){
                 refs['editStockForm'].validate((valid) => {
                     if (valid) {
-                        let editStockForm = this.editStockForm
+                        let editStockForm = this.editStockForm;
                         let payload = {
                             _id:editStockForm['_id'],
                             data:{...editStockForm}
-                        }
-                        this.$store.dispatch("Goods/updateGoods",payload)
-                        this.$message.success('修改成功')
+                        };
+                        this.$store.dispatch("Goods/updateGoods",payload);
+                        this.$message.success('修改成功');
                         this.show=false;
+                        this.searchForm.name="";
                         refs['editStockForm'].resetFields();
                     } else {
                         console.log('error submit!!');
@@ -239,12 +251,23 @@
              * @param item
              */
             pageChange (item) {
-                this.$store.dispatch("Goods/getGoods",{
-                    pagination: {
-                        current: item,
-                        pageSize: 10,
-                    },
-                });
+                //分查询分
+                if(this.searchForm.name === ''){
+                    this.$store.dispatch("Goods/getGoods",{
+                        pagination: {
+                            current: item,
+                            pageSize: 10,
+                        },
+                    });
+                }else {
+                    this.$store.dispatch("Goods/filterGoods",{
+                        pagination: {
+                            current: item,
+                            pageSize: 10,
+                        },
+                        name:this.searchForm.name
+                    })
+                }
             },
         },
         created() {
@@ -260,5 +283,4 @@
 
 <style scoped>
 </style>
-
 
