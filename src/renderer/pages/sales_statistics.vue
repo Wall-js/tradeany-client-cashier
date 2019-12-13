@@ -185,6 +185,7 @@
                     pageSize: 10,
                 }});
             this.$store.dispatch("OrderCensus/getTodayCensus")
+            this.$store.dispatch("OrderCensus/getMouthCensus")
             this.statistics=[
                 {
                     title:'当月订单量',
