@@ -260,7 +260,7 @@
         </el-row>
       </el-main>
     </Dialog>
-    <webview :src="fullPath" nodeintegration></webview>
+    <webview :src="fullPath" nodeintegration v-show="isShowPrinter"></webview>
   </div>
 </template>
 
@@ -318,9 +318,6 @@
                     looseChange:'',
                     isPrinter:''
                 },
-                accountFormRules:{
-
-                },
                 isSettlement:true,
                 totalQty:0,
                 total:this.$store.state.Cashier.order.total,
@@ -329,6 +326,7 @@
                 fullPath: path.join(__static, 'print.html'),
                 printerList: [],
                 printer: "",
+                isShowPrinter:true,
                 //小键盘
                 option:'',
             }
@@ -387,10 +385,6 @@
 
                 }
             },
-            SubmitDialog(){
-                console.log( this.categoryForm)
-
-            },
             closeDialog(){
                 this.show=false;
             },
@@ -432,7 +426,7 @@
                     this.isSettlement = false;
                     this.accountForm['looseChange'] = (value - total).toFixed(2)
                 }else {
-                    //this.$message.error('请输入正确金额');
+                    // this.$message.error('请输入正确金额');
                     this.isSettlement = true
                 }
             },
@@ -442,6 +436,7 @@
                     this.$store.dispatch("Cashier/createOrder",this.$store.state.Cashier.order);
                     // this.$router.push("/printer")
                     //打印订单
+                    // this.isShowPrinter=true;
                     console.log(this.$store.state.Cashier.order);
                     this.getPrinterList(this.$store.state.Cashier.order)
                 }else{
@@ -495,6 +490,7 @@
                                 //这个回调是打印后的回调事件，data为true就是打印成功，为false就打印失败
                                 console.log("webview success", data);
                                 // this.$router.push('/home')
+                                this.isShowPrinter = false;
                             }
                         );
                     }

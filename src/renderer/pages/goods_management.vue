@@ -85,14 +85,15 @@
                 searchFormConfig: {
                     line_type: true,
                     formItemList: [
+                        // {
+                        //     type: 'input',
+                        //     label: '条形码：',
+                        //     prop: 'barCode',
+                        //     style:'width:246px',
+                        //     placeholder: '请输入或通过扫码枪获取条形码',
+                        //     slotBottom:'codeInput',
+                        // },
                         {
-                            type: 'input',
-                            label: '条形码：',
-                            prop: 'barCode',
-                            style:'width:246px',
-                            placeholder: '请输入或通过扫码枪获取条形码',
-                            slotBottom:'codeInput',
-                        },{
                             type: 'input',
                             label: '商品名称：',
                             prop: 'name',
@@ -201,7 +202,7 @@
                         }
                     ],
                 },
-                isEdit:false
+                isEdit:false,
             }
         },
         components: {
@@ -215,17 +216,23 @@
              */
             //查询
             search() {
-                // this.$store.dispatch("Goods/filterGoods",{
-                //     pagination: {
-                //         current: 1,
-                //         pageSize: 10,
-                //     },
-                //     form:this.searchForm
-                // })
+                this.$store.dispatch("Goods/filterGoods",{
+                    pagination: {
+                        current: 1,
+                        pageSize: 10,
+                    },
+                    name:this.searchForm.name
+                })
             },
             //重置
             reset(refs) {
                 refs['searchForm'].resetFields();
+                this.$store.dispatch("Goods/getGoods",{
+                    pagination: {
+                        current: 1,
+                        pageSize: 10,
+                    }});
+
             },
             //商品录入
             //判断字符串是否是数字
@@ -263,7 +270,7 @@
                                 _id:addProductForm['_id'],
                                 data:{...addProductForm}
                             }
-                            this.$store.dispatch("Goods/updateGoods",payload)
+                            this.$store.dispatch("Goods/updateGoods",payload);
                             this.$message.success('修改成功')
                         }else {
                             this.$store.dispatch("Goods/createGoods",addProductForm)
@@ -294,13 +301,15 @@
                     this.show = true;
                     let formItemList = this.addProductFormConfig['formItemList'];
                     formItemList[formItemList.length-2]['disabled'] = true;
-                    this.addProductForm = {...item}
+                    this.addProductForm = {...item};
+                    this.searchForm.name = ''
                 }else if(action === 'del'){
                     this.$confirm('此操作将删除该商品, 是否继续?', '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
                         type: 'warning'
                     }).then(() => {
+                        this.searchForm.name = '';
                         this.$store.dispatch("Goods/deleteGoods",{_id:item._id})
                     })
 
