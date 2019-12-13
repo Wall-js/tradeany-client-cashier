@@ -1,10 +1,10 @@
 import db from "../../datastore"
 
 const model = {
-    barCode:'',
-    name:'',
-    price:'',
-    stock:'',
+    barCode: '',
+    name: '',
+    price: '',
+    stock: '',
 };
 const state = {
     list: [],
@@ -13,22 +13,22 @@ const state = {
         pageSize: 10,
         total: 0,
     },
-    currentRouter:''
+    currentRouter: ''
 };
 
 const mutations = {
     SET_GOODS(state, payload) {
-        if(payload){
+        if (payload) {
             let currentRouter = state.currentRouter;
-            if(currentRouter === '/goods-management'){
-                payload.forEach((item,index)=>{
-                    item['No'] = index+1;
-                    item['isOperaText'] = [`修改`,`删除`]
+            if (currentRouter === '/goods-management') {
+                payload.forEach((item, index) => {
+                    item['No'] = index + 1;
+                    item['isOperaText'] = [`修改`, `删除`]
 
                 })
-            }else if(currentRouter === '/stock-management'){
-                payload.forEach((item,index)=>{
-                    item['No'] = index+1;
+            } else if (currentRouter === '/stock-management') {
+                payload.forEach((item, index) => {
+                    item['No'] = index + 1;
                     item['isOperaText'] = [`修改`]
                 })
             }
@@ -52,7 +52,7 @@ const mutations = {
 
         }
     },
-    SET_CURRENT_ROUTER(state,payload){
+    SET_CURRENT_ROUTER(state, payload) {
         state.currentRouter = payload
     }
 };
@@ -73,11 +73,11 @@ const actions = {
         });
     },
     //商品过滤
-    filterGoods(ctx, payload){
+    filterGoods(ctx, payload) {
         ctx.commit('SET_GOODS_PAGINATION', payload);
         let pageSize = ctx.state.pagination.pageSize;
         let skip = (ctx.state.pagination.current - 1) * pageSize;
-        db.goods.find({ 'name': payload.form.name}).skip(skip).limit(pageSize).exec((err, docs) => {
+        db.goods.find({'name': payload.form.name}).skip(skip).limit(pageSize).exec((err, docs) => {
             ctx.dispatch('getGoodsTotal');
             ctx.commit('SET_GOODS', docs);
             if (payload) {
@@ -100,13 +100,14 @@ const actions = {
     deleteGoods(ctx, payload) {
         let list = ctx.state.list;
         let current = ctx.state.pagination.current;
-        if(list.length === 1 && current !==1){
+        if (list.length === 1 && current !== 1) {
             let current = ctx.state.pagination.current - 1;
             ctx.commit("SET_GOODS_PAGINATION", {
                 pagination: {
                     current: current,
                     pageSize: 10,
-                }});
+                }
+            });
         }
         db.goods.remove({_id: payload._id}, (err, newDocs) => {
             ctx.dispatch("getGoods");
@@ -127,6 +128,25 @@ const actions = {
             }
         })
     },
+    cutStock(ctx, payload) {
+        return new Promise((resolve, reject) => {
+            db.goods.findOne({_id: payload._id}, (err, doc) => {
+                if (doc) {
+                    console.log("doc.stock  payload.quantity",doc.stock,payload.quantity);
+                    if (doc.stock >= payload.quantity && doc.stock>0) {
+                        console.log("cutStock：", payload);
+                        let newStock = doc.stock - payload.quantity;
+                        db.goods.update({_id: payload._id}, {$set: {stock: newStock}}, {}, (err, newDocs) => {
+                            if (!err){
+                                console.log("修改goods成功");
+                                resolve()
+                            }
+                        })
+                    }
+                }
+            })
+        })
+    },
     createGoods(ctx, payload) {
         db.goods.insert(payload, (err, newDocs) => {
             ctx.dispatch("getGoods");
@@ -138,7 +158,7 @@ const actions = {
 
         })
     },
-    getCurrentRouter(ctx, payload){
+    getCurrentRouter(ctx, payload) {
         ctx.commit('SET_CURRENT_ROUTER', payload);
     },
 };
