@@ -91,11 +91,10 @@ const mutations = {
 
     // 添加商品
     CREATE_SUBORDER(state, payload) {
-        console.log(payload);
         const index = state.order.subOrder.findIndex((v) => (v._id === payload._id));
-        if (index !== -1) {
+        if (index !== -1 && payload.stock > state.order.subOrder[index].quantity) {
             state.order.subOrder[index].quantity += 1;
-        } else {
+        } else if (index === -1) {
             state.order.subOrder.push(payload);
         }
     },
