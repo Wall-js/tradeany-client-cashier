@@ -555,7 +555,7 @@
           }});
       },
         computed: {
-        //     // 获取商品
+          // 获取商品
             getGoods(){
                 let data=[];
                 this.$store.state.Cashier.order.subOrder.slice().forEach((item,index)=>{
@@ -563,7 +563,7 @@
                 });
                 return data
             },
-        //     // 获取挂单
+         // 获取挂单
             getOrder(){
                 let data=[];
                 this.$store.state.Cashier.cacheOrder.forEach((item)=>{
@@ -573,7 +573,7 @@
                 });
                 return  data
             },
-        //     // 获取全部商品
+         // 获取全部商品
            getAllGoods(){
               return this.$store.state.Goods.list
            }
