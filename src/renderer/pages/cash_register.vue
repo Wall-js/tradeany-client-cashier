@@ -100,10 +100,7 @@
                             label="总价"
                     >
                     </el-table-column>
-                    <el-table-column
-                            fixed="right"
-                            label="操作"
-                            width="100">
+                    <el-table-column  label="操作" >
                       <template slot-scope="scope">
                         <el-button @click="getCacheOrder(scope.$index)" type="text" size="small">提单</el-button>
                         <el-button @click="deleteCacheOrder(scope.$index)" type="text" size="small">删除</el-button>
@@ -138,32 +135,7 @@
                           highlight-current-row
                           @row-click="handleCurrentChange"
                           style="width: 100%">
-                    <el-table-column
-                            label="序号"
-                            type="index"
-                            width="100"
-                    >
-                    </el-table-column>
-                    <el-table-column
-                            property="barCode"
-                            label="条形码"
-                    >
-                    </el-table-column>
-                    <el-table-column
-                            property="name"
-                            label="商品名称"
-                    >
-                    </el-table-column>
-                    <el-table-column
-                            property="price"
-                            label="单价"
-                    >
-                    </el-table-column>
-                    <el-table-column
-                            property="stock"
-                            label="库存数量"
-                    >
-                    </el-table-column>
+                    <el-table-column :prop="item.prop" :label="item.label" v-for="item in tableList"></el-table-column>
                   </el-table>
                   <el-row>
                     <el-col>
@@ -284,9 +256,6 @@
         name: "CashRegister",
         data () {
             return {
-                option:{
-
-                },
                 membershipArray:[
                     {
                         label:'名称：',
@@ -313,6 +282,26 @@
                 rightActiveName:'first',
                 membershipCode:'',
                 barCode:'',
+              //商品列表
+               tableList: [
+                {
+                  label: '序号',
+                  prop: 'No',
+                },
+                {
+                  label: '条形码',
+                  prop: 'barCode',
+                },{
+                  label: '商品名称',
+                  prop: 'name',
+                },{
+                  label: '单价',
+                  prop: 'price',
+                },{
+                  label: '库存数量',
+                  prop: 'stock',
+                }
+              ],
                 // 商品结算
                 show:false,
                 dialogConfig:{
@@ -566,17 +555,15 @@
           }});
       },
         computed: {
-            // 获取商品
+        //     // 获取商品
             getGoods(){
                 let data=[];
                 this.$store.state.Cashier.order.subOrder.slice().forEach((item,index)=>{
-                    let obj={name:item.name,price:item.price,quantity:item.quantity,stock:item.stock}
-                    // item['quantity'] = item.quantity;
-                    data.push(obj)
+                    data.push({...item})
                 });
                 return data
             },
-            // 获取挂单
+        //     // 获取挂单
             getOrder(){
                 let data=[];
                 this.$store.state.Cashier.cacheOrder.forEach((item)=>{
@@ -584,9 +571,9 @@
                     item['subOrderQty'] = item.subOrder.length;
                     data.push(item)
                 });
-                return data
+                return  data
             },
-            // 获取全部商品
+        //     // 获取全部商品
            getAllGoods(){
               return this.$store.state.Goods.list
            }
