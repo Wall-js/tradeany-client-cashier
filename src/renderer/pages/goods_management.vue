@@ -155,6 +155,7 @@
                         {
                             type: 'input',
                             label: '条形码：',
+                            autofocus:true,
                             prop: 'barCode',
                             style:'width:246px',
                             placeholder: '请输入或通过扫码枪获取条形码',
@@ -181,11 +182,14 @@
                                 {required: true, message: '请输入单价', trigger: 'blur'}
                             ],
                         },{
-                            type: 'input',
+                            type: 'number',
                             label: '库存数量：',
                             prop: 'stock',
                             style:'width:300px',
                             placeholder: '请输入数量',
+                            rules:[
+                                { type: 'number', message: '库存数量必须为数字值'}
+                            ],
                         }, {
                             type: 'btnGroup',
                             operate: [
@@ -241,39 +245,27 @@
                     if (valid) {
                         this.searchForm.name = '';
                         let addProductForm = {...this.addProductForm};
-                        //价格和库存为数字
-                        let stock = addProductForm['stock'];
+                        //价格数字
                         let price = addProductForm['price'];
                         var reg = /^[0-9]+.?[0-9]*$/;
                         if (!reg.test(price)) {
-                            this.$message.error("价格应该输入数字")
+                            this.$message.error("价格必须为数字值");
                             return
                         }
-                        if (!reg.test(stock)) {
-                            this.$message.error("库存应该输入数字")
-                            return
-                        }
-                        if(price.indexOf('.')>-1){
-                            let l = price.slice(price.indexOf('.')+1);
-                            if(l.length === 1){
-                                price = price +'0'
-                            }else if(l.length >=2){
-                                price = parseFloat(price).toFixed(2)+'';
-                            }
-                        }else {
-                            price = price +'.00'
-                        }
-                        addProductForm['price'] = price*1;
-                        addProductForm['stock'] = stock*1;
+                        price = (price*1).toFixed(2);
+                        addProductForm['price'] = price;
                         if(this.isEdit){
                             let payload = {
                                 _id:addProductForm['_id'],
                                 data:{...addProductForm}
                             };
-
                             this.$store.dispatch("Goods/updateGoods",payload);
-                            this.$message.success('修改成功')
-
+                            this.$message.success('修改成功');
+                            let formItemList = this.addProductFormConfig['formItemList'];
+                            formItemList[formItemList.length-2]['disabled'] = false;
+                            refs['addProductForm'].resetFields();
+                            this.show=false;
+                            this.isEdit=false;
                         }else {
                             this.$store.dispatch("Goods/createGoods",addProductForm).then(res=>{
                                 this.$message.success('录入成功')
@@ -296,6 +288,9 @@
             },
             //关闭弹窗
             closeDialog(refs){
+                let formItemList = this.addProductFormConfig['formItemList'];
+                formItemList[formItemList.length-2]['disabled'] = false;
+                this.isEdit=false;
                 if(refs){
                     this.show=false;
                     refs['addProductForm'].resetFields();

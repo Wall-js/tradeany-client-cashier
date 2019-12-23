@@ -313,6 +313,18 @@ min:0,
                   :clearable="true"
                   :placeholder="item.placeholder"
                   :style="item.style"
+                  :autofocus="item.autofocus"
+                  :controls="item.controls"
+          ></el-input>
+          <el-input
+                  v-if="item.type==='number'"
+                  v-model.number="value[item.prop]"
+                  :disabled="item.disabled"
+                  :type="item.inputType"
+                  :rows="item.rows"
+                  :clearable="true"
+                  :placeholder="item.placeholder"
+                  :style="item.style"
                   :controls="item.controls"
           ></el-input>
           <el-input-number
