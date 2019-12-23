@@ -244,7 +244,9 @@
                 refs['addProductForm'].validate((valid) => {
                     if (valid) {
                         this.searchForm.name = '';
-                        let addProductForm = {...this.addProductForm};
+                        let addProductForm = {
+                            ...this.addProductForm,
+                        };
                         //价格数字
                         let price = addProductForm['price'];
                         var reg = /^[0-9]+.?[0-9]*$/;
@@ -255,6 +257,7 @@
                         price = (price*1).toFixed(2);
                         addProductForm['price'] = price;
                         if(this.isEdit){
+                            delete addProductForm.No;
                             let payload = {
                                 _id:addProductForm['_id'],
                                 data:{...addProductForm}
@@ -267,6 +270,11 @@
                             this.show=false;
                             this.isEdit=false;
                         }else {
+                            delete addProductForm.createdAt;
+                            delete addProductForm.No;
+                            delete addProductForm.updatedAt;
+                            delete addProductForm._id;
+                            console.log('录入',addProductForm);
                             this.$store.dispatch("Goods/createGoods",addProductForm).then(res=>{
                                 this.$message.success('录入成功')
                                 this.show=false;
