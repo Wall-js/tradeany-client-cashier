@@ -203,8 +203,8 @@ const actions = {
                         if (err) {
                             reject('订单创建失败')
                         } else {
+                            resolve(ctx.state.order);
                             ctx.commit("ClEAR_ORDER");
-                            resolve();
                         }
                     })
                 }, err => {

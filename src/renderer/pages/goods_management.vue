@@ -155,7 +155,6 @@
                         {
                             type: 'input',
                             label: '条形码：',
-                            autofocus:true,
                             prop: 'barCode',
                             style:'width:246px',
                             placeholder: '请输入或通过扫码枪获取条形码',

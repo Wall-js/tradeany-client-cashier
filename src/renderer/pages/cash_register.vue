@@ -117,7 +117,7 @@
         <el-card class="min-height-lg">
           <el-row>
             <el-col class="flex-row">
-              <el-input placeholder="请输入商品条码或用扫码枪扫码" v-model="barCode" @keyup.enter.native="createSubOrder" autofocus clearable>
+              <el-input placeholder="请输入商品条码或用扫码枪扫码" v-model="barCode" @keyup.enter.native="createSubOrder" clearable v-focus>
                 <template slot="prepend"><el-button  icon="el-icon-full-screen" size="small"></el-button></template>
                 <template slot="append"><el-button  type="primary" icon="el-icon-search" size="small" @click="createSubOrder"></el-button></template>
               </el-input>
@@ -327,6 +327,17 @@
                 option:'',
             }
         },
+        //自定义指令
+        directives: {
+          // 注册一个局部的自定义指令 v-focus
+          focus: {
+            // 指令的定义
+            inserted: function (el) {
+              // 聚焦元素
+              el.querySelector('input').focus()
+            }
+          },
+        },
         methods: {
           //获取数据;
           getMsg(){
@@ -441,14 +452,13 @@
                 if(this.accountForm.isPrinter){
                     this.$store.dispatch("Cashier/createOrder",this.$store.state.Cashier.order).then(res=>{
                       //打印订单
-                      // this.isShowPrinter=true;
-                      console.log(this.$store.state.Cashier.order);
-                      this.getPrinterList(this.$store.state.Cashier.order);
+                      this.getPrinterList(res);
+                      //更新页面
+                      this.getMsg();
                       //新建入库明细
                       let payload = {...this.$store.state.Cashier.order.subOrder};
-                      payload.type = 0
+                      payload.type = 0;
                       this.$store.dispatch("OutboundDetails/createOutboundDetails",payload);
-                      this.getMsg();
                     },err=>{
                       this.$message.error(err);
                     });
@@ -459,29 +469,13 @@
             },
             //打印
             print(order) {
+                console.log('订单',order);
                 const webview = document.querySelector("webview");
                 console.log(webview);
                 // webview.addEventListener("dom-ready", () => {
                 console.log("dom-ready");
                 //dom-ready---webview加载完成
                 // webview.openDevTools();  //这个方法可以打开print.html的控制台
-                // var order = {
-                //     "username": "张萌",
-                //     "uid": "213456768765342",
-                //     "orderNo": "234657687645342",
-                //     "subOrderList": [
-                //         {
-                //             "itemName": "卫龙辣条 大包装",
-                //             "skuName": "20根",
-                //             "price": "5.00",
-                //             "qty": "2",
-                //             "payFee": "10.00"
-                //         },
-                //     ],
-                //     "totalQty": "2",
-                //     "payFee": "10.00",
-                //     "payTime": "2019-12-11 12:12",
-                // };
                 //在send时将arr传递过去
                 webview.send("ping", order); //向webview嵌套的页面响应事件
                 // });
