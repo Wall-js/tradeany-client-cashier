@@ -328,6 +328,15 @@
             }
         },
         methods: {
+          //获取数据;
+          getMsg(){
+
+            this.$store.dispatch("Goods/getGoods",{
+              pagination: {
+                current: 1,
+                pageSize: 10,
+              }});
+          },
             handleClick(){},
             rightHandleClick(){
             },
@@ -439,9 +448,9 @@
                       let payload = {...this.$store.state.Cashier.order.subOrder};
                       payload.type = 0
                       this.$store.dispatch("OutboundDetails/createOutboundDetails",payload);
+                      this.getMsg();
                     },err=>{
-                      this.$message.success(err);
-                      console.log("1111111111111111111111111111111",err)
+                      this.$message.error(err);
                     });
                 }else{
                     this.$store.dispatch("Cashier/createOrder",this.$store.state.Cashier.order);
@@ -547,12 +556,7 @@
             PageBreak
         },
       created() {
-        //获取数据;
-        this.$store.dispatch("Goods/getGoods",{
-          pagination: {
-            current: 1,
-            pageSize: 10,
-          }});
+        this.getMsg();
       },
         computed: {
           // 获取商品
