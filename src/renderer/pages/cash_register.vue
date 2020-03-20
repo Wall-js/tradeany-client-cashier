@@ -45,7 +45,6 @@
                     <el-table-column
                             prop="name"
                             label="名称"
-
                     >
                     </el-table-column>
                     <el-table-column
@@ -367,7 +366,6 @@
             },
             // 商品删除
             changeOpera(index){
-                console.log(index)
                 this.$store.dispatch("Cashier/deleteSubOrder",{index:index})
             },
             // 编辑商品数量
@@ -407,7 +405,7 @@
             },
             // 添加购物车
             handleCurrentChange(val){
-                this.barCode=val.barCode
+                this.barCode=val.barCode;
                 this.createSubOrder();
             },
             //结算
@@ -436,7 +434,7 @@
             },
             //计算找零
             looseChange(value){
-                this.accountForm.looseChange=''
+                this.accountForm.looseChange='';
                 value *= 1;
                 let total = this.$store.state.Cashier.order.total;
                 if(value>=total){

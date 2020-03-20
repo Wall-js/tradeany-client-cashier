@@ -52,6 +52,7 @@
                     <Form
                             :value="addProductForm"
                             :formConfig="addProductFormConfig"
+                            @change="change"
                             refName="addProductForm"
                             ref="dialogForm"
                     >
@@ -145,7 +146,12 @@
                 },
                 addProductForm:{
                     barCode:'',
+                    brandName:'',
+                    weight:'',
+                    netWeight:'',
                     name:'',
+                    recommendPrice:'',
+                    auditedDate:'',
                     price:'',
                     stock:''
                 },
@@ -164,12 +170,63 @@
                             ],
                         },{
                             type: 'input',
+                            label: '品牌名称：',
+                            prop: 'brandName',
+                            disabled:'disabled',
+                            style:'width:300px',
+                            placeholder: '请输入品牌名称',
+                            rules:[
+                                {required: true, message: '请输入品牌名称', trigger: 'blur'}
+                            ],
+                        },{
+                            type: 'input',
                             label: '商品名称：',
+                            disabled:'disabled',
                             prop: 'name',
                             style:'width:300px',
                             placeholder: '请输入商品名称',
                             rules:[
                                 {required: true, message: '请输入商品名称', trigger: 'blur'}
+                            ],
+                        },{
+                            type: 'input',
+                            label: '重量：',
+                            disabled:'disabled',
+                            prop: 'weight',
+                            style:'width:300px',
+                            placeholder: '请输入商品重量',
+                            rules:[
+                                {required: true, message: '请输入商品重量', trigger: 'blur'}
+                            ],
+                        },{
+                            type: 'input',
+                            label: '净重：',
+                            prop: 'netWeight',
+                            disabled:'disabled',
+                            style:'width:300px',
+                            placeholder: '请输入商品净重',
+                            rules:[
+                                {required: true, message: '请输入商品净重', trigger: 'blur'}
+                            ],
+                        },{
+                            type: 'input',
+                            label: '推荐零售价：',
+                            disabled:'disabled',
+                            prop: 'recommendPrice',
+                            style:'width:300px',
+                            placeholder: '请输入推荐零售价',
+                            rules:[
+                                {required: true, message: '请输入推荐零售价', trigger: 'blur'}
+                            ],
+                        },{
+                            type: 'input',
+                            label: '保质期：',
+                            disabled:'disabled',
+                            prop: 'auditedDate',
+                            style:'width:300px',
+                            placeholder: '请输入保质期',
+                            rules:[
+                                {required: true, message: '请输入保质期', trigger: 'blur'}
                             ],
                         },{
                             type: 'input',
@@ -238,6 +295,14 @@
                     }});
             },
             //商品录入
+            // 通过条形码过去产品
+            change(val){
+                this.$store.dispatch("Goods/getItem",{
+                    code: val}).then((formData)=>{
+                        console.log("成功1",formData)
+                    this.addProductForm={...formData.item,...formData.itemSku}
+                });
+            },
             //判断字符串是否是数字
             addProductSubmit(refs){
                 refs['addProductForm'].validate((valid) => {
@@ -359,6 +424,9 @@
                 }});
             console.log(this.$store.state.Goods.list)
         },
+        computed:{
+
+        }
 
     }
 </script>

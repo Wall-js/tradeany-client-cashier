@@ -64,6 +64,21 @@ function startRenderer () {
       {
         contentBase: path.join(__dirname, '../'),
         quiet: true,
+        proxy: {
+          '/seller': {
+            // 请求的目标服务器地址
+            target: 'http://192.168.3.107:8080',
+            // 设置允许跨域
+            changeOrigin: true,
+            // 重写路径
+            pathRewrite: {
+              '^/seller': '/seller'
+            },
+            headers: {
+              referer: ''
+            }
+          }
+        },
         before (app, ctx) {
           app.use(hotMiddleware)
           ctx.middleware.waitUntilValid(() => {
@@ -127,7 +142,7 @@ function startElectron () {
   }
 
   electronProcess = spawn(electron, args)
-  
+
   electronProcess.stdout.on('data', data => {
     electronLog(data, 'blue')
   })

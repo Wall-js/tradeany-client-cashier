@@ -315,6 +315,7 @@ min:0,
                   :style="item.style"
                   :autofocus="item.autofocus"
                   :controls="item.controls"
+                  @change="change"
           ></el-input>
           <el-input
                   v-if="item.type==='number'"
@@ -402,7 +403,7 @@ min:0,
                   :placeholder="item.placeholder"
                   :options="item.optList"
                   :props="item.props"
-                  @change="cascaderChange"
+                  @change="change"
                   clearable
                   filterable
           ></el-cascader>
@@ -480,8 +481,8 @@ min:0,
         console.log(this.refName)
         this.$refs[this.refName].resetFields();
       },
-      cascaderChange(values){
-        this.$emit('cascaderChange',values)
+      change(values){
+        this.$emit('change',values)
       }
     },
     mounted() {

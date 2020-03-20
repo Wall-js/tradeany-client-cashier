@@ -1,4 +1,5 @@
 import db from "../../datastore"
+import axios from 'axios';
 
 const model = {
     barCode: '',
@@ -13,7 +14,8 @@ const state = {
         pageSize: 10,
         total: 0,
     },
-    currentRouter: ''
+    currentRouter: '',
+    formData:{}
 };
 
 const mutations = {
@@ -43,6 +45,9 @@ const mutations = {
     },
     SET_CURRENT_ROUTER(state, payload) {
         state.currentRouter = payload
+    },
+    SET_GOODS_GETITEM(state, payload){
+        state.formData = payload
     }
 };
 
@@ -199,6 +204,16 @@ const actions = {
     getCurrentRouter(ctx, payload) {
         ctx.commit('SET_CURRENT_ROUTER', payload);
     },
+    // 通过二维码获取产品
+    getItem(ctx, payload){
+        return new Promise((resolve, reject) => {
+            axios.get(`/seller/store/seller-center-item-sku/${payload.code}`).then((res) => {
+                const {data:{data}}=res;
+                ctx.commit("SET_GOODS_GETITEM", data);
+                resolve(data)
+            });
+        });
+    }
 };
 
 

@@ -47,7 +47,7 @@ const checkVersion = async () => {
 const compareVersion2Update = (current, latest) => {
     const currentVersion = current.split('.').map(item => parseInt(item))
     const latestVersion = latest.split('.').map(item => parseInt(item))
-    let flag = false
+    let flag = false;
 
     for (let i = 0; i < 3; i++) {
         if (currentVersion[i] < latestVersion[i]) {
