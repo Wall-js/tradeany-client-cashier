@@ -6,9 +6,6 @@
                    :formConfig="searchFormConfig"
                    refName="searchForm"
             >
-                <div slot="codeInput" class="float-right m-l-sm">
-                    <el-button  icon="el-icon-full-screen" size="small" ></el-button>
-                </div>
             </Form>
         </el-card>
         <el-card class="m-t-sm min-height-lg">
@@ -52,12 +49,15 @@
                     <Form
                             :value="addProductForm"
                             :formConfig="addProductFormConfig"
-                            @change="change"
                             refName="addProductForm"
                             ref="dialogForm"
                     >
-                        <div slot="codeInput" class="float-right m-l-sm">
-                            <el-button  icon="el-icon-full-screen" size="small"></el-button>
+                        <div slot="barCode">
+                            <el-form-item label="条形码:">
+                                <el-input placeholder="请输入商品条码或用扫码枪扫码" v-model="addProductForm.barCode" style='width:300px' @keyup.enter.native="createSubOrder" clearable >
+                                    <template slot="append"><el-button  icon="el-icon-full-screen" size="small"></el-button></template>
+                                </el-input>
+                            </el-form-item>
                         </div>
                     </Form>
                 </el-col>
@@ -80,20 +80,11 @@
                  *搜索
                  **/
                 searchForm: {
-                    barCode:'',
                     name:''
                 },
                 searchFormConfig: {
                     line_type: true,
                     formItemList: [
-                        // {
-                        //     type: 'input',
-                        //     label: '条形码：',
-                        //     prop: 'barCode',
-                        //     style:'width:246px',
-                        //     placeholder: '请输入或通过扫码枪获取条形码',
-                        //     slotBottom:'codeInput',
-                        // },
                         {
                             type: 'input',
                             label: '商品名称：',
@@ -147,8 +138,6 @@
                 addProductForm:{
                     barCode:'',
                     brandName:'',
-                    weight:'',
-                    netWeight:'',
                     name:'',
                     recommendPrice:'',
                     auditedDate:'',
@@ -159,16 +148,10 @@
                     labelWidth:'120px',
                     formItemList: [
                         {
-                            type: 'input',
-                            label: '条形码：',
-                            prop: 'barCode',
-                            style:'width:246px',
-                            placeholder: '请输入或通过扫码枪获取条形码',
-                            slotBottom:'codeInput',
-                            rules:[
-                                {required: true, message: '请输入或通过扫码枪获取条形码', trigger: 'blur'}
-                            ],
-                        },{
+                          slot:'barCode',
+                          type:'slot',
+
+                        }, {
                             type: 'input',
                             label: '品牌名称：',
                             prop: 'brandName',
@@ -187,26 +170,6 @@
                             placeholder: '请输入商品名称',
                             rules:[
                                 {required: true, message: '请输入商品名称', trigger: 'blur'}
-                            ],
-                        },{
-                            type: 'input',
-                            label: '重量：',
-                            disabled:'disabled',
-                            prop: 'weight',
-                            style:'width:300px',
-                            placeholder: '请输入商品重量',
-                            rules:[
-                                {required: true, message: '请输入商品重量', trigger: 'blur'}
-                            ],
-                        },{
-                            type: 'input',
-                            label: '净重：',
-                            prop: 'netWeight',
-                            disabled:'disabled',
-                            style:'width:300px',
-                            placeholder: '请输入商品净重',
-                            rules:[
-                                {required: true, message: '请输入商品净重', trigger: 'blur'}
                             ],
                         },{
                             type: 'input',
@@ -296,11 +259,14 @@
             },
             //商品录入
             // 通过条形码过去产品
-            change(val){
+            createSubOrder(val){
+                let barCode=this.addProductForm.barCode;
                 this.$store.dispatch("Goods/getItem",{
-                    code: val}).then((formData)=>{
-                        console.log("成功1",formData)
+                    code: barCode}).then((formData)=>{
+                        console.log("shibai")
                     this.addProductForm={...formData.item,...formData.itemSku}
+                },err=>{
+                 this.$message.error(err);
                 });
             },
             //判断字符串是否是数字
@@ -366,8 +332,10 @@
                 if(refs){
                     this.show=false;
                     refs['addProductForm'].resetFields();
+                    this.addProductForm.barCode=''
                 }else {
                     this.$refs['dialogForm']['$refs']['addProductForm'].resetFields();
+                    this.addProductForm.barCode=''
                 }
             },
             //商品操作

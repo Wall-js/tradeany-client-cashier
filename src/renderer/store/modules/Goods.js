@@ -211,6 +211,8 @@ const actions = {
                 const {data:{data}}=res;
                 ctx.commit("SET_GOODS_GETITEM", data);
                 resolve(data)
+            }).catch(function (error) {
+                reject(error.response.data.data)
             });
         });
     }

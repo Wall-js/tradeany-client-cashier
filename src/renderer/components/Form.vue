@@ -171,124 +171,19 @@ min:0,
 
 <template>
   <el-form
-    :inline="formConfig.line_type"
-    :model="value"
-    label-position="right"
-    :label-width="formConfig.labelWidth"
-    size='small'
-    :rules="rules"
-    :ref="refName"
+          :inline="formConfig.line_type"
+          :model="value"
+          label-position="right"
+          :label-width="formConfig.labelWidth"
+          size='small'
+          :rules="rules"
+          :ref="refName"
   >
-    <el-card v-if='formConfig.elCard' v-for="(cardItem) in formConfig.elCard" :style="cardItem.style" :class="cardItem.paddingBottom">
-      <div slot="header" v-if="cardItem.title">{{cardItem.title}}</div>
-      <el-row :type="cardItem.type" :justify="cardItem.justify">
-        <el-col :span="cardItem.span">
-          <template v-for="(item,index) in cardItem.formItemList">
-            <!--  slot 添加自定义配置项-->
-            <slot
-                    v-if="item.slot"
-                    :name="item.slot"
-            ></slot>
-            <el-form-item
-                    :key="index"
-                    :label="item.label"
-                    :prop="item.prop"
-                    :label-width="item.labelWidth"
-                    :rules="item.rules"
-            >
-              <slot
-                      v-if="item.type==='slot'"
-                      :name="item.slotName"
-              ></slot>
-              <span v-if="item.type==='text'">{{item.text}}</span>
-              <el-input
-                      v-if="item.type==='input'"
-                      v-model="value[item.prop]"
-                      :disabled="item.disabled"
-                      :type="item.inputType"
-                      :rows="item.rows"
-                      :clearable="true"
-                      :placeholder="item.placeholder"
-                      :style="item.style"
-              ></el-input>
-              <el-select
-                      :clearable="true"
-                      v-else-if="item.type==='select'"
-                      v-model="value[item.prop]"
-                      :disabled="item.disabled"
-                      :placeholder="item.placeholder"
-              >
-                <el-option
-                        v-for="(optItem,index) in item.optList"
-                        :key="index"
-                        :label="optItem.label"
-                        :value="optItem.value"
-                ></el-option>
-              </el-select>
-              <div  v-else-if="item.type==='checkbox'" :class="item.colStyle">
-                <el-checkbox
-                        v-for="(boxItem,index) in item.optList"
-                        v-model="value[boxItem.label]"
-                        :key="index"
-                        :disabled="boxItem.disabled"
-                >
-                  {{boxItem.name}}
-                  <el-button :type="boxItem.type" @click="boxItem.checkBoxClick(index)" v-show="boxItem.checkBoxBtn" :style="boxItem.style">{{boxItem.btnName}}</el-button>
-                </el-checkbox>
-              </div>
-              <el-cascader
-                      v-else-if="item.type==='cascader'"
-                      :placeholder="item.placeholder"
-                      :options="item.optList"
-                      :props="item.props"
-                      clearable
-                      filterable
-              ></el-cascader>
-              <el-radio-group
-                      v-model="value[item.prop]"
-                      v-else-if="item.type==='radio'">
-                <div :class="item.colStyle?'radioStyle':''">
-                  <el-radio
-                          v-for="(optItem,index) in item.optList"
-                          :key="index"
-                          :label="optItem.label"
-                          :value="optItem.value">
-                  </el-radio>
-                </div>
-              </el-radio-group>
-              <div  v-else-if="item.type==='btnGroup'">
-                <el-button
-                        v-for="(operateItem, index) in item.operate"
-                        :key="index"
-                        size="mini"
-                        :style="operateItem.style"
-                        :type="operateItem.type"
-                        :icon="operateItem.icon"
-                        @click="operateItem.handleClick($refs)"
-                >{{operateItem.name}}
-                </el-button>
-              </div>
-              <el-date-picker
-                      v-else-if="item.type==='date'"
-                      v-model="value[item.prop]"
-                      :range-separator="item.middleWord"
-                      :start-placeholder="item.startPlaceholder"
-                      :end-placeholder="item.endPlaceholder"
-                      :type="item.dataType"
-                      :disabled="item.disabled"
-                      :clearable="true"
-                      :placeholder="item.label"
-              ></el-date-picker>
-              <div style="color:#999;font-size: 12px" v-html="item.message"></div>
-            </el-form-item>
-          </template>
-        </el-col>
-      </el-row>
-    </el-card>
+
     <template v-for="(item,index) in formConfig.formItemList">
       <!--  slot 添加自定义配置项-->
       <slot
-              v-if="item.slot"
+              v-if="item.type==='slot'"
               :name="item.slot"
       ></slot>
       <el-form-item
@@ -297,15 +192,16 @@ min:0,
               :prop="item.prop"
               :label-width="item.labelWidth"
               :rules="item.rules"
+              v-if="(item.type !== 'slot')"
       >
-        <slot
-                v-if="item.type==='slot'"
-                :name="item.slotName"
-        ></slot>
+        <!--<slot-->
+        <!--v-if="item.type==='slot'"-->
+        <!--:name="item.slotName"-->
+        <!--&gt;</slot>-->
         <div class="flex-row">
           <span v-if="item.type==='text'">{{item.text}}</span>
           <el-input
-                  v-if="item.type==='input'"
+                  v-else-if="item.type==='input'"
                   v-model="value[item.prop]"
                   :disabled="item.disabled"
                   :type="item.inputType"
@@ -315,10 +211,9 @@ min:0,
                   :style="item.style"
                   :autofocus="item.autofocus"
                   :controls="item.controls"
-                  @change="change"
           ></el-input>
           <el-input
-                  v-if="item.type==='number'"
+                  v-else-if="item.type==='number'"
                   v-model.number="value[item.prop]"
                   :disabled="item.disabled"
                   :type="item.inputType"
@@ -435,8 +330,8 @@ min:0,
           ></el-date-picker>
           <slot :name="item.slotBottom"></slot>
         </div>
-      <div style="color:#999;font-size: 12px" :class="item.messageInline?'messageInline':''" v-html="item.message"></div>
-    </el-form-item>
+        <div style="color:#999;font-size: 12px" :class="item.messageInline?'messageInline':''" v-html="item.message"></div>
+      </el-form-item>
     </template>
   </el-form>
 </template>
@@ -481,9 +376,6 @@ min:0,
         console.log(this.refName)
         this.$refs[this.refName].resetFields();
       },
-      change(values){
-        this.$emit('change',values)
-      }
     },
     mounted() {
       // this.setDefaultValue();
