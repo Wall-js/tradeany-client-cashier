@@ -39,6 +39,12 @@
           },
           {
             type: 'menuItem',
+            title: '线上收银',
+            icon:'el-icon-full-screen',
+            index: "/cash_online"
+          },
+          {
+            type: 'menuItem',
             title: '商品管理',
             icon:"el-icon-s-goods",
             index: "/goods-management"

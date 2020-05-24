@@ -18,6 +18,13 @@ export default new Router({
       name: 'cash-register',
       component: require('@/pages/cash_register').default
     },
+    //线上收银
+    {
+      path: '/cash_online',
+      // path: '/',
+      name: 'cash_online',
+      component: require('@/pages/cash_online').default
+    },
     //商品管理
     {
       path: '/goods-management',

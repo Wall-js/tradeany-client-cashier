@@ -67,12 +67,12 @@ function startRenderer () {
         proxy: {
           '/seller': {
             // 请求的目标服务器地址
-            target: 'http://192.168.3.107:8080',
+            target: 'https://seller.test.hiqio.com/',
             // 设置允许跨域
             changeOrigin: true,
             // 重写路径
             pathRewrite: {
-              '^/seller': '/seller'
+              '^/seller': '/api/v1/seller'
             },
             headers: {
               referer: ''
