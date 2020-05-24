@@ -583,7 +583,6 @@
             getOrder(){
                 let data=[];
                 this.$store.state.cashierOnline.cacheOrder.forEach((item)=>{
-                  console.log(288,item.consumer)
                     item['name'] = item.consumer.nickName;
                     item['subOrderQty'] = item.subOrder.length;
                     data.push(item)
