@@ -38,19 +38,19 @@ const mutations = {
         state.list = payload.list;
         state.pagination=payload.pagination;
     },
-    // SET_GOODS_PAGINATION(state, payload) {
-    //     if (payload) {
-    //         if (payload.pagination) {
-    //             if (payload.pagination.current) {
-    //                 state.pagination.current = payload.pagination.current;
-    //             }
-    //             if (payload.pagination.pageSize) {
-    //                 state.pagination.pageSize = payload.pagination.pageSize;
-    //             }
-    //         }
-    //
-    //     }
-    // },
+    SET_GOODS_PAGINATION(state, payload) {
+        if (payload) {
+            if (payload.pagination) {
+                if (payload.pagination.current) {
+                    state.pagination.current = payload.pagination.current;
+                }
+                if (payload.pagination.pageSize) {
+                    state.pagination.pageSize = payload.pagination.pageSize;
+                }
+            }
+
+        }
+    },
     //总单
     TOTAL_ORDER(state) {
         //此处添加计算小计  计算总数量
@@ -189,19 +189,16 @@ const mutations = {
 const actions = {
     // 获取全部商品列表
     getGoods(ctx, payload) {
-        // ctx.commit('SET_GOODS_PAGINATION', payload);
-        // let pageSize = ctx.state.pagination.pageSize;
-        // let skip = (ctx.state.pagination.current - 1) * pageSize;
+        ctx.commit('SET_GOODS_PAGINATION', payload);
         return new Promise((resolve, reject) => {
-            axios.get(`/seller/mall/sell-item-list`).then((res) => {
-                // let {data:{data}}=res
-                console.log(112,res.data.data)
-                ctx.commit('SET_GOODS', res.data.data);
-                // if (payload) {
-                //     if (payload.callback) {
-                //         payload.callback(err)
-                //     }
-                // }
+            axios.get(`/seller/mall/sell-item-list?`,{
+                params: {
+                    current: ctx.state.pagination.current,
+                    pageSize: ctx.state.pagination.pageSize,
+                }
+            }).then((res) => {
+                let {data:{data}}=res
+                ctx.commit('SET_GOODS', data);
             }).catch(function (error) {
                 reject(error.response.data)
             });
