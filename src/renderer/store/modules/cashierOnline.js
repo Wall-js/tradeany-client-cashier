@@ -23,6 +23,7 @@ const defaultState = {
         pageSize: 10,
         total: 0,
     },
+    userList:{},
 };
 
 const state = Object.assign({}, defaultState);
@@ -37,6 +38,9 @@ const mutations = {
         }
         state.list = payload.list;
         state.pagination=payload.pagination;
+    },
+    SET_USER(state, payload){
+        state.order.consumer = payload;
     },
     SET_GOODS_PAGINATION(state, payload) {
         if (payload) {
@@ -67,6 +71,7 @@ const mutations = {
             const a = numeral(item.price);
             const b = a.multiply(item.quantity);
             const c = b.add(total);
+            console.log(88,a,b,c)
             if (index === state.order.subOrder.length - 1) {
                 return c.format('0.00');
             } else {
@@ -92,6 +97,7 @@ const mutations = {
                 activeKey: 'total'
             },
             cacheOrder: [],
+            userList:[]
         };
     },
 
@@ -120,10 +126,11 @@ const mutations = {
 
     // 添加商品
     CREATE_SUBORDER(state, payload) {
-        const index = state.order.subOrder.findIndex((v) => (v._id === payload._id));
-        if (index !== -1 && payload.stock > state.order.subOrder[index].quantity) {
+        const index = state.order.subOrder.findIndex((v) => (v.itemSkuCode === payload.itemSkuCode));
+        if (index !== -1) {
             state.order.subOrder[index].quantity += 1;
         } else if (index === -1) {
+            payload.quantity = 1;
             state.order.subOrder.push(payload);
         }
     },
@@ -157,21 +164,27 @@ const mutations = {
 
     // 挂单
     SET_CACHE_ORDER(state) {
-        console.log(state.order);
+        // console.log(1010,state.order);
+        // let uid = state.userList.userUid;
+        // let name = state.userList.nickName
+        // state.order.consumer = {
+        //     uid: uid,
+        //     name: name,
+        // },
         state.cacheOrder.push({...state.order});
+        // console.log(999,state.order);
         state.order = {
             type: undefined,
             consumer: {
-                uid: undefined,
-                name: '游客',
-                points: undefined,
-                level: undefined,
+                uid: "游客",
+                name: undefined,
             },
             subOrder: [],
             total: 0,
             qtyTotal: 0,
             activeKey: 'total'
-        };
+        };     // state.userList=[]
+
     },
 
     // 提单
@@ -191,7 +204,7 @@ const actions = {
     getGoods(ctx, payload) {
         ctx.commit('SET_GOODS_PAGINATION', payload);
         return new Promise((resolve, reject) => {
-            axios.get(`/seller/mall/sell-item-list?`,{
+            axios.get(`/seller/store/store-goods-list`,{
                 params: {
                     current: ctx.state.pagination.current,
                     pageSize: ctx.state.pagination.pageSize,
@@ -199,6 +212,17 @@ const actions = {
             }).then((res) => {
                 let {data:{data}}=res
                 ctx.commit('SET_GOODS', data);
+            }).catch(function (error) {
+                reject(error.response.data)
+            });
+        });
+    },
+    // 获取会员信息
+    getUser(ctx, payload){
+        return new Promise((resolve, reject) => {
+            axios.get(`/seller/store/user`,{ params: payload}).then((res) => {
+                let {data:{data}}=res
+                ctx.commit('SET_USER', data);
             }).catch(function (error) {
                 reject(error.response.data)
             });
@@ -218,67 +242,53 @@ const actions = {
     },
     //创建订单
     createOrder(ctx, payload) {
-        let newOrder = ctx.state.order;
-        newOrder.createTime = new Date();
-        //修改产品库存
-        let subOrder = ctx.state.order.subOrder;
-        if (subOrder) {
-            var p = new Promise((resolve, reject) => {
-                subOrder.forEach(obj => {
-                    let newPayload = {
-                        _id: obj._id,
-                        quantity: obj.quantity
-                    };
-                    ctx.dispatch("Goods/cutStock", newPayload, {root: true}).then(res => {
-                            resolve()
-                        }, err => {
-                            reject(err);
-                        }
-                    );
-                })
-            });
-            let promise = new Promise((resolve, reject) => {
-                p.then(res => {
-                    // 插入数据
-                    db.order.insert(newOrder, (err, newDocs) => {
-                        if (payload) {
-                            if (payload.callback) {
-                                payload.callbacks(err)
-                            }
-                        }
-                        if (err) {
-                            reject('订单创建失败')
-                        } else {
-                            resolve(ctx.state.order);
-                            ctx.commit("ClEAR_ORDER");
-                        }
-                    })
-                }, err => {
-                    reject(err);
-                })
-            });
-            return promise
-        }
 
+        let promise = new Promise((resolve, reject) => {
+            axios.post(`/seller/store/order`, payload).then(res => {
+                // console.log(999,res.data.data.list[0])
+                resolve()
+            }).catch(error=>{
+                reject(error.response.data.data)
+            })
+        })
+        return promise
     },
     // 添加商品到订单
     createSubOrder(ctx, payload) {
-        db.goods.findOne({barCode: payload.barCode}, (err, doc) => {
-            console.log(doc);
-            if (doc) {
-                if (doc.stock >= 1) {
-                    doc.quantity = payload.quantity ? payload.quantity : 1;
-                    doc.quantity = doc.quantity <= doc.stock ? doc.quantity : doc.stock;
-                    ctx.commit("CREATE_SUBORDER", doc);
-                    ctx.commit("TOTAL_ORDER")
-                }
+        axios.get(`/seller/store/store-goods-list`,{
+            params: {
+                barCode: payload.barCode
             }
-            if (payload) {
-                if (payload.callback) {
-                    payload.callback(err)
-                }
-            }
-        });
+        }).then(res=>{
+            // console.log(999,res.data.data.list[0])
+            // res.data.data.list[0].consumer = {
+            //     uid: ctx.state.userList.userUid,
+            //     name: ctx.state.userList.nickName,
+            // },
+            ctx.commit("CREATE_SUBORDER", res.data.data.list[0]);
+            ctx.commit("TOTAL_ORDER")
+                // if (doc.stock >= 1) {
+                //                 //     // doc.quantity = payload.quantity ? payload.quantity : 1;
+                //                 //     // doc.quantity = doc.quantity <= doc.stock ? doc.quantity : doc.stock;
+                //                 //
+                //                 // }
+        })
+        // db.goods.findOne({barCode: payload.barCode}, (err, doc) => {
+        //     console.log(doc);
+        //     if (doc) {
+        //         if (doc.stock >= 1) {
+        //             doc.quantity = payload.quantity ? payload.quantity : 1;
+        //             doc.quantity = doc.quantity <= doc.stock ? doc.quantity : doc.stock;
+        //             ctx.commit("CREATE_SUBORDER", doc);
+        //             ctx.commit("TOTAL_ORDER")
+        //         }
+        //     }
+        //     if (payload) {
+        //         if (payload.callback) {
+        //             payload.callback(err)
+        //         }
+        //     }
+        // });
     },
     // 删除商品
     deleteSubOrder(ctx, payload) {

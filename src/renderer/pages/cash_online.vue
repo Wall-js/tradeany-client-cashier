@@ -7,14 +7,14 @@
           <el-col class="flex-row">
           <el-input placeholder="请输入会员编号" v-model="membershipCode">
           <template slot="prepend"><el-button  icon="el-icon-full-screen" size="small"></el-button></template>
-          <template slot="append"><el-button  type="primary" icon="el-icon-search" size="small"></el-button></template>
+          <template slot="append"><el-button  type="primary" icon="el-icon-search" size="small" @click="getUser"></el-button></template>
           </el-input>
           </el-col>
           </el-row>
           <el-row>
             <el-divider></el-divider>
             <Panel
-                    :array="membershipArray"
+                    :array="getUserData"
             ></Panel>
             <el-divider></el-divider>
           </el-row>
@@ -80,7 +80,7 @@
                     <el-col  class="flex-row just-between flex-align" :span="18" >
                       <div>
                         <span>总价</span>
-                        <h4>￥{{$store.state.Cashier.order.total}}</h4>
+                        <h4>￥{{$store.state.cashierOnline.order.total}}</h4>
                       </div>
                       <div>
                         <el-button type="primary" size="small" @click="Category">
@@ -163,88 +163,88 @@
         </el-card>
       </el-col>
     </el-row>
-    <!--&lt;!&ndash;结算弹窗&ndash;&gt;-->
-    <!--<Dialog-->
-            <!--:show.sync="show"-->
-            <!--:dialogConfig="dialogConfig"-->
-            <!--@handleClose="closeDialog"-->
-    <!--&gt;-->
-      <!--<el-main slot="content">-->
-        <!--<el-row>-->
-          <!--<el-col :span="10">-->
-            <!--<el-col>-->
-              <!--<h3 style="text-align: center">&#45;&#45;&#45;&#45;&#45;&#45;欢迎光临&#45;&#45;&#45;&#45;&#45;&#45;</h3>-->
-            <!--</el-col>-->
-            <!--<el-col class="flex-row flex-align">-->
-              <!--<h3>会员名称：</h3>-->
-              <!--<span>{{$store.state.Cashier.order.consumer.name}}</span>-->
-            <!--</el-col>-->
-            <!--<el-col style="border-top: 1px solid #dddddd;overflow: hidden;">-->
-              <!--<el-table-->
-                      <!--:data="$store.state.Cashier.order.subOrder"-->
-                      <!--:header-cell-style="{textAlign: 'center'}"-->
-                      <!--:cell-style="{textAlign: 'center'}"-->
-                      <!--style="width: 100%">-->
-                <!--<el-table-column-->
-                        <!--prop="name"-->
-                        <!--label="商品名称"-->
+    <!--结算弹窗-->
+    <Dialog
+            :show.sync="show"
+            :dialogConfig="dialogConfig"
+            @handleClose="closeDialog"
+    >
+      <el-main slot="content">
+        <el-row>
+          <el-col :span="10">
+            <el-col>
+              <h3 style="text-align: center">------欢迎光临------</h3>
+            </el-col>
+            <el-col class="flex-row flex-align">
+              <h3>会员名称：</h3>
+              <span>{{$store.state.cashierOnline.order.consumer.name}}</span>
+            </el-col>
+            <el-col style="border-top: 1px solid #dddddd;overflow: hidden;">
+              <el-table
+                      :data="$store.state.cashierOnline.order.subOrder"
+                      :header-cell-style="{textAlign: 'center'}"
+                      :cell-style="{textAlign: 'center'}"
+                      style="width: 100%">
+                <el-table-column
+                        prop="name"
+                        label="商品名称"
 
-                <!--&gt;-->
-                <!--</el-table-column>-->
-                <!--<el-table-column-->
-                        <!--prop="goodsPrice"-->
-                        <!--label="单价"-->
-                <!--&gt;-->
-                <!--</el-table-column>-->
-                <!--<el-table-column-->
-                        <!--prop="quantity"-->
-                        <!--label="数量"-->
-                <!--&gt;-->
-                <!--</el-table-column>-->
-                <!--<el-table-column-->
-                        <!--prop="subTotal"-->
-                        <!--label="价格"-->
-                <!--&gt;-->
-                <!--</el-table-column>-->
-              <!--</el-table>-->
-            <!--</el-col>-->
-            <!--<el-col class="flex-row just-end m-t-lg">-->
-              <!--<div class="flex-row just-between flex-align">-->
-                <!--<h4>数量：</h4>-->
-                <!--<h2 style="color:#409EFF">{{$store.state.Cashier.order.qtyTotal}}</h2>-->
-              <!--</div>-->
-              <!--<div class="flex-row just-between flex-align m-l-lg">-->
-                <!--<h4>总金额：</h4>-->
-                <!--<h2 style="color:#409EFF">{{$store.state.Cashier.order.total}}</h2>-->
-              <!--</div>-->
-            <!--</el-col>-->
-          <!--</el-col>-->
-          <!--<el-col :span="14" class="flex-column just-between flex-align">-->
+                >
+                </el-table-column>
+                <el-table-column
+                        prop="goodsPrice"
+                        label="单价"
+                >
+                </el-table-column>
+                <el-table-column
+                        prop="quantity"
+                        label="数量"
+                >
+                </el-table-column>
+                <el-table-column
+                        prop="subTotal"
+                        label="价格"
+                >
+                </el-table-column>
+              </el-table>
+            </el-col>
+            <el-col class="flex-row just-end m-t-lg">
+              <div class="flex-row just-between flex-align">
+                <h4>数量：</h4>
+                <h2 style="color:#409EFF">{{$store.state.cashierOnline.order.qtyTotal}}</h2>
+              </div>
+              <div class="flex-row just-between flex-align m-l-lg">
+                <h4>总金额：</h4>
+                <h2 style="color:#409EFF">{{$store.state.cashierOnline.order.total}}</h2>
+              </div>
+            </el-col>
+          </el-col>
+          <el-col :span="14" class="flex-column just-between flex-align">
 
-            <!--<el-form :model="accountForm" ref="accountForm" label-width="100px" class="demo-ruleForm" size="small">-->
-              <!--<el-form-item label="实收金额：">-->
-                <!--<el-input type="text" autofocus v-model="accountForm.payment" @input="paymentChange" :readonly="true"  ></el-input>-->
-              <!--</el-form-item>-->
-              <!--<el-form-item label="找零：" prop="looseChange" >-->
-                <!--<el-input type="text" autofocus v-model="accountForm.looseChange" disabled></el-input>-->
-              <!--</el-form-item>-->
+            <el-form :model="accountForm" ref="accountForm" label-width="100px" class="demo-ruleForm" size="small">
+              <el-form-item label="实收金额：">
+                <el-input type="text" autofocus v-model="accountForm.payment" @input="paymentChange" :readonly="true"  ></el-input>
+              </el-form-item>
+              <el-form-item label="找零：" prop="looseChange" >
+                <el-input type="text" autofocus v-model="accountForm.looseChange" disabled></el-input>
+              </el-form-item>
 
-              <!--<div>-->
-                <!--<KeyBoard   @keyval="setPayment" ></KeyBoard>-->
-              <!--</div>-->
-              <!--<el-form-item>-->
-                <!--<el-checkbox v-model="accountForm.isPrinter" class="m-l-sm">是否打印小票</el-checkbox>-->
-              <!--</el-form-item>-->
-              <!--<el-form-item>-->
-                <!--<el-button type="primary" @click="settlementForm('ruleForm')" :disabled="isSettlement">确认结算</el-button>-->
-              <!--</el-form-item>-->
+              <div>
+                <KeyBoard   @keyval="setPayment" ></KeyBoard>
+              </div>
+              <el-form-item>
+                <el-checkbox v-model="accountForm.isPrinter" class="m-l-sm">是否打印小票</el-checkbox>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="settlementForm('ruleForm')" :disabled="isSettlement">确认结算</el-button>
+              </el-form-item>
 
-            <!--</el-form>-->
-          <!--</el-col>-->
-        <!--</el-row>-->
-      <!--</el-main>-->
-    <!--</Dialog>-->
-    <!--<webview :src="fullPath" nodeintegration v-show="isShowPrinter"></webview>-->
+            </el-form>
+          </el-col>
+        </el-row>
+      </el-main>
+    </Dialog>
+    <webview :src="fullPath" nodeintegration v-show="isShowPrinter"></webview>
   </div>
 </template>
 
@@ -262,28 +262,6 @@
         name: "CashRegister",
         data () {
             return {
-                membershipArray:[
-                    {
-                        label:'名称：',
-                        value:'',
-                        span:12
-
-                    },
-                    {
-                        label:'编号：',
-                        value:'',
-                        span:12
-
-                    }, {
-                        label:'等级：',
-                        value:'',
-                        span:12
-                    }, {
-                        label:'积分：',
-                        value:'',
-                        span:12
-                    },
-                ],
                 activeName:'first',
                 rightActiveName:'first',
                 membershipCode:'',
@@ -323,7 +301,7 @@
                 },
                 isSettlement:true,
                 totalQty:0,
-                total:this.$store.state.Cashier.order.total,
+                total:this.$store.state.cashierOnline.order.total,
 
                 //打印小票
                 fullPath: path.join(__static, 'print.html'),
@@ -346,9 +324,12 @@
           },
         },
         methods: {
+          // 获取会员信息
+          getUser(){
+            this.$store.dispatch("cashierOnline/getUser",{userUid:this.membershipCode});
+          },
           //获取数据;
           getMsg(){
-
             this.$store.dispatch("cashierOnline/getGoods",{
               pagination: {
                 current: 1,
@@ -404,8 +385,6 @@
                     this.$store.state.cashierOnline.order.subOrder.forEach(item =>{
                         this.totalQty+=item.quantity
                     })
-
-
                 }
             },
             closeDialog(){
@@ -456,20 +435,34 @@
             //确认结算
             settlementForm(){
                 if(this.accountForm.isPrinter){
-                    this.$store.dispatch("cashierOnline/createOrder",this.$store.state.cashierOnline.order).then(res=>{
+                  console.log(8881,this.$store.state.cashierOnline.order)
+                  let subOrder = this.$store.state.cashierOnline.order.subOrder;
+                  let sellerSubOrderSet = [];
+                  if(subOrder){
+                    subOrder.forEach(item=>{
+                      sellerSubOrderSet.push({
+                        goodsItemSkuCode:item.itemSkuCode,
+                        quantity:item.quantity,
+                      })
+                    })
+                  }
+                    let formData={
+                      userUid:this.$store.state.cashierOnline.order.consumer.userUid,
+                      sellerSubOrderSet:sellerSubOrderSet
+                    }
+                    this.$store.dispatch("cashierOnline/createOrder",formData).then(res=>{
+                      console.log(888);
                       //打印订单
                       this.getPrinterList(res);
                       //更新页面
                       this.getMsg();
-                      //新建入库明细
-                      let payload = {...this.$store.state.cashierOnline.order.subOrder};
-                      payload.type = 0;
-                      this.$store.dispatch("OutboundDetails/createOutboundDetails",payload);
+                      this.clearOrder()
                     },err=>{
+                      console.log(11,err);
                       this.$message.error(err);
                     });
                 }else{
-                    this.$store.dispatch("cashierOnline/createOrder",this.$store.state.cashierOnline.order);
+                    this.$store.dispatch("cashierOnline/createOrder",formData);
                 }
                 this.show = false
             },
@@ -567,11 +560,31 @@
                 });
                 return data
             },
+           // 获取会员
+            getUserData(){
+              console.log(this.$store.state.cashierOnline.userList)
+              let membershipArray= [
+                {
+                  label:'名称：',
+                  value:this.$store.state.cashierOnline.order.consumer.nickName,
+                  span:12
+
+                },
+                {
+                  label:'编号：',
+                  value:this.$store.state.cashierOnline.order.consumer.userUid,
+                  span:12
+
+                },
+              ];
+              return  membershipArray
+            },
          // 获取挂单
             getOrder(){
                 let data=[];
                 this.$store.state.cashierOnline.cacheOrder.forEach((item)=>{
-                    item['name'] = item.consumer.name;
+                  console.log(288,item.consumer)
+                    item['name'] = item.consumer.nickName;
                     item['subOrderQty'] = item.subOrder.length;
                     data.push(item)
                 });

@@ -21,11 +21,11 @@ span:'8'
 },
 ],
 <template>
-  <el-form label-position="right" inline class="demo-table-expand" label-width="150px">
+  <el-form label-position="right" inline class="demo-table-expand" label-width="70px">
   <el-row>
     <div v-for="(arrayItem,index) in array" :key="index">
       <el-col :span="arrayItem.span">
-        <el-form-item :label=arrayItem.label>
+        <el-form-item :label=arrayItem.label label-width="100px">
           <span>{{ arrayItem.value }}</span>
         </el-form-item>
       </el-col>
