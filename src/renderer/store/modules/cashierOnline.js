@@ -244,9 +244,10 @@ const actions = {
     createOrder(ctx, payload) {
 
         let promise = new Promise((resolve, reject) => {
+            // http://www.tamall365.com/api/v1
             axios.post(`http://www.tamall365.com/api/v1/seller/store/order`, payload).then(res => {
                 // console.log(999,res.data.data.list[0])
-                resolve()
+                resolve(ctx.state.order)
             }).catch(error=>{
                 reject(error.response.data.data)
             })

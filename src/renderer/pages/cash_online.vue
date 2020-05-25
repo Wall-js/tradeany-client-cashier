@@ -451,6 +451,7 @@
                 if(this.accountForm.isPrinter){
                     this.$store.dispatch("cashierOnline/createOrder",formData).then(res=>{
                       this.$message.success("结算成功");
+                      console.log('结算成功',res)
                       //打印订单
                       this.getPrinterList(res);
                       //更新页面
@@ -513,6 +514,7 @@
                 ipcRenderer.send("getPrinterList");
                 //监听主线程获取到打印机列表后的回调
                 ipcRenderer.once("getPrinterList", (event, data) => {
+                  console.log(event, data)
                     //data就是打印机列表
                     // 过滤可用打印机
                     this.printerList = data.filter(element => element.status === 0);
