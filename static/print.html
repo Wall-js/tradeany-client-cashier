@@ -47,22 +47,22 @@
         console.log(event);
         console.log(order);
         //执行渲染
-        let html = `<div class="wrapper"><div class="welcome">欢迎光临</div>
-                <div>会员名称：${order.consumer.name}</div><div></div>
-<!--                <div>会员卡号：</div><div>${order.uid}</div><div>订单号：</div><div>${order.orderNo}</div>-->
-                <hr/>
-                <table border="0" class="product"><tr><th align="left">商品名称</th><th align="left">单价</th><th align="left">数量</th><th align="left">价格</th></tr>`;
-
-        for (let index = 0;  index< order.subOrder.length; index++) {
-            let sub_order = order.subOrder[index];
-            let totalPrice = (sub_order.price * sub_order.quantity).toFixed(2);
-            html += `<tr><td align="left">${sub_order.name}</td><td align="left">${sub_order.price}</td>
-                            <td align="left">${sub_order.quantity}</td><td align="left">${totalPrice}</td></tr>`
-        }
-        // var nowTime = new Date().Format("yyyy-MM-dd hh:mm");
-        // console.log(nowTime)
-        html += `</table><br/><div>金额总计：￥${order.total}</div><div>日期：${currentDate}</div><br/><hr/><br/><div class="thank">谢谢惠顾，欢迎下次光临!</div></div>`
-        document.getElementById('app').innerHTML = html;
+        // let html = `<div class="wrapper"><div class="welcome">欢迎光临</div>
+        //         <div>会员名称：${order.consumer.name}</div><div></div>
+        //         <!--<div>会员卡号：</div><div>${order.uid}</div><div>订单号：</div><div>${order.orderNo}</div>-->
+        //         <hr/>
+        //         <table border="0" class="product"><tr><th align="left">商品名称</th><th align="left">单价</th><th align="left">数量</th><th align="left">价格</th></tr>`;
+        //
+        // for (let index = 0;  index< order.subOrder.length; index++) {
+        //     let sub_order = order.subOrder[index];
+        //     let totalPrice = (sub_order.price * sub_order.quantity).toFixed(2)
+        //     html += `<tr><td align="left">${sub_order.name}</td><td align="left">${sub_order.price}</td>
+        //                     <td align="left">${sub_order.quantity}</td><td align="left">${totalPrice}</td></tr>`
+        // }
+        // // var nowTime = new Date().Format("yyyy-MM-dd hh:mm");
+        // // console.log(nowTime)
+        // html += `</table><br/><div>金额总计：￥${order.total}</div><div>日期：${currentDate}</div><br/><hr/><br/><div class="thank">谢谢惠顾，欢迎下次光临!</div></div>`
+        document.getElementById('app').innerHTML ="22222";
         ipcRenderer.sendToHost('pong') //向webview所在页面的进程传达消息
     })
 </script>

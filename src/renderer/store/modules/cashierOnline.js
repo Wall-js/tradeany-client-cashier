@@ -1,6 +1,7 @@
 import db from "../../datastore";
 import numeral from 'numeral';
 import axios from 'axios';
+let url='http://www.tamall365.com/api/v1';
 
 const defaultState = {
     order: {
@@ -121,7 +122,10 @@ const mutations = {
     // 清空商品
     CLEAN_SUBORDER(state) {
         state.order.subOrder = [];
-        state.order.total = 0
+        state.order.consumer ={
+            uid:'',
+            name: '',
+        }
     },
 
     // 添加商品
@@ -204,7 +208,7 @@ const actions = {
     getGoods(ctx, payload) {
         ctx.commit('SET_GOODS_PAGINATION', payload);
         return new Promise((resolve, reject) => {
-            axios.get(`http://www.tamall365.com/api/v1/seller/store/store-goods-list`,{
+            axios.get(url+`/seller/store/store-goods-list`,{
                 params: {
                     current: ctx.state.pagination.current,
                     pageSize: ctx.state.pagination.pageSize,
@@ -220,7 +224,7 @@ const actions = {
     // 获取会员信息
     getUser(ctx, payload){
         return new Promise((resolve, reject) => {
-            axios.get(`http://www.tamall365.com/api/v1/seller/store/user`,{ params: payload}).then((res) => {
+            axios.get(url+`/seller/store/user`,{ params: payload}).then((res) => {
                 let {data:{data}}=res
                 ctx.commit('SET_USER', data);
             }).catch(function (error) {
@@ -245,7 +249,7 @@ const actions = {
 
         let promise = new Promise((resolve, reject) => {
             // http://www.tamall365.com/api/v1
-            axios.post(`http://www.tamall365.com/api/v1/seller/store/order`, payload).then(res => {
+            axios.post(`url+/seller/store/order`, payload).then(res => {
                 // console.log(999,res.data.data.list[0])
                 resolve(ctx.state.order)
             }).catch(error=>{
@@ -256,7 +260,7 @@ const actions = {
     },
     // 添加商品到订单
     createSubOrder(ctx, payload) {
-        axios.get(`http://www.tamall365.com/api/v1/seller/store/store-goods-list`,{
+        axios.get(`url+/seller/store/store-goods-list`,{
             params: {
                 barCode: payload.barCode
             }
