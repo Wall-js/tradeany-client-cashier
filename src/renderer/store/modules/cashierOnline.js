@@ -204,7 +204,7 @@ const actions = {
     getGoods(ctx, payload) {
         ctx.commit('SET_GOODS_PAGINATION', payload);
         return new Promise((resolve, reject) => {
-            axios.get(`/seller/store/store-goods-list`,{
+            axios.get(`https://seller.test.hiqio.com/api/v1/seller/store/store-goods-list`,{
                 params: {
                     current: ctx.state.pagination.current,
                     pageSize: ctx.state.pagination.pageSize,
@@ -220,7 +220,7 @@ const actions = {
     // 获取会员信息
     getUser(ctx, payload){
         return new Promise((resolve, reject) => {
-            axios.get(`/seller/store/user`,{ params: payload}).then((res) => {
+            axios.get(`https://seller.test.hiqio.com/api/v1/seller/store/user`,{ params: payload}).then((res) => {
                 let {data:{data}}=res
                 ctx.commit('SET_USER', data);
             }).catch(function (error) {
@@ -244,7 +244,7 @@ const actions = {
     createOrder(ctx, payload) {
 
         let promise = new Promise((resolve, reject) => {
-            axios.post(`/seller/store/order`, payload).then(res => {
+            axios.post(`https://seller.test.hiqio.com/api/v1/seller/store/order`, payload).then(res => {
                 // console.log(999,res.data.data.list[0])
                 resolve()
             }).catch(error=>{
