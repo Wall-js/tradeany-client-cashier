@@ -249,7 +249,7 @@ const actions = {
 
         let promise = new Promise((resolve, reject) => {
             // http://www.tamall365.com/api/v1
-            axios.post(`url+/seller/store/order`, payload).then(res => {
+            axios.post(url+`/seller/store/order`, payload).then(res => {
                 // console.log(999,res.data.data.list[0])
                 resolve(ctx.state.order)
             }).catch(error=>{
@@ -260,7 +260,7 @@ const actions = {
     },
     // 添加商品到订单
     createSubOrder(ctx, payload) {
-        axios.get(`url+/seller/store/store-goods-list`,{
+        axios.get(url+`/seller/store/store-goods-list`,{
             params: {
                 barCode: payload.barCode
             }
