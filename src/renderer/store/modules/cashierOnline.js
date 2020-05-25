@@ -204,7 +204,7 @@ const actions = {
     getGoods(ctx, payload) {
         ctx.commit('SET_GOODS_PAGINATION', payload);
         return new Promise((resolve, reject) => {
-            axios.get(`https://seller.test.hiqio.com/api/v1/seller/store/store-goods-list`,{
+            axios.get(`http://www.tamall365.com/api/v1/seller/store/store-goods-list`,{
                 params: {
                     current: ctx.state.pagination.current,
                     pageSize: ctx.state.pagination.pageSize,
@@ -220,7 +220,7 @@ const actions = {
     // 获取会员信息
     getUser(ctx, payload){
         return new Promise((resolve, reject) => {
-            axios.get(`https://seller.test.hiqio.com/api/v1/seller/store/user`,{ params: payload}).then((res) => {
+            axios.get(`http://www.tamall365.com/api/v1/seller/store/user`,{ params: payload}).then((res) => {
                 let {data:{data}}=res
                 ctx.commit('SET_USER', data);
             }).catch(function (error) {
@@ -244,7 +244,7 @@ const actions = {
     createOrder(ctx, payload) {
 
         let promise = new Promise((resolve, reject) => {
-            axios.post(`https://seller.test.hiqio.com/api/v1/seller/store/order`, payload).then(res => {
+            axios.post(`http://www.tamall365.com/api/v1/seller/store/order`, payload).then(res => {
                 // console.log(999,res.data.data.list[0])
                 resolve()
             }).catch(error=>{
@@ -255,7 +255,7 @@ const actions = {
     },
     // 添加商品到订单
     createSubOrder(ctx, payload) {
-        axios.get(`/seller/store/store-goods-list`,{
+        axios.get(`http://www.tamall365.com/api/v1/seller/store/store-goods-list`,{
             params: {
                 barCode: payload.barCode
             }
