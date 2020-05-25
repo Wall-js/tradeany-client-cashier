@@ -434,24 +434,23 @@
             },
             //确认结算
             settlementForm(){
+              console.log(8881,this.$store.state.cashierOnline.order)
+              let subOrder = this.$store.state.cashierOnline.order.subOrder;
+              let sellerSubOrderSet = [];
+              let formData = {};
+              if(subOrder){
+                subOrder.forEach(item=>{
+                  sellerSubOrderSet.push({
+                    goodsItemSkuCode:item.itemSkuCode,
+                    quantity:item.quantity,
+                  })
+                })
+                formData.userUid =this.$store.state.cashierOnline.order.consumer.userUid;
+                formData.sellerSubOrderSet =sellerSubOrderSet;
+              }
                 if(this.accountForm.isPrinter){
-                  console.log(8881,this.$store.state.cashierOnline.order)
-                  let subOrder = this.$store.state.cashierOnline.order.subOrder;
-                  let sellerSubOrderSet = [];
-                  if(subOrder){
-                    subOrder.forEach(item=>{
-                      sellerSubOrderSet.push({
-                        goodsItemSkuCode:item.itemSkuCode,
-                        quantity:item.quantity,
-                      })
-                    })
-                  }
-                    let formData={
-                      userUid:this.$store.state.cashierOnline.order.consumer.userUid,
-                      sellerSubOrderSet:sellerSubOrderSet
-                    }
                     this.$store.dispatch("cashierOnline/createOrder",formData).then(res=>{
-                      console.log(888);
+                      this.$message.success("结算成功");
                       //打印订单
                       this.getPrinterList(res);
                       //更新页面

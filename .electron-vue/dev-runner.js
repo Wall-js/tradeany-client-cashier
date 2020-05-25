@@ -67,7 +67,7 @@ function startRenderer () {
         proxy: {
           '/seller': {
             // 请求的目标服务器地址
-            target: 'https://seller.test.hiqio.com/',
+            target: 'http://www.tamall365.com/',
             // 设置允许跨域
             changeOrigin: true,
             // 重写路径
