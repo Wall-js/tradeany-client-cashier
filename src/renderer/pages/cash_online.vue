@@ -461,7 +461,15 @@
                       this.$message.error(err);
                     });
                 }else{
-                    this.$store.dispatch("cashierOnline/createOrder",formData);
+                    this.$store.dispatch("cashierOnline/createOrder",formData).then(res=>{
+                      this.$message.success("结算成功");
+                      //更新页面
+                      this.getMsg();
+                      this.clearOrder()
+                    },err=>{
+                      console.log(11,err);
+                      this.$message.error(err);
+                    });
                 }
                 this.show = false
             },
