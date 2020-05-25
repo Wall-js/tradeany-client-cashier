@@ -122,6 +122,8 @@ const mutations = {
     // 清空商品
     CLEAN_SUBORDER(state) {
         state.order.subOrder = [];
+        state.order.qtyTotal=0;
+        state.order.total=0;
         state.order.consumer ={
             uid:'',
             name: '',
