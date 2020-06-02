@@ -1,7 +1,7 @@
 import db from "../../datastore";
 import numeral from 'numeral';
 import axios from 'axios';
-let url='';
+let url='http://www.tamall365.com/api/v1';
 
 const defaultState = {
     order: {
@@ -35,6 +35,7 @@ const mutations = {
         if(payload.list){
             payload.list.forEach((item,index)=>{
                 item['No'] = index+1;
+                item.price =item.price/100
             })
         }
         state.list = payload.list;
@@ -63,13 +64,13 @@ const mutations = {
         let qtyTotal = 0;
         if (state.order.subOrder) {
             subOrder.forEach(item => {
-                item.subTotal = item.quantity * item.price;
+                item.subTotal = item.quantity * item.price/100;
                 qtyTotal += item.quantity
             })
         }
         state.order.qtyTotal = qtyTotal;
         state.order.total = state.order.subOrder.length > 0 ? state.order.subOrder.reduce((total, item, index) => {
-            const a = numeral(item.price);
+            const a = numeral(item.price/100);
             const b = a.multiply(item.quantity);
             const c = b.add(total);
             console.log(88,a,b,c)

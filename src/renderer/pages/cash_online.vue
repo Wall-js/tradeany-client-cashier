@@ -50,7 +50,7 @@
                           :cell-style="{textAlign:'center'}"
                           style="width: 100%">
                     <el-table-column
-                            prop="name"
+                            prop="itemName"
                             label="名称"
                     >
                     </el-table-column>
@@ -97,7 +97,7 @@
                           :cell-style="{textAlign:'center'}"
                           style="width: 100%">
                     <el-table-column
-                            prop="name"
+                            prop="itemName"
                             label="名称"
                     >
                     </el-table-column>
@@ -186,13 +186,13 @@
                       :cell-style="{textAlign: 'center'}"
                       style="width: 100%">
                 <el-table-column
-                        prop="name"
+                        prop="itemName"
                         label="商品名称"
 
                 >
                 </el-table-column>
                 <el-table-column
-                        prop="goodsPrice"
+                        prop="price"
                         label="单价"
                 >
                 </el-table-column>
@@ -277,7 +277,7 @@
                   prop: 'barCode',
                 },{
                   label: '商品名称',
-                  prop: 'name',
+                  prop: 'itemName',
                 },{
                   label: '单价',
                   prop: 'price',
@@ -436,17 +436,17 @@
             settlementForm(){
               console.log(8881,this.$store.state.cashierOnline.order)
               let subOrder = this.$store.state.cashierOnline.order.subOrder;
-              let sellerSubOrderSet = [];
+              let subOrderInfoList = [];
               let formData = {};
               if(subOrder){
                 subOrder.forEach(item=>{
-                  sellerSubOrderSet.push({
-                    goodsItemSkuCode:item.itemSkuCode,
+                  subOrderInfoList.push({
+                    itemSkuCode:item.itemSkuCode,
                     quantity:item.quantity,
                   })
                 })
                 formData.userUid =this.$store.state.cashierOnline.order.consumer.userUid;
-                formData.sellerSubOrderSet =sellerSubOrderSet;
+                formData.subOrderInfoList =subOrderInfoList;
               }
                 if(this.accountForm.isPrinter){
                     this.$store.dispatch("cashierOnline/createOrder",formData).then(res=>{
