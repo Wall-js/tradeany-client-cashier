@@ -12,10 +12,10 @@ if (!process.env.IS_WEB) Vue.use(require('vue-electron'));
 Vue.http = Vue.prototype.$http = axios;
 Vue.config.productionTip = false;
 
+
 Vue.use(ElementUI); // 添加ElementUI
 
 Vue.prototype.$db = db; // 添加本地数据库
-
 /* eslint-disable no-new */
 new Vue({
     components: {App},

@@ -11,10 +11,9 @@ const webpackHotMiddleware = require('webpack-hot-middleware')
 
 const mainConfig = require('./webpack.main.config')
 const rendererConfig = require('./webpack.renderer.config')
-const {app,BrowserWindow,} = require('electron')
 let electronProcess = null;
 let manualRestart = false;
-let hotMiddleware;
+let hotMiddleware
 
 function logStats (proc, data) {
   let log = ''
@@ -67,12 +66,13 @@ function startRenderer () {
         proxy: {
           '/seller': {
             // 请求的目标服务器地址
-            target: 'http://www.tamall365.com/',
+            target: 'https://seller.test.hiqio.com',
+            // target: "http://192.168.3.128:8880",  // 刘风浩
             // 设置允许跨域
             changeOrigin: true,
             // 重写路径
             pathRewrite: {
-              '^/seller': '/seller'
+              '^/seller': '/api/v1/seller'
             },
             headers: {
               referer: ''
@@ -200,20 +200,5 @@ function init () {
     .catch(err => {
       console.error(err)
     })
-}
-let mainWindow
-function createWindow() {
-  mainWindow = new BrowserWindow({
-    webPreferences: {
-      webSecurity: false
-    }
-  })
-  mainWindow.loadFile('index.html')
-//重点在下面这行，开启调试
-  mainWindow.webContents.openDevTools()
-
-  mainWindow.on('closed', function () {
-    mainWindow = null
-  })
 }
 init();
