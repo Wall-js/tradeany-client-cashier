@@ -11,10 +11,10 @@ const webpackHotMiddleware = require('webpack-hot-middleware')
 
 const mainConfig = require('./webpack.main.config')
 const rendererConfig = require('./webpack.renderer.config')
-
-let electronProcess = null
-let manualRestart = false
-let hotMiddleware
+const {app,BrowserWindow,} = require('electron')
+let electronProcess = null;
+let manualRestart = false;
+let hotMiddleware;
 
 function logStats (proc, data) {
   let log = ''
@@ -72,7 +72,7 @@ function startRenderer () {
             changeOrigin: true,
             // 重写路径
             pathRewrite: {
-              '^/seller': '/api/v1/seller'
+              '^/seller': '/seller'
             },
             headers: {
               referer: ''
@@ -201,5 +201,19 @@ function init () {
       console.error(err)
     })
 }
+let mainWindow
+function createWindow() {
+  mainWindow = new BrowserWindow({
+    webPreferences: {
+      webSecurity: false
+    }
+  })
+  mainWindow.loadFile('index.html')
+//重点在下面这行，开启调试
+  mainWindow.webContents.openDevTools()
 
-init()
+  mainWindow.on('closed', function () {
+    mainWindow = null
+  })
+}
+init();

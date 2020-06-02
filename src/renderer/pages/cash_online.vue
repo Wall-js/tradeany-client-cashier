@@ -458,8 +458,6 @@
                       this.getMsg();
                       this.clearOrder()
                     },err=>{
-                      console.log(11,err);
-                      this.$message.error("失败");
                       this.$message.error(err);
                     });
                 }else{
@@ -469,8 +467,6 @@
                       this.getMsg();
                       this.clearOrder()
                     },err=>{
-                      console.log(11,err);
-                      this.$message.error("失败");
                       this.$message.error(err);
                     });
                 }
