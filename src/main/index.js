@@ -27,7 +27,7 @@ function createWindow() {
         width: 1200
     });
     // 重点在下面这行，开启调试 调试完再注释调
-    mainWindow.webContents.openDevTools({mode:'bottom'});
+    // mainWindow.webContents.openDevTools({mode:'bottom'});
     //在主线程下，通过ipcMain对象监听渲染线程传过来的getPrinterList事件
     ipcMain.on('getPrinterList', (event) => {
 
