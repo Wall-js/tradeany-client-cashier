@@ -444,7 +444,7 @@
                     itemSkuCode:item.itemSkuCode,
                     quantity:item.quantity,
                   })
-                })
+                });
                 formData.userUid =this.$store.state.cashierOnline.order.consumer.userUid;
                 formData.subOrderInfoList =subOrderInfoList;
               }
@@ -474,6 +474,7 @@
             },
             //打印
             print(order) {
+                 order.accountForm=this.accountForm;
                 console.log('订单',order);
                 const webview = document.querySelector("webview");
                 console.log(webview);

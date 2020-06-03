@@ -68,7 +68,7 @@ function startRenderer () {
             // 请求的目标服务器地址
             // target: 'https://seller.test.hiqio.com',
             // target: "http://192.168.3.128:8880",  // 刘风浩
-            target: "http://www.tamall365.com",  // 张
+            target: "http://www.tamall365.com/",  // 张
             // 设置允许跨域
             changeOrigin: true,
             // 重写路径
