@@ -1,7 +1,8 @@
 import db from "../../datastore";
 import numeral from 'numeral';
 import axios from 'axios';
-let url='http://www.tamall365.com/api/v1';
+let url='';
+// let url='http://www.tamall365.com/api/v1';
 
 const defaultState = {
     order: {
@@ -36,9 +37,9 @@ const mutations = {
             payload.list.forEach((item,index)=>{
                 item['No'] = index+1;
                 item.price =item.price/100
-            })
+            });
+            state.list = payload.list;
         }
-        state.list = payload.list;
         state.pagination=payload.pagination;
     },
     SET_USER(state, payload){
@@ -64,13 +65,13 @@ const mutations = {
         let qtyTotal = 0;
         if (state.order.subOrder) {
             subOrder.forEach(item => {
-                item.subTotal = item.quantity * item.price/100;
+                item.subTotal = item.quantity * item.price;
                 qtyTotal += item.quantity
             })
         }
         state.order.qtyTotal = qtyTotal;
         state.order.total = state.order.subOrder.length > 0 ? state.order.subOrder.reduce((total, item, index) => {
-            const a = numeral(item.price/100);
+            const a = numeral(item.price);
             const b = a.multiply(item.quantity);
             const c = b.add(total);
             console.log(88,a,b,c)
@@ -273,6 +274,8 @@ const actions = {
             //     uid: ctx.state.userList.userUid,
             //     name: ctx.state.userList.nickName,
             // },
+            let price=res.data.data.list[0].price;
+            res.data.data.list[0].price= price/100;
             ctx.commit("CREATE_SUBORDER", res.data.data.list[0]);
             ctx.commit("TOTAL_ORDER")
                 // if (doc.stock >= 1) {
