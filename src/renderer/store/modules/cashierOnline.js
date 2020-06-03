@@ -1,8 +1,8 @@
 import db from "../../datastore";
 import numeral from 'numeral';
 import axios from 'axios';
-let url='';
-// let url='http://www.tamall365.com/api/v1';
+// let url='';
+let url='http://www.tamall365.com/api/v1';
 
 const defaultState = {
     order: {
